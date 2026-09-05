@@ -6,7 +6,7 @@ Nothing in this list has been guessed. Where the old site was ambiguous, contrad
 new site carries the scraped value forward unchanged, flags it, and waits for you.
 
 There are **6 blockers** (the site should not go live until these are answered),
-**15 important** items and **1** tidy-ups.
+**16 important** items and **1** tidy-ups.
 
 Most of the answers can be entered by your staff at `/admin` without a developer. Where that is
 true, the answer says so.
@@ -158,6 +158,12 @@ You currently also sell through https://www.just-eat.co.uk/restaurants-javatri-a
 The live site publishes these dishes as bare names and prices, with no descriptions at all, while every dish on the main food menu has one. A dosa with a sentence under it sells better than a dosa without.
 
 **What we did in the meantime.** Seeded them with no description rather than writing copy and putting words in your mouth. They render cleanly without one, and descriptions can be added at /admin/menu at any time.
+
+### 16. Can we have some photographs?
+
+There is almost no usable photography of the restaurant, the food or the banqueting hall. The new site is designed to work without it — the homepage earns its impact typographically rather than with a stock curry photograph, which would have been a lie about your food — but photographs of your actual dishes sell them better than any amount of design does, and the events page in particular is asking people to book a room they cannot see.
+
+**What we did in the meantime.** Built the site so it looks deliberate with no photography at all, and left image slots on every dish and on the events page. Send us a phone-camera set of the hall dressed for a wedding and a dozen of your best-selling dishes and they can go straight in.
 
 ---
 

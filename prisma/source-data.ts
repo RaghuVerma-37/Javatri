@@ -434,6 +434,16 @@ export function transform(source: SourceFile): TransformResult {
         'Not linked from the new site. Direct ordering is the primary call to action everywhere. Tell us if you want the Just Eat link back as a secondary option.',
     },
     {
+      id: 'photography',
+      area: 'Menu content',
+      severity: 'important',
+      question: 'Can we have some photographs?',
+      detail:
+        'There is almost no usable photography of the restaurant, the food or the banqueting hall. The new site is designed to work without it — the homepage earns its impact typographically rather than with a stock curry photograph, which would have been a lie about your food — but photographs of your actual dishes sell them better than any amount of design does, and the events page in particular is asking people to book a room they cannot see.',
+      weDidThisMeanwhile:
+        'Built the site so it looks deliberate with no photography at all, and left image slots on every dish and on the events page. Send us a phone-camera set of the hall dressed for a wedding and a dozen of your best-selling dishes and they can go straight in.',
+    },
+    {
       id: 'allergens',
       area: 'Allergens',
       severity: 'blocker',
