@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { isDatabaseConfigured } from '@/server/static-data'
 import { checkWithinRadius, formatPostcode, looksLikeUkPostcode, normalisePostcode, type LatLng } from '@/lib/geo'
 
 /**
@@ -27,7 +28,12 @@ export async function geocodePostcode(input: string): Promise<GeocodeResult> {
   const normalised = normalisePostcode(input)
   if (!looksLikeUkPostcode(normalised)) return { ok: false, reason: 'malformed' }
 
-  const cached = await prisma.postcodeLookup.findUnique({ where: { postcode: normalised } })
+  // The cache is an optimisation, not a requirement. Without a database the lookup still works,
+  // it just costs a request to postcodes.io each time — which is the correct trade, because the
+  // alternative is telling a customer we cannot check their address when we perfectly well can.
+  const cached = isDatabaseConfigured()
+    ? await prisma.postcodeLookup.findUnique({ where: { postcode: normalised } }).catch(() => null)
+    : null
   if (cached && !isStale(cached.lookedUpAt)) {
     if (!cached.isValid || cached.latitude === null || cached.longitude === null) {
       return { ok: false, reason: 'not_found' }
@@ -76,12 +82,18 @@ function isStale(at: Date): boolean {
 }
 
 async function cache(postcode: string, latitude: number | null, longitude: number | null, isValid: boolean) {
+  if (!isDatabaseConfigured()) return
   const data = { latitude, longitude, isValid, lookedUpAt: new Date() }
-  await prisma.postcodeLookup.upsert({
-    where: { postcode },
-    create: { postcode, ...data },
-    update: data,
-  })
+  try {
+    await prisma.postcodeLookup.upsert({
+      where: { postcode },
+      create: { postcode, ...data },
+      update: data,
+    })
+  } catch (error) {
+    // Failing to cache is not failing to answer.
+    console.error('[delivery] could not cache postcode lookup —', error)
+  }
 }
 
 export type DeliveryDecision =
