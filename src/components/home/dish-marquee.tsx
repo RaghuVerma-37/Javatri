@@ -18,7 +18,27 @@ export function DishMarquee({
 }) {
   if (dishes.length === 0) return null
 
-  const Row = ({ hidden }: { hidden?: boolean }) => (
+  return (
+    <div
+      className={cn('marquee border-y border-line bg-surface-2/60 py-4', className)}
+      // Hovering pauses it, so a name that catches someone's eye can be read.
+      style={{ ['--duration' as string]: `${durationSeconds}s` }}
+    >
+      <div className="marquee-track">
+        <MarqueeRow dishes={dishes} />
+        <MarqueeRow dishes={dishes} hidden />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Declared at module scope rather than inside DishMarquee. A component defined during render is a
+ * new component type on every render, so React unmounts and remounts the whole subtree — which
+ * here would restart the animation on every parent render.
+ */
+function MarqueeRow({ dishes, hidden }: { dishes: string[]; hidden?: boolean }) {
+  return (
     <ul aria-hidden={hidden} className="flex shrink-0 items-center">
       {dishes.map((dish) => (
         <li key={dish} className="flex items-center whitespace-nowrap">
@@ -27,18 +47,5 @@ export function DishMarquee({
         </li>
       ))}
     </ul>
-  )
-
-  return (
-    <div
-      className={cn('marquee border-y border-line bg-surface-2/60 py-4', className)}
-      // Hovering pauses it, so a name that catches someone's eye can be read.
-      style={{ ['--duration' as string]: `${durationSeconds}s` }}
-    >
-      <div className="marquee-track">
-        <Row />
-        <Row hidden />
-      </div>
-    </div>
   )
 }

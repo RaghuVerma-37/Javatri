@@ -36,7 +36,9 @@ export function SlotPicker({
   isClosedNow: boolean
 }) {
   const { state, setRequestedFor } = useCart()
-  const slots = slotsByType[state.orderType] ?? []
+  // Memoised because `?? []` produces a new array identity on every render, which would make the
+  // grouping below re-run each time.
+  const slots = useMemo(() => slotsByType[state.orderType] ?? [], [slotsByType, state.orderType])
 
   const days = useMemo(() => {
     const grouped = new Map<string, { label: string; slots: SlotOption[] }>()

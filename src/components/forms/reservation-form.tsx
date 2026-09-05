@@ -16,9 +16,14 @@ type Time = { iso: string; label: string }
  */
 export function ReservationForm({ minDate, maxDate }: { minDate: string; maxDate: string }) {
   const [date, setDate] = useState('')
-  const [times, setTimes] = useState<Time[]>([])
-  const [isClosedThatDay, setIsClosedThatDay] = useState(false)
-  const [isLoadingTimes, setIsLoadingTimes] = useState(false)
+  const [loaded, setLoaded] = useState<{ date: string; times: Time[]; closed: boolean } | null>(null)
+
+  // Derived from what came back, so clearing the date needs no effect and no second state update.
+  // `loaded.date === date` also means a slow response for a previously chosen day can never be
+  // shown against the day the customer has since picked.
+  const times = loaded?.date === date ? loaded.times : []
+  const isClosedThatDay = loaded?.date === date && loaded.closed
+  const isLoadingTimes = Boolean(date) && loaded?.date !== date
 
   const [values, setValues] = useState({
     name: '',
@@ -39,22 +44,17 @@ export function ReservationForm({ minDate, maxDate }: { minDate: string; maxDate
     setValues((current) => ({ ...current, [key]: value }))
 
   useEffect(() => {
-    if (!date) {
-      setTimes([])
-      setIsClosedThatDay(false)
-      return
-    }
+    if (!date) return
     const controller = new AbortController()
-    setIsLoadingTimes(true)
+
     fetch(`/api/reservations/times?date=${date}`, { signal: controller.signal })
       .then((r) => r.json())
       .then((data: { times: Time[]; closed: boolean }) => {
-        setTimes(data.times ?? [])
-        setIsClosedThatDay(Boolean(data.closed))
+        setLoaded({ date, times: data.times ?? [], closed: Boolean(data.closed) })
         setValues((current) => ({ ...current, dateTime: data.times?.[0]?.iso ?? '' }))
       })
       .catch(() => undefined)
-      .finally(() => setIsLoadingTimes(false))
+
     return () => controller.abort()
   }, [date])
 

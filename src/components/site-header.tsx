@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Menu, Phone, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-context'
 import { buttonClass } from '@/components/ui'
@@ -31,30 +31,14 @@ const PHONE_DISPLAY = '01628 825753'
 export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const { itemCount, isHydrated } = useCart()
 
   // On the homepage the header floats over the dark hero until you scroll off it, so the page
   // opens as one cinematic block rather than a pale band laid across a dark one.
   const isHome = pathname === '/'
-
-  useEffect(() => {
-    if (!isHome) {
-      setIsScrolled(false)
-      return
-    }
-    const onScroll = () => setIsScrolled(window.scrollY > 80)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [isHome])
+  const isScrolled = useScrolledPast(80)
 
   const isOverHero = isHome && !isScrolled && !isOpen
-
-  // Close the drawer on navigation, or the menu stays open behind the new page.
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname])
 
   useEffect(() => {
     if (!isOpen) return
@@ -173,6 +157,7 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={() => setIsOpen(false)}
                   aria-current={isCurrent(item.href) ? 'page' : undefined}
                   className={cn(
                     'block rounded-xl px-3 py-3 text-base',
@@ -186,7 +171,11 @@ export function SiteHeader() {
               </li>
             ))}
             <li className="mt-2 border-t border-line pt-2">
-              <a href={`tel:${PHONE}`} className="block rounded-xl px-3 py-3 text-base text-ink hover:bg-surface-2">
+              <a
+                href={`tel:${PHONE}`}
+                onClick={() => setIsOpen(false)}
+                className="block rounded-xl px-3 py-3 text-base text-ink hover:bg-surface-2"
+              >
                 Call {PHONE_DISPLAY}
               </a>
             </li>
@@ -194,5 +183,32 @@ export function SiteHeader() {
         </nav>
       </div>
     </header>
+  )
+}
+
+/**
+ * Whether the page is scrolled past a threshold.
+ *
+ * Scroll position is browser state, not React state, so it is read with `useSyncExternalStore`
+ * rather than mirrored into a `useState` from inside an effect. That also means the very first
+ * render already knows the answer — landing on a deep link with a hash does not flash the
+ * transparent header for a frame before correcting itself.
+ */
+function useScrolledPast(threshold: number): boolean {
+  const subscribe = useCallback((onChange: () => void) => {
+    window.addEventListener('scroll', onChange, { passive: true })
+    window.addEventListener('resize', onChange, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onChange)
+      window.removeEventListener('resize', onChange)
+    }
+  }, [])
+
+  return useSyncExternalStore(
+    subscribe,
+    () => window.scrollY > threshold,
+    // The server cannot know, and the hero is at the top of the page, so "not scrolled" is the
+    // correct assumption for the markup React hydrates against.
+    () => false,
   )
 }

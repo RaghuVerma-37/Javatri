@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import { prisma } from '@/lib/db'
+import type { Prisma } from '@/generated/prisma/client'
 import { isMenuAvailableAt } from '@/lib/hours'
 import type { CatalogueItem } from '@/lib/pricing'
 import { isDatabaseConfigured, staticMenus } from '@/server/static-data'
@@ -39,17 +40,14 @@ export const getPublishedMenus = cache(async (branchId: string) => {
 })
 
 /**
- * Anchored to the Prisma query rather than to `getPublishedMenus`.
+ * Anchored to Prisma's payload type rather than to `getPublishedMenus`.
  *
  * `getPublishedMenus` can now return the file-backed fallback, which is itself typed as
  * `MenuWithContent` — inferring the type from that function would be circular, and TypeScript
  * resolves a circular inference to `any`, silently deleting the type safety of every menu
- * component. This private query is the one true shape.
+ * component. `MenuGetPayload` is the shape the query actually returns, stated directly.
  */
-const menusQuery = (branchId: string) =>
-  prisma.menu.findMany({ where: { branchId }, include: MENU_INCLUDE })
-
-export type MenuWithContent = Awaited<ReturnType<typeof menusQuery>>[number]
+export type MenuWithContent = Prisma.MenuGetPayload<{ include: typeof MENU_INCLUDE }>
 export type CategoryWithItems = MenuWithContent['categories'][number]
 export type ItemWithOptions = CategoryWithItems['items'][number]
 

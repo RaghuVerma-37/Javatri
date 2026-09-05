@@ -1,4 +1,5 @@
 import { AuthError } from 'next-auth'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { auth, signIn } from '@/auth'
 import { Button } from '@/components/ui'
@@ -54,9 +55,9 @@ export default async function SignInPage({ searchParams }: Props) {
       <h1 className="text-3xl">Staff sign in</h1>
       <p className="mt-2 text-sm text-muted">
         This is the Javatri admin area. If you are here by accident,{' '}
-        <a href="/" className="underline underline-offset-2">
+        <Link href="/" className="underline underline-offset-2">
           go back to the restaurant
-        </a>
+        </Link>
         .
       </p>
 

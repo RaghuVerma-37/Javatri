@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
 import { Badge, Button } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
@@ -63,7 +63,7 @@ export function MenuFilters({
   const [noAlcohol, setNoAlcohol] = useState(false)
   const [spice, setSpice] = useState<Spice>('any')
   const [excluded, setExcluded] = useState<Allergen[]>([])
-  const [visibleCount, setVisibleCount] = useState<number | null>(null)
+  const countRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     const root = document.getElementById(rootId)
@@ -81,6 +81,11 @@ export function MenuFilters({
 
     // CSS can hide a dish but it cannot tell a section that all of its dishes are gone, so the
     // empty-section collapse and the running count are done here, once, after the classes settle.
+    //
+    // Both are written straight to the DOM rather than back into React state. The count is read
+    // *out* of the DOM, so feeding it back in would be a render caused by the result of the last
+    // render — the cascading update the react-hooks rules exist to prevent. The element is a
+    // live region either way, so a screen reader is told all the same.
     let visible = 0
     for (const section of Array.from(root.querySelectorAll<HTMLElement>('[data-menu-section]'))) {
       const dishes = Array.from(section.querySelectorAll<HTMLElement>('[data-dish]'))
@@ -88,8 +93,15 @@ export function MenuFilters({
       visible += shown
       section.hidden = shown === 0
     }
-    setVisibleCount(visible)
-  }, [rootId, vegetarian, vegan, noAlcohol, spice, excluded])
+
+    if (countRef.current) {
+      const hasFilter =
+        vegetarian || vegan || noAlcohol || spice !== 'any' || excluded.length > 0
+      countRef.current.textContent = hasFilter
+        ? `${visible} of ${totalDishes} dishes`
+        : `${totalDishes} dishes`
+    }
+  }, [rootId, vegetarian, vegan, noAlcohol, spice, excluded, totalDishes])
 
   const activeCount =
     (vegetarian ? 1 : 0) + (vegan ? 1 : 0) + (noAlcohol ? 1 : 0) + (spice !== 'any' ? 1 : 0) + excluded.length
@@ -124,10 +136,8 @@ export function MenuFilters({
         <Toggle label="Vegetarian" checked={vegetarian} onChange={setVegetarian} />
         <Toggle label="Vegan" checked={vegan} onChange={setVegan} />
 
-        <p aria-live="polite" className="ml-auto text-sm text-muted">
-          {visibleCount === null || activeCount === 0
-            ? `${totalDishes} dishes`
-            : `${visibleCount} of ${totalDishes} dishes`}
+        <p ref={countRef} aria-live="polite" className="ml-auto text-sm text-muted">
+          {totalDishes} dishes
         </p>
       </div>
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { NotConfigured } from '@/components/not-configured'
 import { DemoNotice } from '@/components/demo-notice'
 import { isDatabaseConfigured } from '@/server/static-data'
+import Link from 'next/link'
 import { Car, Check, Lightbulb, Users, Utensils, Wine } from 'lucide-react'
 import { EnquiryForm } from '@/components/forms/enquiry-form'
 import { ButtonLink, SectionHeading } from '@/components/ui'
@@ -138,9 +139,9 @@ export default async function EventsPage() {
           </div>
           <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted">
             Menus are built from{' '}
-            <a href="/menu" className="underline underline-offset-2 hover:text-brand-text">
+            <Link href="/menu" className="underline underline-offset-2 hover:text-brand-text">
               our full menu
-            </a>{' '}
+            </Link>{' '}
             rather than a separate list, so you can taste everything before you choose. Vegetarian,
             vegan and Jain menus are no trouble — tell us in the form and we will plan around it.
           </p>

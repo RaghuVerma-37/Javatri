@@ -288,12 +288,10 @@ export async function deleteHoliday(id: string): Promise<ActionResult> {
 // Orders, reservations, enquiries
 // ---------------------------------------------------------------------------
 
-const KITCHEN_STATUSES = ['ACCEPTED', 'PREPARING', 'READY', 'COMPLETED', 'CANCELLED'] as const
+/** The statuses staff can move an order into. Never PAID or PENDING_PAYMENT — money is Stripe's. */
+type KitchenStatus = 'ACCEPTED' | 'PREPARING' | 'READY' | 'COMPLETED' | 'CANCELLED'
 
-export async function setOrderStatus(
-  orderId: string,
-  status: (typeof KITCHEN_STATUSES)[number],
-): Promise<ActionResult> {
+export async function setOrderStatus(orderId: string, status: KitchenStatus): Promise<ActionResult> {
   try {
     await requireStaff()
 
