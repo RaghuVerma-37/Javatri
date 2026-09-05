@@ -6,7 +6,7 @@ import { OpenStatus } from '@/components/open-status'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { summariseWeek } from '@/lib/hours'
-import { absoluteUrl } from '@/lib/site'
+import { absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getServiceState, getBranchSafe, getOtherBranches } from '@/server/branch'
 
 export const metadata: Metadata = {
@@ -75,8 +75,8 @@ export default async function ContactPage() {
               </p>
               <p className="flex gap-3">
                 <Phone aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
-                <a href={`tel:${branch.phone?.replace(/\s/g, '')}`} className="hover:text-brand-text">
-                  {branch.phone}
+                <a href={telHref(branch.phone)} className="hover:text-brand-text">
+                  {formatPhone(branch.phone)}
                 </a>
               </p>
               {branch.email ? (
@@ -158,7 +158,7 @@ export default async function ContactPage() {
                   </p>
                   <p className="mt-3 text-sm">
                     <Link href="/contact" className="text-brand-text underline underline-offset-2">
-                      Call {branch.phone}
+                      Call {formatPhone(branch.phone)}
                     </Link>{' '}
                     <span className="text-muted">for anything at this site.</span>
                   </p>

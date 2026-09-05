@@ -28,17 +28,24 @@ const NAV = [
 const PHONE = '+441628825753'
 const PHONE_DISPLAY = '01628 825753'
 
+/**
+ * Pages that open with the full-bleed dark hero. The header floats over those, transparent, until
+ * you scroll off it — a pale bar laid across a dark block looks like a mistake.
+ *
+ * A list rather than a measurement: the alternative is having the hero tell the header about
+ * itself through context or an effect, which is a lot of machinery for two routes.
+ */
+const DARK_HERO_ROUTES = new Set(['/', '/events'])
+
 export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const { itemCount, isHydrated } = useCart()
 
-  // On the homepage the header floats over the dark hero until you scroll off it, so the page
-  // opens as one cinematic block rather than a pale band laid across a dark one.
-  const isHome = pathname === '/'
+  const hasDarkHero = DARK_HERO_ROUTES.has(pathname)
   const isScrolled = useScrolledPast(80)
 
-  const isOverHero = isHome && !isScrolled && !isOpen
+  const isOverHero = hasDarkHero && !isScrolled && !isOpen
 
   useEffect(() => {
     if (!isOpen) return

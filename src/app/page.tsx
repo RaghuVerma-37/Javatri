@@ -9,7 +9,7 @@ import { ButtonLink, SectionHeading } from '@/components/ui'
 import { JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { summariseWeek } from '@/lib/hours'
-import { SITE, absoluteUrl } from '@/lib/site'
+import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getServiceState, getBranchSafe } from '@/server/branch'
 import { getPublishedMenus } from '@/server/menu'
 import { slotOptionsByType } from '@/server/ordering'
@@ -211,8 +211,8 @@ export default async function HomePage() {
               </p>
               <p className="flex gap-3">
                 <Phone aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
-                <a href={`tel:${branch.phone?.replace(/\s/g, '')}`} className="hover:text-brand-text">
-                  {branch.phone}
+                <a href={telHref(branch.phone)} className="hover:text-brand-text">
+                  {formatPhone(branch.phone)}
                 </a>
               </p>
             </address>

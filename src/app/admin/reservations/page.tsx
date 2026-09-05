@@ -1,4 +1,5 @@
 import { Phone, TriangleAlert } from 'lucide-react'
+import { formatPhone, telHref } from '@/lib/site'
 import { ActionButton } from '@/components/admin/action-button'
 import { Badge } from '@/components/ui'
 import { prisma } from '@/lib/db'
@@ -63,11 +64,11 @@ export default async function AdminReservationsPage() {
               <p className="mt-3 flex flex-wrap items-center gap-x-3 text-sm">
                 <span className="font-medium">{reservation.name}</span>
                 <a
-                  href={`tel:${reservation.phone.replace(/\s/g, '')}`}
+                  href={telHref(reservation.phone)}
                   className="inline-flex items-center gap-1.5 text-brand-text underline underline-offset-2"
                 >
                   <Phone aria-hidden className="size-3.5" />
-                  {reservation.phone}
+                  {formatPhone(reservation.phone)}
                 </a>
                 <a href={`mailto:${reservation.email}`} className="text-muted underline underline-offset-2">
                   {reservation.email}

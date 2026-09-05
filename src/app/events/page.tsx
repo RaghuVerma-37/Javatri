@@ -8,7 +8,7 @@ import { EnquiryForm } from '@/components/forms/enquiry-form'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
-import { SITE, absoluteUrl } from '@/lib/site'
+import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getBranchSafe } from '@/server/branch'
 
 export const metadata: Metadata = {
@@ -90,10 +90,10 @@ export default async function EventsPage() {
               Tell us about your event
             </ButtonLink>
             <a
-              href={`tel:${branch.phone?.replace(/\s/g, '')}`}
+              href={telHref(branch.phone)}
               className="inline-flex min-h-13 items-center rounded-full border border-[#5a4a3a] px-7 text-base text-[#f2e8d9] transition-colors hover:border-[#d99a2b] hover:text-[#f7d9a0]"
             >
-              Call {branch.phone}
+              Call {formatPhone(branch.phone)}
             </a>
           </div>
         </div>
@@ -186,10 +186,10 @@ export default async function EventsPage() {
             <div className="border-t border-line pt-5">
               <h2 className="text-lg">Rather talk?</h2>
               <a
-                href={`tel:${branch.phone?.replace(/\s/g, '')}`}
+                href={telHref(branch.phone)}
                 className="mt-2 inline-block font-display text-xl font-semibold text-brand-text underline underline-offset-4"
               >
-                {branch.phone}
+                {formatPhone(branch.phone)}
               </a>
               <p className="mt-2 text-sm leading-relaxed text-muted">
                 {branch.addressLine1}, {branch.addressLine2}, {branch.city} {branch.postcode}

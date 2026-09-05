@@ -32,6 +32,26 @@ export const SITE = {
 
 export const DEFAULT_BRANCH_SLUG = 'littlewick-green'
 
+/**
+ * "+44 1628 825753" -> "01628 825753".
+ *
+ * The number is stored in E.164 because that is what `tel:` links and any future SMS provider
+ * want, but nobody in Maidenhead reads their local restaurant's number that way.
+ */
+export function formatPhone(phone: string | null | undefined): string {
+  if (!phone) return ''
+  const digits = phone.replace(/[^\d+]/g, '')
+  if (!digits.startsWith('+44')) return phone
+  const national = `0${digits.slice(3)}`
+  // UK geographic numbers group 5+6 (01628 825753) or 4+7 for the big cities (0161 2345678).
+  return national.length === 11 ? `${national.slice(0, 5)} ${national.slice(5)}` : national
+}
+
+/** The dialable form, for a `tel:` href. */
+export function telHref(phone: string | null | undefined): string {
+  return `tel:${(phone ?? '').replace(/[^\d+]/g, '')}`
+}
+
 export function absoluteUrl(path: string): string {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? SITE.url
   return new URL(path, base).toString()

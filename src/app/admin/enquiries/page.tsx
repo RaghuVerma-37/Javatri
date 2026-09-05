@@ -1,4 +1,5 @@
 import { Phone } from 'lucide-react'
+import { formatPhone, telHref } from '@/lib/site'
 import { ActionButton } from '@/components/admin/action-button'
 import { Badge } from '@/components/ui'
 import { prisma } from '@/lib/db'
@@ -64,11 +65,11 @@ export default async function AdminEnquiriesPage() {
                 <p className="mt-3 flex flex-wrap items-center gap-x-3 text-sm">
                   <span className="font-medium">{enquiry.name}</span>
                   <a
-                    href={`tel:${enquiry.phone.replace(/\s/g, '')}`}
+                    href={telHref(enquiry.phone)}
                     className="inline-flex items-center gap-1.5 text-brand-text underline underline-offset-2"
                   >
                     <Phone aria-hidden className="size-3.5" />
-                    {enquiry.phone}
+                    {formatPhone(enquiry.phone)}
                   </a>
                   <a
                     href={`mailto:${enquiry.email}`}

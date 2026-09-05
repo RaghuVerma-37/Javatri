@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { formatPhone, telHref } from '@/lib/site'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Check, Clock, CookingPot, MapPin, Package, TriangleAlert } from 'lucide-react'
@@ -63,8 +64,8 @@ export default async function OrderStatusPage({ params }: Params) {
           <p className="mt-2 text-sm leading-relaxed text-ink/85">
             This page updates itself — there is no need to reload. If it is still saying this in a
             minute, your card was probably declined and nothing has been charged. Give us a call on{' '}
-            <a href={`tel:${order.branch.phone?.replace(/\s/g, '')}`} className="font-medium underline underline-offset-2">
-              {order.branch.phone}
+            <a href={telHref(order.branch.phone)} className="font-medium underline underline-offset-2">
+              {formatPhone(order.branch.phone)}
             </a>{' '}
             and quote {order.orderNumber}.
           </p>
@@ -188,8 +189,8 @@ export default async function OrderStatusPage({ params }: Params) {
 
       <p className="mt-8 text-sm text-muted">
         Something not right?{' '}
-        <a href={`tel:${order.branch.phone?.replace(/\s/g, '')}`} className="underline underline-offset-4 hover:text-brand-text">
-          Call us on {order.branch.phone}
+        <a href={telHref(order.branch.phone)} className="underline underline-offset-4 hover:text-brand-text">
+          Call us on {formatPhone(order.branch.phone)}
         </a>{' '}
         or{' '}
         <Link href="/menu" className="underline underline-offset-4 hover:text-brand-text">

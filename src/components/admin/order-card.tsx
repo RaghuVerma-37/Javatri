@@ -1,4 +1,5 @@
 import { Phone, TriangleAlert } from 'lucide-react'
+import { formatPhone, telHref } from '@/lib/site'
 import { ActionButton } from '@/components/admin/action-button'
 import { Badge } from '@/components/ui'
 import { formatInLondon } from '@/lib/hours'
@@ -118,11 +119,11 @@ export function OrderCard({ order, timezone }: { order: Order; timezone: string 
         <p className="flex flex-wrap items-center gap-x-3">
           <span className="font-medium">{order.customerName}</span>
           <a
-            href={`tel:${order.customerPhone.replace(/\s/g, '')}`}
+            href={telHref(order.customerPhone)}
             className="inline-flex items-center gap-1.5 text-brand-text underline underline-offset-2"
           >
             <Phone aria-hidden className="size-3.5" />
-            {order.customerPhone}
+            {formatPhone(order.customerPhone)}
           </a>
         </p>
         {order.type === 'DELIVERY' ? (

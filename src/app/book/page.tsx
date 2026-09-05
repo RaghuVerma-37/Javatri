@@ -6,7 +6,7 @@ import { ReservationForm } from '@/components/forms/reservation-form'
 import { OpenStatus } from '@/components/open-status'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { localDateKey, addDaysToDateKey, summariseWeek } from '@/lib/hours'
-import { absoluteUrl } from '@/lib/site'
+import { absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getServiceState, getBranchSafe } from '@/server/branch'
 import { RESERVATION_HORIZON_DAYS } from '@/server/ordering'
 
@@ -83,10 +83,10 @@ export default async function BookPage() {
                 We answer the phone during service.
               </p>
               <a
-                href={`tel:${branch.phone?.replace(/\s/g, '')}`}
+                href={telHref(branch.phone)}
                 className="mt-2 inline-block font-display text-xl font-semibold text-brand-text underline underline-offset-4"
               >
-                {branch.phone}
+                {formatPhone(branch.phone)}
               </a>
             </div>
 
