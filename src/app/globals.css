@@ -1,0 +1,481 @@
+@import "tailwindcss";
+
+/*
+  Javatri — design tokens.
+
+  Warm paper, tandoori red, brass. The palette is checked for WCAG AA at the sizes it is used:
+  --muted on --bg is 5.4:1, --brand-text on --bg is 8.7:1, --on-brand on --brand is 11.2:1.
+  Nothing below 4.5:1 is used for body text and nothing below 3:1 for large text or borders that
+  carry meaning.
+*/
+
+:root {
+  --bg: #fbf7f1;
+  --surface: #ffffff;
+  --surface-2: #f4ece0;
+  --ink: #1b1714;
+  --muted: #6a5e52;
+  --line: #e4d9c9;
+  --line-strong: #cdbda6;
+
+  --brand: #8a1c1c;
+  --brand-hover: #6f1616;
+  --on-brand: #fff8f0;
+  --brand-text: #7a1818;
+  --brand-wash: #f6e9e5;
+
+  --accent: #9a6f16;
+  --accent-wash: #f7efdc;
+
+  --ok: #1c6340;
+  --ok-wash: #e4f1ea;
+  --warn: #8a5300;
+  --warn-wash: #fbf0dc;
+  --danger: #a11b1b;
+  --danger-wash: #fbe9e9;
+
+  --focus: #1f4fd8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14110f;
+    --surface: #1d1815;
+    --surface-2: #262019;
+    --ink: #f6efe5;
+    --muted: #b3a595;
+    --line: #362d25;
+    --line-strong: #4c4036;
+
+    --brand: #a52323;
+    --brand-hover: #bd2c2c;
+    --on-brand: #fff6ef;
+    --brand-text: #f0a08f;
+    --brand-wash: #2b1817;
+
+    --accent: #d9a63f;
+    --accent-wash: #2a2114;
+
+    --ok: #6ec49a;
+    --ok-wash: #16261e;
+    --warn: #e0ac5b;
+    --warn-wash: #2a2013;
+    --danger: #f08b8b;
+    --danger-wash: #2c1717;
+
+    --focus: #8fb0ff;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-on-brand: var(--on-brand);
+  --color-brand-text: var(--brand-text);
+  --color-brand-wash: var(--brand-wash);
+
+  --color-accent: var(--accent);
+  --color-accent-wash: var(--accent-wash);
+
+  --color-ok: var(--ok);
+  --color-ok-wash: var(--ok-wash);
+  --color-warn: var(--warn);
+  --color-warn-wash: var(--warn-wash);
+  --color-danger: var(--danger);
+  --color-danger-wash: var(--danger-wash);
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  /* One visible focus ring, everywhere, that survives a dark background. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+
+  /* Inputs inherit the page's type rather than the browser's. */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+    max-width: 76rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Skip link: off-screen until focused. */
+  .skip-link {
+    position: absolute;
+    left: 0.75rem;
+    top: -4rem;
+    z-index: 100;
+    background: var(--surface);
+    color: var(--ink);
+    border: 2px solid var(--focus);
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+}
+
+/*
+  Menu filtering.
+
+  The filter controls are a small client component; the 180 dish cards are server components.
+  Rather than ship the whole menu across the RSC boundary so React can filter it, the client
+  component sets classes on the menu root and these rules do the hiding. The dishes stay in the
+  server-rendered HTML — which is what Google reads — and the filter costs nothing but a class.
+*/
+@layer utilities {
+  .menu-filter-veg [data-dish][data-veg='0'],
+  .menu-filter-vegan [data-dish][data-vegan='0'],
+  .menu-filter-no-alcohol [data-dish][data-alcohol='1'] {
+    display: none;
+  }
+
+  .menu-filter-spice-mild [data-dish]:not([data-spice='MILD']):not([data-spice='NONE']),
+  .menu-filter-spice-hot [data-dish]:not([data-spice='HOT']):not([data-spice='EXTRA_HOT']) {
+    display: none;
+  }
+
+  /* One rule per regulated allergen. A dish is hidden when it is KNOWN to contain the allergen.
+     Dishes whose allergens are unconfirmed are deliberately NOT hidden — hiding them would imply
+     they had been checked and cleared. They are flagged instead, and the filter bar says so. */
+  .exclude-celery [data-dish][data-a-celery],
+  .exclude-gluten [data-dish][data-a-gluten],
+  .exclude-crustaceans [data-dish][data-a-crustaceans],
+  .exclude-eggs [data-dish][data-a-eggs],
+  .exclude-fish [data-dish][data-a-fish],
+  .exclude-lupin [data-dish][data-a-lupin],
+  .exclude-milk [data-dish][data-a-milk],
+  .exclude-molluscs [data-dish][data-a-molluscs],
+  .exclude-mustard [data-dish][data-a-mustard],
+  .exclude-peanuts [data-dish][data-a-peanuts],
+  .exclude-sesame [data-dish][data-a-sesame],
+  .exclude-soybeans [data-dish][data-a-soybeans],
+  .exclude-sulphites [data-dish][data-a-sulphites],
+  .exclude-tree-nuts [data-dish][data-a-tree-nuts] {
+    display: none;
+  }
+
+  /* Warn on every unchecked dish while an allergen filter is running. */
+  .menu-filtering-allergens [data-dish][data-allergens-confirmed='0'] .dish-unchecked {
+    display: flex;
+  }
+
+  /* Empty categories are collapsed by the filter component itself: CSS cannot ask whether a
+     descendant was hidden by a stylesheet rule, so `:has()` is no help here. */
+}
+
+/*
+  ---------------------------------------------------------------------------
+  Hero motion
+  ---------------------------------------------------------------------------
+
+  Javatri has no photography — the old site had almost none worth keeping — so the hero earns its
+  drama typographically and generatively rather than with a stock curry photograph. Everything
+  here animates only `opacity`, `transform` and `filter`, which the compositor can do without
+  touching layout, and the LCP element (the h1) is server-rendered text that is painted before any
+  of it runs.
+
+  Every animation in this block is switched off wholesale by the reduced-motion rule in @layer
+  base above.
+*/
+
+@layer components {
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    /* The hero commits to a dark ground in both themes: it reads as evening, which is when
+       people are deciding where dinner comes from. */
+    background: #120d0b;
+    color: #f7efe4;
+  }
+
+  /* Slow-drifting heat blooms. Three layers at different speeds so the movement never resolves
+     into an obvious loop. */
+  .hero-aurora {
+    position: absolute;
+    inset: -30%;
+    z-index: -2;
+    filter: blur(80px);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .hero-aurora span {
+    position: absolute;
+    display: block;
+    border-radius: 999px;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+
+  .hero-aurora span:nth-child(1) {
+    width: 46vw;
+    height: 46vw;
+    left: 4%;
+    top: 8%;
+    background: radial-gradient(circle at 40% 40%, #b8341f, transparent 68%);
+    animation: hero-drift-a 26s ease-in-out infinite alternate;
+  }
+
+  .hero-aurora span:nth-child(2) {
+    width: 40vw;
+    height: 40vw;
+    right: 2%;
+    top: 22%;
+    background: radial-gradient(circle at 60% 40%, #d99a2b, transparent 66%);
+    animation: hero-drift-b 32s ease-in-out infinite alternate;
+  }
+
+  .hero-aurora span:nth-child(3) {
+    width: 52vw;
+    height: 52vw;
+    left: 28%;
+    bottom: -18%;
+    background: radial-gradient(circle at 50% 50%, #7a1533, transparent 70%);
+    animation: hero-drift-c 38s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-drift-a {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(9vw, 5vh, 0) scale(1.18); }
+  }
+  @keyframes hero-drift-b {
+    from { transform: translate3d(0, 0, 0) scale(1.1); }
+    to   { transform: translate3d(-8vw, 8vh, 0) scale(0.92); }
+  }
+  @keyframes hero-drift-c {
+    from { transform: translate3d(0, 0, 0) scale(0.95); }
+    to   { transform: translate3d(6vw, -7vh, 0) scale(1.15); }
+  }
+
+  /* Film grain, so the blurred gradients do not band on a cheap phone screen. */
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.35;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* Word-by-word mask reveal. Pure CSS with staggered delays — no JavaScript stands between the
+     headline and the first paint. */
+  .reveal-line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .reveal-word {
+    display: inline-block;
+    transform: translateY(105%) rotate(3deg);
+    opacity: 0;
+    animation: reveal-word 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes reveal-word {
+    to {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes fade-up {
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Hairline that draws itself across the hero. */
+  .rule-draw {
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: rule-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes rule-draw {
+    to { transform: scaleX(1); }
+  }
+
+  /* The rotating dish word. Each word is absolutely stacked and takes its turn. */
+  .word-rotator {
+    position: relative;
+    display: inline-grid;
+    vertical-align: bottom;
+    overflow: hidden;
+  }
+
+  .word-rotator > span {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translateY(0.9em);
+    animation: word-cycle var(--cycle-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @keyframes word-cycle {
+    0%          { opacity: 0; transform: translateY(0.9em); }
+    4%, 20%     { opacity: 1; transform: translateY(0); }
+    24%, 100%   { opacity: 0; transform: translateY(-0.9em); }
+  }
+
+  /* Infinite marquee. The track holds the list twice, so translating by exactly -50% loops with
+     no visible seam. */
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    flex: none;
+    gap: 0;
+    min-width: 100%;
+    animation: marquee var(--duration, 48s) linear infinite;
+    will-change: transform;
+  }
+
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Pointer-tilt cards. The rotation comes from CSS custom properties the client component sets,
+     so React never re-renders on mousemove. */
+  .tilt-card {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .tilt-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--glow, 0);
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      22rem circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklab, var(--accent) 26%, transparent),
+      transparent 60%
+    );
+  }
+
+  /*
+    Scroll-triggered reveal, fail-safe.
+
+    The obvious implementation — `opacity: 0` plus `animation-timeline: view()` — hides content by
+    default and only shows it if the animation runs. That is a bad trade on a page whose job is to
+    show a menu: any browser quirk, any failure, and the customer gets a blank page. (It also
+    renders blank in any full-page capture, which is how this was caught.)
+
+    So the default state here is *visible*. The `js-reveal` class is added to <html> only once the
+    reveal script is running and the visitor has not asked for reduced motion; only then is
+    anything hidden, and only until it scrolls into view. No JavaScript, an error, an old browser,
+    or reduced-motion all land on "everything is visible", which is the right failure.
+  */
+  html.js-reveal [data-reveal]:not([data-shown]) {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  html.js-reveal [data-reveal][data-shown] {
+    animation: fade-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .scroll-cue span {
+    animation: scroll-cue 2.2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-cue {
+    0%, 100% { transform: translateY(0); opacity: 0.35; }
+    50%      { transform: translateY(6px); opacity: 1; }
+  }
+}

@@ -1,0 +1,500 @@
+// Javatri — data model.
+//
+// Two rules run through the whole of this file:
+//   1. Money is ALWAYS an Int of pence. Never a Float, never a Decimal-as-string.
+//   2. Times of day that recur weekly are Ints of minutes-since-local-midnight, never DateTime.
+//      A DateTime for "we open at 3pm on Tuesdays" carries a date and a UTC offset that are both
+//      meaningless, and is exactly how a site ends up an hour wrong for half the year. Wall-clock
+//      minutes are compared against a London wall-clock time computed once, in src/lib/hours.ts.
+//      A close time after midnight is stored as > 1440 (e.g. 1500 = 01:00 the next day).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// Prisma 7 moved the connection URL out of the schema. It lives in prisma.config.ts for the
+// CLI, and is handed to PrismaClient at runtime through the pg driver adapter (src/lib/db.ts).
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum SpiceLevel {
+  NONE
+  MILD
+  HOT
+  EXTRA_HOT
+}
+
+/// The 14 allergens named in Regulation (EU) 1169/2011 as retained in UK law and
+/// enforced by the FSA. A closed set on purpose: a free-text column is how "sesame",
+/// "Sesame" and "sesame seeds" become three different allergens and someone gets hurt.
+enum Allergen {
+  CELERY
+  CEREALS_CONTAINING_GLUTEN
+  CRUSTACEANS
+  EGGS
+  FISH
+  LUPIN
+  MILK
+  MOLLUSCS
+  MUSTARD
+  PEANUTS
+  SESAME
+  SOYBEANS
+  SULPHUR_DIOXIDE
+  TREE_NUTS
+}
+
+enum OrderType {
+  PICKUP
+  DELIVERY
+  DINE_IN
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  ACCEPTED
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum ReservationStatus {
+  REQUESTED
+  CONFIRMED
+  SEATED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  WON
+  LOST
+}
+
+enum AdminRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+// ---------------------------------------------------------------------------
+// Branch, hours
+// ---------------------------------------------------------------------------
+
+model Branch {
+  id           String  @id @default(cuid())
+  name         String
+  slug         String  @unique
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  postcode     String?
+  phone        String?
+  email        String?
+  latitude     Float?
+  longitude    Float?
+
+  /// Farnham Common is seeded with this false: it is advertised on the old site with no
+  /// address, phone or hours, so it must not be selectable until the client supplies them.
+  isActive            Boolean @default(false)
+  acceptsOrders       Boolean @default(false)
+  acceptsDelivery     Boolean @default(false)
+  acceptsDineIn       Boolean @default(true)
+  acceptsReservations Boolean @default(false)
+
+  deliveryRadiusMiles      Float @default(3)
+  minOrderInPence          Int   @default(1500)
+  deliveryFeeInPence       Int   @default(299)
+  freeDeliveryAboveInPence Int?
+
+  /// Kitchen lead time before the earliest selectable slot.
+  pickupLeadMinutes           Int @default(25)
+  deliveryLeadMinutes         Int @default(45)
+  lastOrderMinutesBeforeClose Int @default(30)
+  slotIntervalMinutes         Int @default(15)
+
+  timezone  String  @default("Europe/London")
+  notes     String?
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  openingHours OpeningHours[]
+  holidays     HolidayOverride[]
+  menus        Menu[]
+  orders       Order[]
+  reservations Reservation[]
+  enquiries    EventEnquiry[]
+}
+
+/// One row per continuous service window. A day with no rows is closed — absence is the
+/// only "closed" state, so there is never a row and a flag that can disagree. Multiple rows
+/// per day give split service (lunch and dinner) for free.
+model OpeningHours {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  /// 0 = Sunday … 6 = Saturday, matching JavaScript's getDay().
+  dayOfWeek Int
+  opensAt   Int
+  closesAt  Int
+
+  @@unique([branchId, dayOfWeek, opensAt])
+  @@index([branchId])
+}
+
+model HolidayOverride {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  date     DateTime @db.Date
+  isClosed Boolean  @default(true)
+  opensAt  Int?
+  closesAt Int?
+  note     String?
+
+  @@unique([branchId, date])
+  @@index([branchId, date])
+}
+
+// ---------------------------------------------------------------------------
+// Menu — ONE copy of the data, read by both the browsable menu and the order flow
+// ---------------------------------------------------------------------------
+
+model Menu {
+  id       String @id @default(cuid())
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  name        String
+  slug        String
+  description String?
+  serviceNote String?
+
+  /// Availability window in minutes since local midnight; null means "whenever the branch is open".
+  availableFrom Int?
+  availableTo   Int?
+  /// Days of week this menu is served. Empty means every day.
+  daysAvailable Int[] @default([])
+
+  sortOrder   Int     @default(0)
+  isPublished Boolean @default(true)
+  /// A menu can be browsable but not orderable — e.g. a bar list served at the table only.
+  isOrderable Boolean @default(true)
+  /// Set on the two menus the old site lost, so the UI can say so rather than render blank.
+  staffNote   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories MenuCategory[]
+
+  @@unique([branchId, slug])
+  @@index([branchId, isPublished])
+}
+
+model MenuCategory {
+  id     String @id @default(cuid())
+  menuId String
+  menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  name      String
+  slug      String
+  /// Customer-facing note printed under the category heading.
+  note      String?
+  /// Internal note for staff. Scrape flags land here, never in `note`.
+  staffNote String?
+  sortOrder Int     @default(0)
+
+  items MenuItem[]
+
+  @@unique([menuId, slug])
+  @@index([menuId])
+}
+
+model MenuItem {
+  id         String       @id @default(cuid())
+  categoryId String
+  category   MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  name         String
+  slug         String
+  description  String     @default("")
+  priceInPence Int
+  spiceLevel   SpiceLevel @default(NONE)
+
+  isVegetarian    Boolean @default(false)
+  isVegan         Boolean @default(false)
+  containsAlcohol Boolean @default(false)
+
+  allergens Allergen[] @default([])
+  /// Critical: an empty allergens array must never render as "contains no allergens".
+  /// Until the kitchen confirms an item, the UI says the information is unconfirmed and
+  /// tells the customer to ask. See ALLERGEN_TODO.md.
+  allergensConfirmed Boolean @default(false)
+
+  imageUrl    String?
+  isAvailable Boolean @default(true)
+  isOrderable Boolean @default(true)
+  sortOrder   Int     @default(0)
+  /// Internal note for staff — price conflicts and "verify this" flags from the scrape.
+  staffNote   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants       MenuItemVariant[]
+  modifierGroups ModifierGroup[]
+  orderItems     OrderItem[]
+
+  @@unique([categoryId, slug])
+  @@index([categoryId])
+  @@index([isAvailable])
+}
+
+model MenuItemVariant {
+  id     String   @id @default(cuid())
+  itemId String
+  item   MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  name              String
+  slug              String
+  priceDeltaInPence Int     @default(0)
+  isDefault         Boolean @default(false)
+  isAvailable       Boolean @default(true)
+  sortOrder         Int     @default(0)
+
+  @@unique([itemId, slug])
+  @@index([itemId])
+}
+
+model ModifierGroup {
+  id     String   @id @default(cuid())
+  itemId String
+  item   MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  name       String
+  slug       String
+  minSelect  Int     @default(0)
+  maxSelect  Int     @default(1)
+  isRequired Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  modifiers MenuItemModifier[]
+
+  @@unique([itemId, slug])
+  @@index([itemId])
+}
+
+model MenuItemModifier {
+  id      String        @id @default(cuid())
+  groupId String
+  group   ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  name         String
+  slug         String
+  priceInPence Int     @default(0)
+  isAvailable  Boolean @default(true)
+  sortOrder    Int     @default(0)
+
+  @@unique([groupId, slug])
+  @@index([groupId])
+}
+
+// ---------------------------------------------------------------------------
+// Orders
+// ---------------------------------------------------------------------------
+
+model Order {
+  id String @id @default(cuid())
+
+  /// Used in the /order/[publicId] URL. Never expose a sequential id here — an enumerable
+  /// order URL leaks every customer's name, phone and address to anyone counting upwards.
+  publicId    String @unique @default(cuid())
+  /// Short human reference read out over the phone, e.g. JV-7F3K2.
+  orderNumber String @unique
+
+  branchId String
+  branch   Branch      @relation(fields: [branchId], references: [id])
+  type     OrderType
+  status   OrderStatus @default(PENDING_PAYMENT)
+
+  customerName  String
+  customerEmail String
+  customerPhone String
+
+  addressLine1  String?
+  addressLine2  String?
+  city          String?
+  postcode      String?
+  deliveryNotes String?
+
+  partySize Int?
+
+  /// The UTC instant the customer wants the order for. Rendered back in Europe/London.
+  requestedFor DateTime
+  isAsap       Boolean  @default(true)
+
+  subtotalInPence    Int
+  deliveryFeeInPence Int @default(0)
+  discountInPence    Int @default(0)
+  totalInPence       Int
+
+  allergyNotes String?
+  notes        String?
+
+  stripePaymentIntentId String? @unique
+  paidAt                DateTime?
+  acceptedAt            DateTime?
+  readyAt               DateTime?
+  completedAt           DateTime?
+  cancelledAt           DateTime?
+  cancellationReason    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([branchId, status])
+  @@index([branchId, requestedFor])
+  @@index([createdAt])
+}
+
+/// Name and price are snapshotted so historic orders survive menu edits and deletions.
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  itemId String?
+  item   MenuItem? @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  nameSnapshot        String
+  descriptionSnapshot String?
+  spiceLevelSnapshot  SpiceLevel?
+
+  basePriceInPence Int
+  unitPriceInPence Int
+  quantity         Int
+  lineTotalInPence Int
+
+  selectedVariants  Json    @default("[]")
+  selectedModifiers Json    @default("[]")
+  notes             String?
+
+  @@index([orderId])
+}
+
+// ---------------------------------------------------------------------------
+// Reservations and events
+// ---------------------------------------------------------------------------
+
+model Reservation {
+  id        String @id @default(cuid())
+  publicId  String @unique @default(cuid())
+  reference String @unique
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  name      String
+  email     String
+  phone     String
+  partySize Int
+  dateTime  DateTime
+
+  status       ReservationStatus @default(REQUESTED)
+  occasion     String?
+  allergyNotes String?
+  notes        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([branchId, dateTime])
+  @@index([status])
+}
+
+model EventEnquiry {
+  id        String @id @default(cuid())
+  reference String @unique
+
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id])
+
+  name            String
+  email           String
+  phone           String
+  eventType       String
+  estimatedGuests Int?
+  preferredDate   DateTime?
+  message         String?
+
+  status EnquiryStatus @default(NEW)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Operational
+// ---------------------------------------------------------------------------
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         AdminRole @default(STAFF)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// The webhook's idempotency ledger. Stripe retries, and can deliver the same event twice
+/// concurrently; a unique primary key on its event id is the only thing that actually
+/// guarantees "confirm the order exactly once".
+model StripeEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+
+  @@index([type])
+}
+
+/// Geocode cache so a postcode check does not hit postcodes.io on every keystroke.
+model PostcodeLookup {
+  postcode   String   @id
+  latitude   Float?
+  longitude  Float?
+  isValid    Boolean  @default(true)
+  lookedUpAt DateTime @default(now())
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
