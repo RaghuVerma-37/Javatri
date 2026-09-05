@@ -2,7 +2,7 @@ import 'server-only'
 import { availableSlots, isMenuAvailableAt, type Slot } from '@/lib/hours'
 import { priceCart, type CartLineInput, type CartPricing, type PricingContext } from '@/lib/pricing'
 import { getCatalogue } from '@/server/menu'
-import { getServiceState, requireBranch, toSchedule, type BranchWithHours } from '@/server/branch'
+import { getBranchSafe, getServiceState, toSchedule, type BranchWithHours } from '@/server/branch'
 import type { OrderTypeValue } from '@/lib/validation'
 
 /**
@@ -107,7 +107,8 @@ export async function priceOrder(
   requestedForIso: string | null | undefined,
   now: Date = new Date(),
 ): Promise<OrderingSnapshot> {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) throw new Error('No branch available — the database is unreachable.')
   const time = resolveRequestedTime(branch, orderType, requestedForIso, now)
   const catalogue = await getCatalogue(branch.id, time.requestedFor, branch.timezone)
   const pricing = priceCart(lines, catalogue, pricingContextFor(branch, orderType))
