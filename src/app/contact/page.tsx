@@ -7,8 +7,7 @@ import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { summariseWeek } from '@/lib/hours'
 import { absoluteUrl } from '@/lib/site'
-import { prisma } from '@/lib/db'
-import { getServiceState, getBranchSafe } from '@/server/branch'
+import { getServiceState, getBranchSafe, getOtherBranches } from '@/server/branch'
 
 export const metadata: Metadata = {
   title: 'Find us',
@@ -27,10 +26,7 @@ export default async function ContactPage() {
 
   // The second branch is listed honestly rather than advertised. The old site offered Farnham
   // Common in the banqueting dropdown with no address, no phone and no hours anywhere.
-  const otherBranches = await prisma.branch.findMany({
-    where: { slug: { not: branch.slug } },
-    orderBy: { sortOrder: 'asc' },
-  })
+  const otherBranches = await getOtherBranches(branch.slug)
 
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
     `${branch.addressLine1}, ${branch.postcode}`,

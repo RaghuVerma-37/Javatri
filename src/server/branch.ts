@@ -115,3 +115,26 @@ export const getBranchSafe = cache(async (slug: string = DEFAULT_BRANCH_SLUG) =>
     return null
   }
 })
+
+/**
+ * The branches other than the one being shown.
+ *
+ * Exists so /contact can list Farnham Common honestly — advertised on the old site with no
+ * address, phone or hours — without reaching for Prisma directly and taking the page down when
+ * there is no database.
+ */
+export const getOtherBranches = cache(async (excludeSlug: string) => {
+  if (!isDatabaseConfigured()) {
+    // The file-backed source has only the one active branch; the second is described in the
+    // questions document rather than presented as a place a customer could go.
+    return []
+  }
+  try {
+    return await prisma.branch.findMany({
+      where: { slug: { not: excludeSlug } },
+      orderBy: { sortOrder: 'asc' },
+    })
+  } catch {
+    return []
+  }
+})
