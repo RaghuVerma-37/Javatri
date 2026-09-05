@@ -1,0 +1,21 @@
+# `vercel deploy` uploads the working directory, not the git tree, so anything that must never
+# leave this machine has to be listed here as well as in .gitignore.
+#
+# .env in particular: without this line the CLI ships your local environment to the build machine,
+# which is how a production deployment ends up pointing DATABASE_URL at 127.0.0.1 and quietly
+# failing every query.
+.env
+.env.*
+!.env.example
+
+.git
+.next
+node_modules
+.vercel
+
+# Generated at build time by `prisma generate`.
+src/generated
+
+# Local artefacts
+coverage
+*.log
