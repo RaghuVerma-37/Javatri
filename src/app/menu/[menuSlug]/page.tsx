@@ -12,7 +12,7 @@ import {
 import { ButtonLink } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, menuSchema } from '@/lib/jsonld'
 import { absoluteUrl } from '@/lib/site'
-import { requireBranch } from '@/server/branch'
+import { getBranchSafe } from '@/server/branch'
 import { getMenuBySlug, getPublishedMenus } from '@/server/menu'
 
 export const revalidate = 300
@@ -26,7 +26,8 @@ type Params = { params: Promise<{ menuSlug: string }> }
  */
 export async function generateStaticParams() {
   try {
-    const branch = await requireBranch()
+    const branch = await getBranchSafe()
+    if (!branch) return []
     const menus = await getPublishedMenus(branch.id)
     return menus.map((menu) => ({ menuSlug: menu.slug }))
   } catch {
@@ -38,7 +39,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { menuSlug } = await params
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return {}
   const menu = await getMenuBySlug(branch.id, menuSlug)
   if (!menu) return {}
 
@@ -62,7 +64,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function SingleMenuPage({ params }: Params) {
   const { menuSlug } = await params
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) notFound()
   const [menu, allMenus] = await Promise.all([
     getMenuBySlug(branch.id, menuSlug),
     getPublishedMenus(branch.id),

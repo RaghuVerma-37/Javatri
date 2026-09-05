@@ -2,6 +2,7 @@ import { cache } from 'react'
 import { prisma } from '@/lib/db'
 import { isMenuAvailableAt } from '@/lib/hours'
 import type { CatalogueItem } from '@/lib/pricing'
+import { isDatabaseConfigured, staticMenus } from '@/server/static-data'
 
 const MENU_INCLUDE = {
   categories: {
@@ -28,41 +29,64 @@ const MENU_INCLUDE = {
  * that reads prices from somewhere else — that duplication is what let the old site show
  * £6.50 and £8.50 for the same paratha.
  */
-export const getPublishedMenus = cache(async (branchId: string) =>
-  prisma.menu.findMany({
+export const getPublishedMenus = cache(async (branchId: string) => {
+  if (!isDatabaseConfigured()) return staticMenus().filter((menu) => menu.isPublished)
+  return prisma.menu.findMany({
     where: { branchId, isPublished: true },
     orderBy: { sortOrder: 'asc' },
     include: MENU_INCLUDE,
-  }),
-)
+  })
+})
 
-export type MenuWithContent = Awaited<ReturnType<typeof getPublishedMenus>>[number]
+/**
+ * Anchored to the Prisma query rather than to `getPublishedMenus`.
+ *
+ * `getPublishedMenus` can now return the file-backed fallback, which is itself typed as
+ * `MenuWithContent` — inferring the type from that function would be circular, and TypeScript
+ * resolves a circular inference to `any`, silently deleting the type safety of every menu
+ * component. This private query is the one true shape.
+ */
+const menusQuery = (branchId: string) =>
+  prisma.menu.findMany({ where: { branchId }, include: MENU_INCLUDE })
+
+export type MenuWithContent = Awaited<ReturnType<typeof menusQuery>>[number]
 export type CategoryWithItems = MenuWithContent['categories'][number]
 export type ItemWithOptions = CategoryWithItems['items'][number]
 
-export const getMenuBySlug = cache(async (branchId: string, slug: string) =>
-  prisma.menu.findFirst({
+export const getMenuBySlug = cache(async (branchId: string, slug: string) => {
+  if (!isDatabaseConfigured()) {
+    return staticMenus().find((menu) => menu.slug === slug && menu.isPublished) ?? null
+  }
+  return prisma.menu.findFirst({
     where: { branchId, slug, isPublished: true },
     include: MENU_INCLUDE,
-  }),
-)
+  })
+})
 
-export const getOrderableMenus = cache(async (branchId: string) =>
-  prisma.menu.findMany({
+export const getOrderableMenus = cache(async (branchId: string) => {
+  if (!isDatabaseConfigured()) {
+    return staticMenus().filter((menu) => menu.isPublished && menu.isOrderable)
+  }
+  return prisma.menu.findMany({
     where: { branchId, isPublished: true, isOrderable: true },
     orderBy: { sortOrder: 'asc' },
     include: MENU_INCLUDE,
-  }),
-)
+  })
+})
 
 /** Menus that exist but are not on sale, so the site can say why rather than render nothing. */
-export const getUnpublishedMenuNotes = cache(async (branchId: string) =>
-  prisma.menu.findMany({
+export const getUnpublishedMenuNotes = cache(async (branchId: string) => {
+  if (!isDatabaseConfigured()) {
+    return staticMenus()
+      .filter((menu) => !menu.isPublished)
+      .map((menu) => ({ name: menu.name, slug: menu.slug, staffNote: menu.staffNote }))
+  }
+  return prisma.menu.findMany({
     where: { branchId, isPublished: false },
     select: { name: true, slug: true, staffNote: true },
     orderBy: { sortOrder: 'asc' },
-  }),
-)
+  })
+})
 
 /**
  * The catalogue the pricing engine is handed. Built fresh from the database on every checkout,
@@ -74,10 +98,9 @@ export async function getCatalogue(
   requestedFor: Date,
   timezone: string,
 ): Promise<Map<string, CatalogueItem>> {
-  const menus = await prisma.menu.findMany({
-    where: { branchId, isPublished: true },
-    include: MENU_INCLUDE,
-  })
+  const menus = isDatabaseConfigured()
+    ? await prisma.menu.findMany({ where: { branchId, isPublished: true }, include: MENU_INCLUDE })
+    : staticMenus().filter((menu) => menu.isPublished)
 
   const catalogue = new Map<string, CatalogueItem>()
 

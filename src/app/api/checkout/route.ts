@@ -4,6 +4,7 @@ import { getStripe, isStripeConfigured } from '@/lib/stripe'
 import { checkoutSchema, fieldErrors } from '@/lib/validation'
 import { priceOrder } from '@/server/ordering'
 import { createPendingOrder } from '@/server/orders'
+import { isDatabaseConfigured } from '@/server/static-data'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -19,6 +20,18 @@ export const dynamic = 'force-dynamic'
  * arrived. It is never confirmed by the customer's browser returning to a success page.
  */
 export async function POST(request: Request) {
+  // No database means nowhere to record the order, and an order nobody has recorded must never
+  // be charged for. This is checked before Stripe, because it is the more fundamental problem.
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          'This deployment has no database yet, so we cannot record your order. Nothing has been charged. Please call us on 01628 825753.',
+      },
+      { status: 503 },
+    )
+  }
+
   if (!isStripeConfigured()) {
     return NextResponse.json(
       { error: 'Online payment is not set up on this deployment yet. Please call us to order.' },

@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { CheckoutForm } from '@/components/checkout/checkout-form'
 import { CheckoutSummary } from '@/components/checkout/checkout-summary'
-import { requireBranch } from '@/server/branch'
+import { getBranchSafe } from '@/server/branch'
 import { slotOptionsByType } from '@/server/ordering'
+import { isDatabaseConfigured } from '@/server/static-data'
+import { DemoNotice } from '@/components/demo-notice'
 
 export const metadata: Metadata = {
   title: 'Checkout',
@@ -13,7 +16,8 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function CheckoutPage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const slots = slotOptionsByType(branch)
 
   return (
@@ -28,7 +32,11 @@ export default async function CheckoutPage() {
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
         <div className="min-w-0">
-          <CheckoutForm slots={slots} />
+          {isDatabaseConfigured() ? (
+            <CheckoutForm slots={slots} />
+          ) : (
+            <DemoNotice context="checkout" />
+          )}
         </div>
         <CheckoutSummary slots={slots} />
       </div>

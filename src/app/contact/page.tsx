@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { OpenStatus } from '@/components/open-status'
@@ -7,7 +8,7 @@ import { breadcrumbSchema, JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { summariseWeek } from '@/lib/hours'
 import { absoluteUrl } from '@/lib/site'
 import { prisma } from '@/lib/db'
-import { getServiceState, requireBranch } from '@/server/branch'
+import { getServiceState, getBranchSafe } from '@/server/branch'
 
 export const metadata: Metadata = {
   title: 'Find us',
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function ContactPage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const state = getServiceState(branch)
 
   // The second branch is listed honestly rather than advertised. The old site offered Farnham

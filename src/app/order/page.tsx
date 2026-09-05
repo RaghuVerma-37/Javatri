@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { PauseCircle } from 'lucide-react'
 import { CartBar, CartPanel } from '@/components/cart/cart-panel'
@@ -13,8 +14,10 @@ import { DeliveryGate } from '@/components/order/delivery-gate'
 import { OrderTypeSelector } from '@/components/order/order-type-selector'
 import { SlotPicker } from '@/components/order/slot-picker'
 import { OpenStatus } from '@/components/open-status'
+import { DemoNotice } from '@/components/demo-notice'
 import { absoluteUrl } from '@/lib/site'
-import { getServiceState, requireBranch } from '@/server/branch'
+import { getServiceState, getBranchSafe } from '@/server/branch'
+import { isDatabaseConfigured } from '@/server/static-data'
 import { getOrderableMenus } from '@/server/menu'
 import { slotOptionsByType } from '@/server/ordering'
 
@@ -38,10 +41,12 @@ export const dynamic = 'force-dynamic'
  */
 export default async function OrderPage() {
   const now = new Date()
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const menus = await getOrderableMenus(branch.id)
   const state = getServiceState(branch, now)
   const slots = slotOptionsByType(branch, now)
+  const canTakeOrders = isDatabaseConfigured()
 
   const dishes = countDishes(menus)
   const unconfirmed = countUnconfirmedAllergens(menus)
@@ -58,7 +63,9 @@ export default async function OrderPage() {
         </div>
       </header>
 
-      {state.isPaused ? (
+      {!canTakeOrders ? <DemoNotice context="order" className="mt-6 max-w-3xl" /> : null}
+
+      {canTakeOrders && state.isPaused ? (
         <div className="mt-6 flex max-w-3xl gap-3 rounded-2xl border border-warn/30 bg-warn-wash p-4 sm:p-5">
           <PauseCircle aria-hidden className="mt-0.5 size-5 shrink-0 text-warn" />
           <div className="text-sm leading-relaxed">

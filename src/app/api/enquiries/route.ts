@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db'
 import { enquiryEmail, sendEmail } from '@/lib/email'
 import { enquirySchema, fieldErrors } from '@/lib/validation'
 import { requireBranch } from '@/server/branch'
+import { isDatabaseConfigured } from '@/server/static-data'
 import { generateReference } from '@/server/orders'
 
 export const runtime = 'nodejs'
@@ -10,6 +11,18 @@ export const dynamic = 'force-dynamic'
 
 /** Event enquiries. The highest-value form on the site, so it asks for as little as possible. */
 export async function POST(request: Request) {
+  // Defence in depth: the UI hides these forms without a database, but a route is a public
+  // endpoint and must refuse on its own rather than trusting that the page did.
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          'This deployment has no database yet, so there is nowhere to record your request. Please call us on 01628 825753.',
+      },
+      { status: 503 },
+    )
+  }
+
   let body: unknown
   try {
     body = await request.json()

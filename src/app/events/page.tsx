@@ -1,11 +1,14 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
+import { DemoNotice } from '@/components/demo-notice'
+import { isDatabaseConfigured } from '@/server/static-data'
 import { Car, Check, Lightbulb, Users, Utensils, Wine } from 'lucide-react'
 import { EnquiryForm } from '@/components/forms/enquiry-form'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { SITE, absoluteUrl } from '@/lib/site'
-import { requireBranch } from '@/server/branch'
+import { getBranchSafe } from '@/server/branch'
 
 export const metadata: Metadata = {
   title: 'Weddings & events',
@@ -40,7 +43,8 @@ const EVENT_TYPES = [
 ]
 
 export default async function EventsPage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
 
   return (
     <>
@@ -154,7 +158,7 @@ export default async function EventsPage() {
               className="scroll-mt-24"
             />
             <div className="mt-9">
-              <EnquiryForm />
+              {isDatabaseConfigured() ? <EnquiryForm /> : <DemoNotice context="form" />}
             </div>
           </div>
 

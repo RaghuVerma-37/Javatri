@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import { auth, signIn } from '@/auth'
 import { Button } from '@/components/ui'
 import { TextInput } from '@/components/checkout/field'
+import { DemoNotice } from '@/components/demo-notice'
+import { isDatabaseConfigured } from '@/server/static-data'
 
 export const metadata = { title: 'Sign in', robots: { index: false, follow: false } }
 export const dynamic = 'force-dynamic'
@@ -13,6 +15,21 @@ export default async function SignInPage({ searchParams }: Props) {
   const session = await auth()
   const params = await searchParams
   if (session?.user) redirect(params.from ?? '/admin')
+
+  // Staff accounts live in the database. Without one there is nobody to sign in as, and the sign-in
+  // form would fail with a connection error rather than an explanation.
+  if (!isDatabaseConfigured()) {
+    return (
+      <div className="mx-auto max-w-md">
+        <h1 className="text-3xl">Staff sign in</h1>
+        <DemoNotice className="mt-6" />
+        <p className="mt-6 text-sm leading-relaxed text-muted">
+          Add a <code>DATABASE_URL</code>, then run <code>npm run db:deploy</code> and{' '}
+          <code>npm run db:seed</code> to create the first staff account. See README.md.
+        </p>
+      </div>
+    )
+  }
 
   async function signInAction(formData: FormData) {
     'use server'

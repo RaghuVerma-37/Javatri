@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { AllergenNotice } from '@/components/menu/allergen-notice'
 import { MenuFilters } from '@/components/menu/menu-filters'
@@ -12,7 +13,7 @@ import { OpenStatus } from '@/components/open-status'
 import { ButtonLink } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, menuSchema } from '@/lib/jsonld'
 import { absoluteUrl } from '@/lib/site'
-import { getServiceState, requireBranch } from '@/server/branch'
+import { getServiceState, getBranchSafe } from '@/server/branch'
 import { getPublishedMenus, getUnpublishedMenuNotes } from '@/server/menu'
 
 export const metadata: Metadata = {
@@ -31,7 +32,8 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function MenuPage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const [menus, unpublished] = await Promise.all([
     getPublishedMenus(branch.id),
     getUnpublishedMenuNotes(branch.id),

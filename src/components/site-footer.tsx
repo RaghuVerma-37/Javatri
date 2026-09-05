@@ -4,12 +4,14 @@ import { FacebookIcon, InstagramIcon, TripAdvisorIcon } from '@/components/socia
 import { OpenStatus } from '@/components/open-status'
 import { summariseWeek } from '@/lib/hours'
 import { SITE } from '@/lib/site'
-import { getBranch, getServiceState } from '@/server/branch'
+import { getBranchSafe, getServiceState } from '@/server/branch'
 
 const YEAR = new Date().getFullYear()
 
 export async function SiteFooter() {
-  const branch = await getBranch()
+  // The footer renders on every page, including the "not set up yet" one, so it must survive an
+  // unreachable database rather than take the whole page down with it.
+  const branch = await getBranchSafe()
 
   return (
     <footer className="mt-20 border-t border-line bg-surface">

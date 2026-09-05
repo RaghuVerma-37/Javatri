@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
+import { DemoNotice } from '@/components/demo-notice'
+import { isDatabaseConfigured } from '@/server/static-data'
 import { ReservationForm } from '@/components/forms/reservation-form'
 import { OpenStatus } from '@/components/open-status'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { localDateKey, addDaysToDateKey, summariseWeek } from '@/lib/hours'
 import { absoluteUrl } from '@/lib/site'
-import { getServiceState, requireBranch } from '@/server/branch'
+import { getServiceState, getBranchSafe } from '@/server/branch'
 import { RESERVATION_HORIZON_DAYS } from '@/server/ordering'
 
 export const metadata: Metadata = {
@@ -18,7 +21,8 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function BookPage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const now = new Date()
   const today = localDateKey(now, branch.timezone)
 
@@ -49,10 +53,14 @@ export default async function BookPage() {
             </header>
 
             <div className="mt-10">
-              <ReservationForm
-                minDate={today}
-                maxDate={addDaysToDateKey(today, RESERVATION_HORIZON_DAYS)}
-              />
+              {isDatabaseConfigured() ? (
+                <ReservationForm
+                  minDate={today}
+                  maxDate={addDaysToDateKey(today, RESERVATION_HORIZON_DAYS)}
+                />
+              ) : (
+                <DemoNotice context="form" />
+              )}
             </div>
           </div>
 

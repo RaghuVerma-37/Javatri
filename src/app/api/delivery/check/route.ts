@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { checkDelivery } from '@/lib/delivery'
 import { deliveryCheckSchema } from '@/lib/validation'
-import { requireBranch } from '@/server/branch'
+import { getBranchSafe } from '@/server/branch'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -24,7 +24,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const branch = await requireBranch()
+    const branch = await getBranchSafe()
+    if (!branch) {
+      return NextResponse.json({
+        ok: false,
+        reason: 'lookup_failed',
+        message: 'We cannot check delivery addresses right now. Please call us.',
+      })
+    }
     const decision = await checkDelivery(branch, parsed.data.postcode)
     return NextResponse.json(decision, { headers: { 'cache-control': 'no-store' } })
   } catch (error) {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { Check, MapPin, Phone, Users } from 'lucide-react'
 import { DishMarquee } from '@/components/home/dish-marquee'
@@ -9,7 +10,7 @@ import { JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { summariseWeek } from '@/lib/hours'
 import { SITE, absoluteUrl } from '@/lib/site'
-import { getServiceState, requireBranch } from '@/server/branch'
+import { getServiceState, getBranchSafe } from '@/server/branch'
 import { getPublishedMenus } from '@/server/menu'
 import { slotOptionsByType } from '@/server/ordering'
 
@@ -32,7 +33,8 @@ const BANQUETING_INCLUDES = [
 ]
 
 export default async function HomePage() {
-  const branch = await requireBranch()
+  const branch = await getBranchSafe()
+  if (!branch) return <NotConfigured />
   const menus = await getPublishedMenus(branch.id)
   const state = getServiceState(branch)
 
