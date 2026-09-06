@@ -41,11 +41,6 @@ export function Field({
         {label}
         {required ? null : <span className="ml-1.5 font-normal text-muted">(optional)</span>}
       </label>
-      {hint ? (
-        <p id={hintId} className="mt-1 text-xs leading-relaxed text-muted">
-          {hint}
-        </p>
-      ) : null}
       <div className="mt-2">
         {children({
           id,
@@ -54,6 +49,20 @@ export function Field({
           required,
         })}
       </div>
+      {/*
+        The hint sits below the input, not between the label and it.
+        Above, it made the header of a hinted field taller than an unhinted one, so two fields
+        sharing a grid row had their boxes at different heights — Name and Phone on /book, Email
+        and Phone at checkout. Below, every field's input is the same distance from the top of its
+        cell, so a row lines up whether one field is hinted, both are, or neither. Screen readers
+        are unaffected: aria-describedby is what announces it, and that does not care about DOM
+        order.
+      */}
+      {hint ? (
+        <p id={hintId} className="mt-1.5 text-xs leading-relaxed text-muted">
+          {hint}
+        </p>
+      ) : null}
       {error ? (
         <p id={errorId} role="alert" className="mt-1.5 text-sm text-danger">
           {error}
