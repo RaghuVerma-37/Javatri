@@ -192,6 +192,7 @@ npm run test         # the test suite
 npm run db:migrate   # create/apply migrations
 npm run db:seed      # load the menu (safe to re-run — see below)
 npm run db:studio    # browse the database in a GUI
+npm run db:check     # is the app pointed at a working database, pooled correctly?
 npm run docs         # regenerate the three client documents
 
 node scripts/fetch-dish-images.mjs           # fetch any missing dish photograph
