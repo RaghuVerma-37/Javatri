@@ -27,9 +27,16 @@ let problems = 0
 /** Never prints the password, whatever else it says about the URL. */
 function describe(raw) {
   const url = new URL(raw)
+  const port = url.port || '5432'
   return {
     isSupabase: /supabase/.test(url.hostname),
-    isPooler: url.port === '6543' || /pooler/.test(url.hostname),
+    // Mode is decided by the port, not the hostname. Supabase serves BOTH the transaction pooler
+    // (6543) and the session pooler (5432) from the same pooler host, and only the transaction
+    // one is unsuitable for migrations. Reading "pooler" in the hostname and calling it a
+    // transaction pooler condemns the session pooler, which is the connection most projects have
+    // to use for migrations — see the note about db.<ref> below.
+    isTransactionPooler: port === '6543',
+    isDirectHost: /^db\./.test(url.hostname),
     hasPgBouncerFlag: url.searchParams.get('pgbouncer') === 'true',
     redacted: `${url.protocol}//${url.username}@${url.hostname}:${url.port || '5432'}${url.pathname}`,
   }
@@ -82,9 +89,9 @@ const direct = process.env.DIRECT_URL
 
 console.log('')
 if (app.isSupabase) {
-  if (!app.isPooler) {
-    warn('DATABASE_URL is the direct connection. The app wants the pooled one (port 6543) — a')
-    warn('serverless app on a direct connection exhausts Postgres connections under load.')
+  if (!app.isTransactionPooler) {
+    warn('DATABASE_URL is not the transaction pooler (port 6543). The app wants that one — a')
+    warn('serverless app on a session or direct connection exhausts Postgres connections.')
     problems++
   } else if (!app.hasPgBouncerFlag) {
     warn('DATABASE_URL is pooled but missing ?pgbouncer=true. Prisma will prepare statements the')
@@ -98,11 +105,20 @@ if (app.isSupabase) {
     warn('DIRECT_URL is not set. Migrations would run through the pooler and can hang on the')
     warn('migration advisory lock. Set it to the direct connection (port 5432).')
     problems++
-  } else if (direct.isPooler) {
-    warn('DIRECT_URL points at the pooler. Migrations need the direct connection (port 5432).')
+  } else if (direct.isTransactionPooler) {
+    warn('DIRECT_URL is the transaction pooler (6543). Migrations need port 5432 — either the')
+    warn('session pooler or the direct connection; DDL cannot run through transaction pooling.')
     problems++
   } else {
-    ok('DIRECT_URL is the direct connection')
+    ok('DIRECT_URL is on port 5432 — fine for migrations')
+  }
+  for (const [name, info] of [['DATABASE_URL', app], ['DIRECT_URL', direct]]) {
+    if (info?.isDirectHost) {
+      warn(`${name} uses db.<ref>.supabase.co. That host is IPv6-only on most projects — no A`)
+      warn('record at all — so it is unreachable from IPv4-only networks and CI. Use the pooler')
+      warn('host instead: 6543 for the app, 5432 for migrations.')
+      problems++
+    }
   }
 } else {
   ok('not Supabase — a single DATABASE_URL is all this needs')
