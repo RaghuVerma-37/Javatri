@@ -39,16 +39,34 @@ npm install
 
 ### 2. A database
 
-Any Postgres will do. On a Mac, the quickest local one is:
+Any Postgres will do. For a throwaway local one with nothing to install:
 
 ```bash
-brew install postgresql@17
-brew services start postgresql@17
-createdb javatri
+node scripts/local-postgres.mjs   # prints a DATABASE_URL to paste into .env
 ```
 
-For anything hosted, [Neon](https://neon.tech) and [Supabase](https://supabase.com) both have free
-tiers and hand you a connection string.
+It is in-memory: the data goes when the process does, and it picks a new port every run. For a
+persistent local database, `brew install postgresql@17 && brew services start postgresql@17 &&
+createdb javatri`.
+
+#### Supabase (what production uses)
+
+Supabase hands out **two** connection strings and they are not interchangeable:
+
+| Variable | Supabase mode | Port | Used by |
+|---|---|---|---|
+| `DATABASE_URL` | Transaction (pooled) | 6543 | the running app |
+| `DIRECT_URL` | Session (direct) | 5432 | `prisma migrate`, `prisma studio` |
+
+Both are under **Project Settings → Database → Connection string → URI**. Keep `?pgbouncer=true`
+on the pooled one: without it Prisma prepares statements the pooler cannot hold, and queries fail
+intermittently under load rather than failing immediately where you would notice.
+
+Migrations must use the direct connection — DDL and the migration advisory lock cannot run through
+a transaction pooler. `prisma.config.ts` reads `DIRECT_URL` first and falls back to
+`DATABASE_URL`, so a plain local Postgres needs only the one variable.
+
+Then create the tables and load the menu as in step 4 below.
 
 ### 3. Settings
 
