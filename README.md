@@ -122,6 +122,13 @@ slot and lets the customer schedule into it. That was the single most expensive 
 **Allergens are never guessed.** A dish with no allergens listed shows *"not yet confirmed — please
 call us"*, never *"allergen free"*. See `ALLERGEN_TODO.md`.
 
+**The dish photographs are stand-ins, and the site says so.** Every dish shows a library
+photograph of that *kind* of dish, downloaded from Wikimedia Commons under a licence that permits
+commercial use. They live in `public/dishes/`, the manifest in `src/lib/dish-photos.generated.ts`
+names the photographer and licence of each one, and `/photo-credits` renders that list — CC BY and
+CC BY-SA oblige us to. A real photograph of Javatri's own food set on `MenuItem.imageUrl` always
+wins over the stand-in. See `QUESTIONS_FOR_CLIENT.md` #16.
+
 **Everything the old site published still resolves.** `/online-ordering`, `/online-ordering-1`,
 `/online-ordering-ordering-page-2`, `/menu-1`, `/menu-2`, the `?menu=` deep links, `/banqueting`,
 `/reservation-1` and `/contact-us` all 301 to their new homes. Nothing that Google has indexed 404s.
@@ -168,7 +175,15 @@ npm run db:migrate   # create/apply migrations
 npm run db:seed      # load the menu (safe to re-run — see below)
 npm run db:studio    # browse the database in a GUI
 npm run docs         # regenerate the three client documents
+
+node scripts/fetch-dish-images.mjs           # fetch any missing dish photograph
+node scripts/fetch-dish-images.mjs --force   # re-fetch all of them
+node scripts/fetch-dish-images.mjs --only "Chicken Biryani"
 ```
+
+The search behind each dish photograph is in `scripts/dish-image-queries.mjs`. Photographs are keyed
+by dish name, so renaming a dish in `javatri-menu.json` drops its photograph — the test suite fails
+and names the dish rather than letting the menu render a hole.
 
 `npm run db:seed` is safe to re-run. By default it refreshes structure — menus, sections, dish names
 and descriptions — and **leaves prices, availability and allergens alone**, so re-seeding cannot undo

@@ -1,8 +1,10 @@
+import Image from 'next/image'
 import { Leaf, Sprout, TriangleAlert, Wine } from 'lucide-react'
 import { AddToCartButton } from '@/components/cart/add-to-cart-button'
 import { Badge } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
 import { cn } from '@/lib/cn'
+import { resolveDishPhoto } from '@/lib/dish-photos'
 import { formatPence } from '@/lib/money'
 import type { ItemWithOptions } from '@/server/menu'
 
@@ -56,6 +58,7 @@ export function DishCard({
   }
 
   const soldOut = !item.isAvailable
+  const photo = resolveDishPhoto(item)
 
   return (
     <li
@@ -66,62 +69,93 @@ export function DishCard({
         className,
       )}
     >
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h4 className="font-display text-lg font-semibold leading-snug text-ink">{item.name}</h4>
-          <p className="ml-auto shrink-0 font-display text-lg font-semibold tabular-nums text-brand-text sm:hidden">
-            {formatPence(item.priceInPence)}
-          </p>
-        </div>
-
-        {item.description ? (
-          <p className="mt-1.5 max-w-prose text-sm leading-relaxed text-muted">{item.description}</p>
+      {/*
+        Image and text share a row at every width. A full-bleed photograph per dish would read
+        better in isolation and turn a 171-dish menu into something nobody can scroll on a phone;
+        a thumbnail keeps the list scannable, which is what a menu is for.
+      */}
+      <div className="flex min-w-0 flex-1 gap-3.5 sm:gap-5">
+        {photo ? (
+          <div
+            className={cn(
+              'relative size-20 shrink-0 overflow-hidden rounded-lg bg-surface-2 sm:size-28',
+              soldOut && 'grayscale',
+            )}
+          >
+            <Image
+              src={photo.src}
+              alt={photo.isLibrary ? '' : `${item.name} at Javatri`}
+              /*
+                A library photograph is decoration, not information: it shows what the dish is
+                generally like, and announcing "picture of chicken biryani" to a screen reader
+                after the dish name and description adds nothing. An empty alt hides it. A real
+                photograph of our own food is worth describing.
+              */
+              aria-hidden={photo.isLibrary || undefined}
+              fill
+              sizes="(min-width: 640px) 112px, 80px"
+              className="object-cover"
+            />
+          </div>
         ) : null}
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-          {soldOut ? <Badge tone="danger">Sold out tonight</Badge> : null}
-          {item.isVegan ? (
-            <Badge tone="ok">
-              <Sprout aria-hidden className="size-3" /> Vegan
-            </Badge>
-          ) : item.isVegetarian ? (
-            <Badge tone="ok">
-              <Leaf aria-hidden className="size-3" /> Vegetarian
-            </Badge>
-          ) : null}
-          {SPICE_LABEL[item.spiceLevel] ? (
-            <Badge tone={item.spiceLevel === 'MILD' ? 'neutral' : 'brand'}>
-              {SPICE_LABEL[item.spiceLevel]}
-            </Badge>
-          ) : null}
-          {item.containsAlcohol ? (
-            <Badge tone="accent">
-              <Wine aria-hidden className="size-3" /> Contains alcohol
-            </Badge>
-          ) : null}
-          {item.variants.length > 0 ? (
-            <Badge tone="neutral">{item.variants.length} to choose from</Badge>
-          ) : null}
-        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h4 className="font-display text-lg font-semibold leading-snug text-ink">{item.name}</h4>
+            <p className="ml-auto shrink-0 font-display text-lg font-semibold tabular-nums text-brand-text sm:hidden">
+              {formatPence(item.priceInPence)}
+            </p>
+          </div>
 
-        {item.allergensConfirmed ? (
-          <p className="mt-2 text-xs text-muted">
-            <span className="font-medium text-ink">Allergens:</span>{' '}
-            {item.allergens.length > 0
-              ? item.allergens.map((a) => ALLERGEN_LABELS[a]).join(', ')
-              : 'none of the 14 regulated allergens'}
-          </p>
-        ) : (
-          /*
-            Shown only while an allergen filter is active — see globals.css. The filter cannot
-            vouch for a dish nobody has checked, and saying nothing would let the customer assume
-            it had been cleared.
-          */
-          <p className="dish-unchecked mt-2 hidden items-start gap-1.5 text-xs text-warn">
-            <TriangleAlert aria-hidden className="mt-px size-3.5 shrink-0" />
-            <span>Allergens not confirmed for this dish — the filter cannot check it. Please call us.</span>
-          </p>
-        )}
+          {item.description ? (
+            <p className="mt-1.5 max-w-prose text-sm leading-relaxed text-muted">{item.description}</p>
+          ) : null}
+
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            {soldOut ? <Badge tone="danger">Sold out tonight</Badge> : null}
+            {item.isVegan ? (
+              <Badge tone="ok">
+                <Sprout aria-hidden className="size-3" /> Vegan
+              </Badge>
+            ) : item.isVegetarian ? (
+              <Badge tone="ok">
+                <Leaf aria-hidden className="size-3" /> Vegetarian
+              </Badge>
+            ) : null}
+            {SPICE_LABEL[item.spiceLevel] ? (
+              <Badge tone={item.spiceLevel === 'MILD' ? 'neutral' : 'brand'}>
+                {SPICE_LABEL[item.spiceLevel]}
+              </Badge>
+            ) : null}
+            {item.containsAlcohol ? (
+              <Badge tone="accent">
+                <Wine aria-hidden className="size-3" /> Contains alcohol
+              </Badge>
+            ) : null}
+            {item.variants.length > 0 ? (
+              <Badge tone="neutral">{item.variants.length} to choose from</Badge>
+            ) : null}
+          </div>
+
+          {item.allergensConfirmed ? (
+            <p className="mt-2 text-xs text-muted">
+              <span className="font-medium text-ink">Allergens:</span>{' '}
+              {item.allergens.length > 0
+                ? item.allergens.map((a) => ALLERGEN_LABELS[a]).join(', ')
+                : 'none of the 14 regulated allergens'}
+            </p>
+          ) : (
+            /*
+              Shown only while an allergen filter is active — see globals.css. The filter cannot
+              vouch for a dish nobody has checked, and saying nothing would let the customer assume
+              it had been cleared.
+            */
+            <p className="dish-unchecked mt-2 hidden items-start gap-1.5 text-xs text-warn">
+              <TriangleAlert aria-hidden className="mt-px size-3.5 shrink-0" />
+              <span>Allergens not confirmed for this dish — the filter cannot check it. Please call us.</span>
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-2">

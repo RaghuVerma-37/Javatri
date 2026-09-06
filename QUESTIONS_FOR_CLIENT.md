@@ -163,7 +163,9 @@ The live site publishes these dishes as bare names and prices, with no descripti
 
 There is almost no usable photography of the restaurant, the food or the banqueting hall. The new site is designed to work without it — the homepage earns its impact typographically rather than with a stock curry photograph, which would have been a lie about your food — but photographs of your actual dishes sell them better than any amount of design does, and the events page in particular is asking people to book a room they cannot see.
 
-**What we did in the meantime.** Built the site so it looks deliberate with no photography at all, and left image slots on every dish and on the events page. Send us a phone-camera set of the hall dressed for a wedding and a dozen of your best-selling dishes and they can go straight in.
+**What we did in the meantime.** Every dish now carries a stand-in photograph — a library picture of that *kind* of dish, taken from Wikimedia Commons under a licence that permits commercial use, with the photographer named on /photo-credits. The menu says plainly that these are serving suggestions rather than our plates, because a photograph next to a price makes a promise and these cannot keep it.
+
+They are a stopgap, and not a good one: they are other people's kitchens, shot on other people's phones. Send us a phone-camera set of the hall dressed for a wedding and a dozen of your best-selling dishes and each real photograph replaces its stand-in the moment it goes on the dish — no code change, the real one always wins. The events page still has no photography at all.
 
 ---
 

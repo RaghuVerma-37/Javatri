@@ -88,6 +88,20 @@ export default async function MenuPage() {
           <MenuSections menus={menus} />
         </div>
 
+        {/*
+          Under the menu rather than above it: it is a caveat, not a headline. But it is on the
+          page, because a photograph next to a price implies a promise, and these photographs
+          cannot keep it — they are library images of the dish, not of our plate.
+        */}
+        <p className="mt-8 max-w-3xl text-xs leading-relaxed text-muted">
+          The dish photographs are serving suggestions — library photographs of each kind of dish
+          rather than of the plate we will bring you. Every one is{' '}
+          <Link href="/photo-credits" className="underline underline-offset-2 hover:text-brand-text">
+            credited to its photographer
+          </Link>
+          .
+        </p>
+
         {unpublished.length > 0 ? (
           <section aria-labelledby="unpublished-heading" className="mt-16 max-w-3xl rounded-2xl border border-line bg-surface p-5 sm:p-6">
             <h2 id="unpublished-heading" className="text-xl">

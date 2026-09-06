@@ -131,7 +131,13 @@ export async function SiteFooter() {
 
       <div className="border-t border-line">
         <div className="container-page flex flex-col gap-3 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {YEAR} {SITE.legalName}. All rights reserved.</p>
+          <p>
+            &copy; {YEAR} {SITE.legalName}. All rights reserved.{' '}
+            <Link href="/photo-credits" className="underline underline-offset-2 hover:text-brand-text">
+              Photo credits
+            </Link>
+            .
+          </p>
           <p>
             Allergies? Please{' '}
             <Link href="/menu#allergens" className="underline underline-offset-2 hover:text-brand-text">
