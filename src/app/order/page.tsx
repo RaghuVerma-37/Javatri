@@ -5,6 +5,7 @@ import { PauseCircle } from 'lucide-react'
 import { CartBar, CartPanel } from '@/components/cart/cart-panel'
 import { AllergenNotice } from '@/components/menu/allergen-notice'
 import { MenuFilters } from '@/components/menu/menu-filters'
+import { MenuSectionNav } from '@/components/menu/menu-section-nav'
 import {
   MenuSections,
   countDishes,
@@ -103,7 +104,15 @@ export default async function OrderPage() {
 
           <AllergenNotice className="mt-6" phone={branch.phone ?? undefined} />
 
-          <div className="sticky top-16 z-30 -mx-5 mt-6 bg-bg/95 px-5 py-3 backdrop-blur-sm sm:top-18 sm:mx-0 sm:px-0">
+          {/*
+            The order page never had a way to reach a section. Someone who knows they want a
+            biryani should not have to scroll past a hundred and thirty other dishes to order one.
+          */}
+          <div className="mt-6">
+            <MenuSectionNav menus={menus} />
+          </div>
+
+          <div className="sticky top-16 z-30 -mx-5 mt-4 bg-bg/95 px-5 py-3 backdrop-blur-sm sm:top-18 sm:mx-0 sm:px-0">
             <MenuFilters
               rootId="order-menu-root"
               totalDishes={dishes}

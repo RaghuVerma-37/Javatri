@@ -70,7 +70,7 @@ export function SiteHeader() {
       <div className="container-page flex h-16 items-center justify-between gap-3 sm:h-18">
         <Link
           href="/"
-          className="-ml-1 flex shrink-0 items-center rounded-lg px-1 py-1"
+          className="-ml-1 flex min-h-11 shrink-0 items-center rounded-lg px-1 py-1"
           aria-label={`${SITE.name} home`}
         >
           <span
@@ -111,7 +111,8 @@ export function SiteHeader() {
             href={`tel:${PHONE}`}
             className={cn(
               buttonClass({ variant: 'secondary', size: 'sm' }),
-              'hidden sm:inline-flex',
+              // 44px on anything thumb-operated; the desktop header keeps its lighter 36px.
+              'hidden min-h-11 sm:inline-flex lg:min-h-9',
               isOverHero && 'border-[#5a4a3a] bg-transparent text-[#f2e8d9] hover:bg-white/10',
             )}
           >
@@ -122,7 +123,7 @@ export function SiteHeader() {
 
           <Link
             href="/order"
-            className={cn(buttonClass({ variant: 'primary', size: 'sm' }), 'relative')}
+            className={cn(buttonClass({ variant: 'primary', size: 'sm' }), 'relative min-h-11 lg:min-h-9')}
           >
             <ShoppingBag aria-hidden className="size-4" />
             <span>Order</span>
@@ -143,7 +144,7 @@ export function SiteHeader() {
             aria-controls="mobile-nav"
             className={cn(
               buttonClass({ variant: 'secondary', size: 'sm' }),
-              'px-3 lg:hidden',
+              'min-h-11 min-w-11 px-3 lg:hidden',
               isOverHero && 'border-[#5a4a3a] bg-transparent text-[#f2e8d9] hover:bg-white/10',
             )}
           >

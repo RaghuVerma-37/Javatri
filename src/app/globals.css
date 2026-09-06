@@ -228,6 +228,13 @@
     display: none;
   }
 
+  /* Search. Set by the filter component on the dishes whose names do not match what was typed;
+     an attribute rather than a class so it cannot collide with the dietary rules above, and so a
+     dish already hidden by one of them stays hidden for both reasons. */
+  [data-dish][data-search-hidden] {
+    display: none;
+  }
+
   /* Warn on every unchecked dish while an allergen filter is running. */
   .menu-filtering-allergens [data-dish][data-allergens-confirmed='0'] .dish-unchecked {
     display: flex;

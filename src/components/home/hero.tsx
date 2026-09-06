@@ -180,7 +180,12 @@ function TonightCard({
   return (
     <aside
       aria-label="Ordering tonight"
-      className="fade-up hidden rounded-3xl border border-white/12 bg-white/[0.055] p-6 backdrop-blur-xl lg:block"
+      /*
+        Shown at every width. This is the block that answers "can I actually get food, and when" —
+        hiding it below lg meant the one module that converts was missing on the devices nearly
+        all of this site's traffic uses.
+      */
+      className="fade-up rounded-3xl border border-white/12 bg-white/[0.055] p-5 backdrop-blur-xl sm:p-6"
       style={{ ['--delay' as string]: '1080ms' }}
     >
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e2b25f]">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
-import { SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
+import { Search, SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
 import { Badge, Button } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
 import { cn } from '@/lib/cn'
@@ -63,7 +63,9 @@ export function MenuFilters({
   const [noAlcohol, setNoAlcohol] = useState(false)
   const [spice, setSpice] = useState<Spice>('any')
   const [excluded, setExcluded] = useState<Allergen[]>([])
+  const [query, setQuery] = useState('')
   const countRef = useRef<HTMLParagraphElement>(null)
+  const emptyRef = useRef<HTMLParagraphElement>(null)
 
   useEffect(() => {
     const root = document.getElementById(rootId)
@@ -79,6 +81,15 @@ export function MenuFilters({
     for (const className of ALL_ALLERGEN_CLASSES) root.classList.remove(className)
     for (const allergen of excluded) root.classList.add(ALLERGEN_CLASS[allergen])
 
+    // Search is a per-dish attribute rather than a root class: there is no way to express
+    // "name contains this text" in CSS, so the match happens here and the rule in globals.css
+    // does the hiding. Matching runs against data-name, not the rendered text.
+    const needle = query.trim().toLowerCase()
+    for (const dish of Array.from(root.querySelectorAll<HTMLElement>('[data-dish]'))) {
+      const name = dish.getAttribute('data-name') ?? ''
+      dish.toggleAttribute('data-search-hidden', needle.length > 0 && !name.includes(needle))
+    }
+
     // CSS can hide a dish but it cannot tell a section that all of its dishes are gone, so the
     // empty-section collapse and the running count are done here, once, after the classes settle.
     //
@@ -86,22 +97,31 @@ export function MenuFilters({
     // *out* of the DOM, so feeding it back in would be a render caused by the result of the last
     // render — the cascading update the react-hooks rules exist to prevent. The element is a
     // live region either way, so a screen reader is told all the same.
-    let visible = 0
+    // Counted once across the whole root rather than summed per section. Sections nest — a menu
+    // section contains the category sections — so a dish belongs to two of them, and summing the
+    // per-section totals reported exactly double the real number.
+    const visible = Array.from(root.querySelectorAll<HTMLElement>('[data-dish]')).filter(
+      (dish) => getComputedStyle(dish).display !== 'none',
+    ).length
+
     for (const section of Array.from(root.querySelectorAll<HTMLElement>('[data-menu-section]'))) {
       const dishes = Array.from(section.querySelectorAll<HTMLElement>('[data-dish]'))
       const shown = dishes.filter((dish) => getComputedStyle(dish).display !== 'none').length
-      visible += shown
       section.hidden = shown === 0
     }
 
     if (countRef.current) {
       const hasFilter =
-        vegetarian || vegan || noAlcohol || spice !== 'any' || excluded.length > 0
+        vegetarian || vegan || noAlcohol || spice !== 'any' || excluded.length > 0 || needle.length > 0
       countRef.current.textContent = hasFilter
         ? `${visible} of ${totalDishes} dishes`
         : `${totalDishes} dishes`
     }
-  }, [rootId, vegetarian, vegan, noAlcohol, spice, excluded, totalDishes])
+
+    // Every section is hidden when nothing matches, which would otherwise leave the reader
+    // staring at an empty page wondering whether the site had broken.
+    if (emptyRef.current) emptyRef.current.hidden = visible > 0
+  }, [rootId, vegetarian, vegan, noAlcohol, spice, excluded, query, totalDishes])
 
   const activeCount =
     (vegetarian ? 1 : 0) + (vegan ? 1 : 0) + (noAlcohol ? 1 : 0) + (spice !== 'any' ? 1 : 0) + excluded.length
@@ -112,11 +132,27 @@ export function MenuFilters({
     setNoAlcohol(false)
     setSpice('any')
     setExcluded([])
+    setQuery('')
   }
 
   return (
     <div className="rounded-2xl border border-line bg-surface">
       <div className="flex flex-wrap items-center gap-2 p-3 sm:p-4">
+        <div className="relative w-full sm:w-56">
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted"
+          />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search dishes"
+            aria-label="Search dishes by name"
+            className="min-h-11 w-full rounded-full border border-line-strong bg-bg pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none"
+          />
+        </div>
+
         <Button
           variant="secondary"
           size="sm"
@@ -140,6 +176,24 @@ export function MenuFilters({
           {totalDishes} dishes
         </p>
       </div>
+
+      <p
+        ref={emptyRef}
+        hidden
+        role="status"
+        /*
+          Deliberately no display utility. The `hidden` attribute is a UA-stylesheet rule, and any
+          author-level `display` class — `flex` included — silently beats it, leaving the message
+          on screen permanently. A plain block paragraph is the one that actually hides.
+        */
+        className="border-t border-line px-3 py-3 text-sm text-muted sm:px-4"
+      >
+        No dishes match.{' '}
+        <Button variant="quiet" size="sm" onClick={reset} className="align-baseline">
+          <X aria-hidden className="size-4" />
+          Clear search and filters
+        </Button>
+      </p>
 
       <div id={panelId} hidden={!isOpen} className="border-t border-line p-3 sm:p-4">
         <div className="grid gap-6 sm:grid-cols-2">

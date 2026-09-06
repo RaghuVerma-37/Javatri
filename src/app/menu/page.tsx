@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { AllergenNotice } from '@/components/menu/allergen-notice'
 import { MenuFilters } from '@/components/menu/menu-filters'
 import { MenuJumpNav } from '@/components/menu/menu-jump-nav'
+import { MenuSectionNav } from '@/components/menu/menu-section-nav'
 import {
   MenuSections,
   countDishes,
@@ -74,8 +75,9 @@ export default async function MenuPage() {
           </div>
         </header>
 
-        <div className="mt-8">
+        <div className="mt-8 space-y-3">
           <MenuJumpNav menus={menus} />
+          <MenuSectionNav menus={menus} />
         </div>
 
         <AllergenNotice id="allergens" className="mt-6 max-w-3xl scroll-mt-24" phone={branch.phone ?? undefined} />

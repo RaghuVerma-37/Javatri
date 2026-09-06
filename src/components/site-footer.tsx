@@ -33,7 +33,8 @@ export async function SiteFooter() {
           <h2 id="footer-nav-heading" className="text-sm font-semibold text-ink">
             Visit
           </h2>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          {/* space-y is gone: the padding below is what makes each row a 44px target. */}
+          <ul className="mt-2 text-sm">
             {[
               { href: '/menu', label: 'Our menus' },
               { href: '/order', label: 'Order online' },
@@ -42,7 +43,10 @@ export async function SiteFooter() {
               { href: '/contact', label: 'Find us' },
             ].map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-muted transition-colors hover:text-brand-text">
+                <Link
+                  href={item.href}
+                  className="inline-flex min-h-11 items-center text-muted transition-colors hover:text-brand-text"
+                >
                   {item.label}
                 </Link>
               </li>

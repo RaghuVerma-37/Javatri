@@ -46,6 +46,12 @@ export function DishCard({
   // allergensConfirmed="0" has not been checked, and the card says so out loud.
   const filterAttributes: Record<string, string> = {
     'data-dish': item.id,
+    /*
+      What the search box matches on. Lower-cased here so the filter never has to touch the
+      rendered text — reading innerText of 171 cards on every keystroke would be both slower and
+      wrong, since a card hidden by a dietary filter reports no text at all.
+    */
+    'data-name': item.name.toLowerCase(),
     'data-veg': item.isVegetarian ? '1' : '0',
     'data-vegan': item.isVegan ? '1' : '0',
     'data-spice': item.spiceLevel,
