@@ -119,7 +119,18 @@ def extract_logo(doc) -> None:
             logo = logo.crop(box)
         out = ROOT / "public" / "javatri-logo.webp"
         logo.save(out, "WEBP", quality=90, method=6, lossless=True)
+
+        # A light version for dark backgrounds. The wordmark is #851917, which against the dark
+        # theme's #14110f header is a contrast ratio of 1.85:1 — under the 3:1 a graphic needs,
+        # and in practice close to invisible. Recolouring the ink while keeping the alpha
+        # preserves the letterforms, which are the brand; the red is kept for light backgrounds.
+        light = Image.new("RGBA", logo.size, (246, 239, 229, 0))
+        light.putalpha(logo.getchannel("A"))
+        light_out = ROOT / "public" / "javatri-logo-light.webp"
+        light.save(light_out, "WEBP", quality=90, method=6, lossless=True)
+
         print(f"logo written to {out.relative_to(ROOT)} ({logo.width}x{logo.height})")
+        print(f"light variant written to {light_out.relative_to(ROOT)}")
         return
 
 

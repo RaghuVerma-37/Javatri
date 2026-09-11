@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import { Menu, Phone, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-context'
 import { buttonClass } from '@/components/ui'
+import Image from 'next/image'
 import { cn } from '@/lib/cn'
 import { SITE } from '@/lib/site'
 
@@ -36,6 +37,12 @@ const PHONE_DISPLAY = '01628 825753'
  * itself through context or an effect, which is a lot of machinery for two routes.
  */
 const DARK_HERO_ROUTES = new Set(['/', '/events'])
+
+const LOGO_DARK = '/javatri-logo.webp'
+const LOGO_LIGHT = '/javatri-logo-light.webp'
+/** Intrinsic size of the wordmark, so the header reserves the right box before it loads. */
+const LOGO_SIZE = { width: 313, height: 113 } as const
+const LOGO_CLASS = 'h-8 w-auto sm:h-9'
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -73,14 +80,28 @@ export function SiteHeader() {
           className="-ml-1 flex min-h-11 shrink-0 items-center rounded-lg px-1 py-1"
           aria-label={`${SITE.name} home`}
         >
-          <span
-            className={cn(
-              'font-display text-2xl font-semibold tracking-tight transition-colors sm:text-[1.6rem]',
-              isOverHero ? 'text-[#f9f2e7]' : 'text-ink',
-            )}
-          >
-            {SITE.name}
-          </span>
+          {/*
+            The wordmark, in the version that can actually be seen.
+
+            The logo's red is #851917. On the light theme's cream header that reads fine; on the
+            dark theme's #14110f it is a 1.85:1 contrast ratio, under the 3:1 a graphic needs and
+            in practice close to invisible. So the red is used on light backgrounds and a
+            recoloured version on dark ones — same letterforms, which are the brand.
+
+            Over the hero the background is a dark photograph whatever the theme, so that case is
+            decided in JS; the rest is left to prefers-color-scheme, which is how this theme is
+            switched everywhere else.
+
+            The images are decorative: the link already carries the accessible name.
+          */}
+          {isOverHero ? (
+            <Image src={LOGO_LIGHT} alt="" priority {...LOGO_SIZE} className={LOGO_CLASS} />
+          ) : (
+            <>
+              <Image src={LOGO_DARK} alt="" priority {...LOGO_SIZE} className={cn(LOGO_CLASS, 'dark:hidden')} />
+              <Image src={LOGO_LIGHT} alt="" priority {...LOGO_SIZE} className={cn(LOGO_CLASS, 'hidden dark:block')} />
+            </>
+          )}
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
