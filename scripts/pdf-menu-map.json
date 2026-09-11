@@ -14,7 +14,6 @@
     "",
     "Re-runnable: scripts/import-pdf-menu.mjs reads this and rewrites javatri-menu.json."
   ],
-
   "match": {
     "1": "Vegetarian Platter",
     "2": "Methi Murgh",
@@ -81,7 +80,6 @@
     "81": "Chicken Madras",
     "82": "Lamb Chops"
   },
-
   "why_these_are_the_same_dish": {
     "2": "Methi Chicken / Methi Murgh — murgh is chicken. Same fenugreek chicken curry, same £15.95.",
     "10": "Paneer Pakoda / Paneer Pakoda (5 pieces) — the site name just carries the portion count.",
@@ -101,25 +99,53 @@
     "62": "Onion & Spinach Bhaji / Onion and Spinach Bhaji — ampersand.",
     "64": "Dilli wala Butter Chicken / Butter Chicken Dilli Wala — word order."
   },
-
   "new": {
-    "3": { "category": "Main Sea Food Galore" },
-    "5": { "category": "Tongue Ticklers - Modern Starters (Veg)" },
-    "6": { "category": "Famous Indian Grill (Non-Veg)" },
-    "9": { "category": "Choice of Paneer" },
-    "14": { "category": "Famous Indian Grill (Non-Veg)" },
-    "26": { "category": "Vegetarian Delights" },
-    "36": { "category": "Biryanis" },
-    "39": { "category": "Main Course Chicken" },
-    "42": { "category": "Chaat Corner" },
-    "63": { "category": "Vegetarian Delights" },
-    "69": { "category": "Vegetarian Delights" },
-    "71": { "category": "Main Course Chicken" },
-    "73": { "category": "Main Course Lamb" },
-    "75": { "category": "Tongue Ticklers - Modern Starters (Veg)" },
-    "79": { "category": "Vegetarian Delights" }
+    "3": {
+      "category": "Main Sea Food Galore"
+    },
+    "5": {
+      "category": "Tongue Ticklers - Modern Starters (Veg)"
+    },
+    "6": {
+      "category": "Famous Indian Grill (Non-Veg)"
+    },
+    "9": {
+      "category": "Choice of Paneer"
+    },
+    "14": {
+      "category": "Famous Indian Grill (Non-Veg)"
+    },
+    "26": {
+      "category": "Vegetarian Delights"
+    },
+    "36": {
+      "category": "Biryanis"
+    },
+    "39": {
+      "category": "Main Course Chicken"
+    },
+    "42": {
+      "category": "Chaat Corner"
+    },
+    "63": {
+      "category": "Vegetarian Delights"
+    },
+    "69": {
+      "category": "Vegetarian Delights"
+    },
+    "71": {
+      "category": "Main Course Chicken"
+    },
+    "73": {
+      "category": "Main Course Lamb"
+    },
+    "75": {
+      "category": "Tongue Ticklers - Modern Starters (Veg)"
+    },
+    "79": {
+      "category": "Vegetarian Delights"
+    }
   },
-
   "duplicates": {
     "18": {
       "sameAs": 72,
@@ -137,9 +163,18 @@
       "note": "Chilli Chicken appears twice, both £11.45, and the two pages disagree. Page 65 has the better sentence ('stir-fried chicken with fiery chillies and aromatic spices'); page 24's reads 'tossed in spicy, tangy sauced with vegetables', which is mistyped. Page 24 has the better photograph at 1440x1152 against 1440x810. Taking the description from 65 and the image from 24 rather than accepting a typo or a smaller picture."
     }
   },
-
   "confirmed_by_owner": {
     "10": "Price £10.95. The PDF page prints '10.95' with no currency symbol.",
     "71": "Name 'Chicken Changezi on the Bone'. The page has its name and description transposed, so the name reads as a sentence fragment."
+  },
+  "name_corrections": {
+    "20": "Chicken Tikka Shashlick",
+    "52": "Tandoori Paneer Shashlick",
+    "75": "Tandoori Broccoli",
+    "_why": [
+      "Misspellings on the PDF page, corrected on the owner's instruction. Kept here rather than",
+      "edited into javatri-menu.json so that re-running the import does not reintroduce them.",
+      "Only outright misspellings of a word — not the PDF's casing or hyphenation choices."
+    ]
   }
 }

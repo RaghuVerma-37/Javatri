@@ -285,7 +285,7 @@
               ]
             },
             {
-              "name": "Tandoori Panner shashlick",
+              "name": "Tandoori Paneer Shashlick",
               "price": 10.5,
               "description": "Chunks of paneer and vegetables marinated in spices, skewered and roasted in the tandoor",
               "tags": [
@@ -378,11 +378,11 @@
               "image": "/dishes/pdf/veg-manchurian.webp"
             },
             {
-              "name": "Tandoori brocolli",
+              "name": "Tandoori Broccoli",
               "price": 11.25,
               "description": "Tandoori-roasted broccoli with delicate spices and an elegant smoky aroma.",
               "tags": [],
-              "image": "/dishes/pdf/tandoori-brocolli.webp"
+              "image": "/dishes/pdf/tandoori-broccoli.webp"
             }
           ]
         },
@@ -455,7 +455,7 @@
               "image": "/dishes/pdf/malai-chicken-tikka.webp"
             },
             {
-              "name": "Chicken Tikka Shahslick",
+              "name": "Chicken Tikka Shashlick",
               "price": 11.5,
               "description": "Juicy chicken tikka and vegetables from the tandoor",
               "tags": [

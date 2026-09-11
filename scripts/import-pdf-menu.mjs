@@ -41,6 +41,10 @@ const slugify = (s) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+const corrections = map.name_corrections ?? {}
+/** The dish name to use: the PDF's, unless it misspelled a word and the owner corrected it. */
+const nameFor = (page) => corrections[String(page.page)] ?? page.name
+
 const byPage = new Map(pages.map((p) => [p.page, p]))
 const itemSlug = (item) => item.slug ?? slugify(item.name)
 
@@ -69,7 +73,7 @@ for (const [pageStr, siteName] of Object.entries(map.match)) {
 
   // Pin the slug before the name moves, so the id survives the rename.
   item.slug = slug
-  item.name = page.name
+  item.name = nameFor(page)
   item.price = price
   item.description = page.description
   item.image = `/dishes/pdf/${slug}.webp`
@@ -90,7 +94,7 @@ for (const [pageStr, info] of Object.entries(map.duplicates)) {
 // --- 3. Dishes the site does not have ---------------------------------------
 for (const [pageStr, spec] of Object.entries(map.new)) {
   const page = byPage.get(Number(pageStr))
-  const slug = slugify(page.name)
+  const slug = slugify(nameFor(page))
   if (allItems.some((e) => itemSlug(e.item) === slug)) continue // already imported
 
   let category = null
@@ -104,7 +108,7 @@ for (const [pageStr, spec] of Object.entries(map.new)) {
   }
 
   category.items.push({
-    name: page.name,
+    name: nameFor(page),
     price: page.priceInPence / 100,
     description: page.description,
     // Left empty on purpose. Tags drive the vegetarian/vegan filter, and this codebase treats a
@@ -112,7 +116,7 @@ for (const [pageStr, spec] of Object.entries(map.new)) {
     tags: [],
     image: `/dishes/pdf/${slug}.webp`,
   })
-  report.added.push(`${page.name} (£${(page.priceInPence / 100).toFixed(2)}) -> ${spec.category}`)
+  report.added.push(`${nameFor(page)} (£${(page.priceInPence / 100).toFixed(2)}) -> ${spec.category}`)
 }
 
 report.untouched = allItems.filter((e) => !e.item.image).length

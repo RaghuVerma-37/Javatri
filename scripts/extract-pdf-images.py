@@ -63,8 +63,11 @@ def main() -> int:
     targets = {}
     for page_str, site_name in mapping["match"].items():
         targets[int(page_str)] = slugify(site_name)
+    corrections = mapping.get("name_corrections", {})
     for page_str in mapping["new"]:
-        targets[int(page_str)] = slugify(by_page[int(page_str)]["name"])
+        page = int(page_str)
+        # Same corrected name the importer uses, or the file and the dish would disagree.
+        targets[page] = slugify(corrections.get(page_str, by_page[page]["name"]))
     # A duplicate page supplies the photograph only when the map says its image won.
     for page_str, info in mapping["duplicates"].items():
         page = int(page_str)
