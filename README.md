@@ -208,6 +208,7 @@ The restaurant's own photography and copy arrive as a PDF, one dish per page.
 python3 scripts/extract-pdf-images.py    # PDF -> public/dishes/pdf/*.webp (needs pymupdf, pillow)
 node scripts/import-pdf-menu.mjs         # dry run: what would change
 node scripts/import-pdf-menu.mjs --write # apply it to javatri-menu.json
+node scripts/watermark-library-images.mjs # square + watermark the borrowed photographs
 npm run db:seed -- --force               # --force, or PDF prices will not overwrite live ones
 ```
 

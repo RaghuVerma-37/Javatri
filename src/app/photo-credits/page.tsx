@@ -68,8 +68,11 @@ export default async function PhotoCreditsPage() {
             </>
           )}
         </p>
-        <p className="mt-3 text-sm text-muted">
-          {credits.length} borrowed photographs, all from Wikimedia Commons.
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          {credits.length} borrowed photographs, all from Wikimedia Commons. Each has been
+          cropped to a square and carries our wordmark in the corner, which makes it an adapted
+          work — the photographer and the licence below still apply to it, and where that licence
+          is share-alike, so is our version.
         </p>
       </header>
 

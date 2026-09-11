@@ -20,7 +20,12 @@ Three things it has to get right:
     inside a square canvas rather than filling it means nothing is ever cut off the plate.
 
 The result is composited onto white, the way the photographs were lit and the way the client
-asked for them — a product shot rather than a cut-out floating on whatever colour is behind it.
+asked for them — a product shot rather than a cut-out floating on whatever colour is behind it —
+and carries the Javatri wordmark bottom-right.
+
+The watermark is applied here, to the file, and only to these photographs. The library
+stand-ins in public/dishes are other people's work, used under licences that require attributing
+*them*; they are never touched by this script.
 """
 import io
 import json
@@ -37,6 +42,10 @@ OUT = ROOT / "public" / "dishes" / "pdf"
 FURNITURE = (384, 672)
 CANVAS = 800
 MARGIN = 24
+# The wordmark, bottom-right, sized as a share of the canvas. Baked into the file rather than
+# overlaid in the page so it travels with the photograph wherever it is used.
+LOGO_WIDTH = 190
+LOGO_MARGIN = 26
 
 
 def slugify(value: str) -> str:
@@ -73,6 +82,22 @@ def dish_image(doc, page):
         # Pixmap(base, mask) returns the base with the mask as its alpha channel.
         pix = pymupdf.Pixmap(pix, pymupdf.Pixmap(doc, smask_xref))
     return Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
+
+
+def load_logo(doc):
+    """The wordmark as an RGBA image, trimmed to its artwork."""
+    for entry in doc[0].get_images(full=True):
+        xref, smask_xref = entry[0], entry[1]
+        info = doc.extract_image(xref)
+        if (info["width"], info["height"]) != FURNITURE:
+            continue
+        pix = pymupdf.Pixmap(doc, xref)
+        if smask_xref:
+            pix = pymupdf.Pixmap(pix, pymupdf.Pixmap(doc, smask_xref))
+        logo = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
+        box = logo.getbbox()
+        return logo.crop(box) if box else logo
+    return None
 
 
 def extract_logo(doc) -> None:
@@ -121,6 +146,10 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     doc = pymupdf.open(PDF)
     extract_logo(doc)
+    logo = load_logo(doc)
+    if logo is not None:
+        ratio = LOGO_WIDTH / logo.width
+        logo = logo.resize((LOGO_WIDTH, max(1, round(logo.height * ratio))), Image.LANCZOS)
     written = 0
     for page_no, slug in sorted(targets.items()):
         img = dish_image(doc, doc[page_no - 1])
@@ -138,6 +167,12 @@ def main() -> int:
 
         canvas = Image.new("RGB", (CANVAS, CANVAS), (255, 255, 255))
         canvas.paste(img, ((CANVAS - img.width) // 2, (CANVAS - img.height) // 2), img)
+        if logo is not None:
+            canvas.paste(
+                logo,
+                (CANVAS - logo.width - LOGO_MARGIN, CANVAS - logo.height - LOGO_MARGIN),
+                logo,
+            )
         canvas.save(OUT / f"{slug}.webp", "WEBP", quality=82, method=6)
         written += 1
 

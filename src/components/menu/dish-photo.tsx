@@ -41,9 +41,10 @@ function usePointerDevice(): boolean {
  * leaving closes it — no click, no dismissing. On a touch screen there is no hover, so the
  * thumbnail is a button that opens a centred overlay with a backdrop and a close control.
  *
- * The watermark goes on Javatri's own photographs only. The rest are other people's work, used
- * under licences that require attributing *them*; stamping a restaurant's logo across someone
- * else's photograph would claim it as ours, which is both rude and a licence breach.
+ * `isOwnPhotograph` now only decides alt text. The wordmark used to be overlaid here for
+ * Javatri's photographs alone; on the owner's instruction it is baked into every dish image
+ * instead, borrowed ones included, so the menu reads as one set. /photo-credits still names
+ * every borrowed photographer and licence, which is what makes that adaptation permissible.
  */
 export function DishPhoto({
   src,
@@ -73,28 +74,21 @@ export function DishPhoto({
 
   const alt = isOwnPhotograph ? `${name} at Javatri` : ''
 
+  /*
+    No logo element here. The wordmark is baked into every dish image now — scripts/
+    extract-pdf-images.py for Javatri's own, scripts/watermark-library-images.mjs for the rest —
+    so overlaying one would stamp a second copy on top of the first.
+  */
   const enlarged = (
-    <>
-      <Image
-        src={src}
-        alt={alt}
-        aria-hidden={isOwnPhotograph ? undefined : true}
-        width={640}
-        height={640}
-        sizes="(min-width: 640px) 420px, 88vw"
-        className="h-auto w-full rounded-xl bg-white object-contain"
-      />
-      {isOwnPhotograph ? (
-        <Image
-          src="/javatri-logo.webp"
-          alt=""
-          aria-hidden
-          width={313}
-          height={113}
-          className="pointer-events-none absolute bottom-3 right-3 w-24 opacity-90 sm:w-28"
-        />
-      ) : null}
-    </>
+    <Image
+      src={src}
+      alt={alt}
+      aria-hidden={isOwnPhotograph ? undefined : true}
+      width={640}
+      height={640}
+      sizes="(min-width: 640px) 420px, 88vw"
+      className="h-auto w-full rounded-xl bg-white object-contain"
+    />
   )
 
   return (
