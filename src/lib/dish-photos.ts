@@ -58,9 +58,21 @@ export function resolveDishPhoto(item: {
   return { src: photo.src, isLibrary: true, credit: photo }
 }
 
-/** Every library photograph in use, for the credits page. */
-export function allDishPhotoCredits(): DishPhoto[] {
-  return Object.values(DISH_PHOTOS as Record<string, DishPhoto>).sort((a, b) =>
-    a.dish.localeCompare(b.dish),
-  )
+/**
+ * The library photographs actually on display, for the credits page.
+ *
+ * Takes the dishes rather than reading the manifest, because the manifest still holds a
+ * stand-in for every dish that has since been given a real photograph. Crediting a
+ * photographer whose work we no longer show is not a small inaccuracy on a page whose whole
+ * purpose is attribution — it misstates what the licence is covering.
+ */
+export function libraryPhotoCredits(
+  dishes: Array<{ name: string; imageUrl?: string | null }>,
+): DishPhoto[] {
+  const seen = new Map<string, DishPhoto>()
+  for (const dish of dishes) {
+    const resolved = resolveDishPhoto(dish)
+    if (resolved?.isLibrary && resolved.credit) seen.set(resolved.credit.slug, resolved.credit)
+  }
+  return [...seen.values()].sort((a, b) => a.dish.localeCompare(b.dish))
 }

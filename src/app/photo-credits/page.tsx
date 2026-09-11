@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { allDishPhotoCredits } from '@/lib/dish-photos'
+import { libraryPhotoCredits } from '@/lib/dish-photos'
 import { absoluteUrl } from '@/lib/site'
+import { getBranchSafe } from '@/server/branch'
+import { getPublishedMenus } from '@/server/menu'
 
 export const metadata: Metadata = {
   title: 'Photo credits',
@@ -22,8 +24,18 @@ export const metadata: Metadata = {
  * that in a comment would be a licence breach; a page that names every one is the cheap, honest
  * way to comply. It doubles as the list of what to delete once the kitchen sends real photographs.
  */
-export default function PhotoCreditsPage() {
-  const credits = allDishPhotoCredits()
+export default async function PhotoCreditsPage() {
+  // Read the menu the site actually serves, so the page credits the photographs on display
+  // rather than everything the library happens to hold.
+  const branch = await getBranchSafe()
+  const menus = branch ? await getPublishedMenus(branch.id) : []
+  const dishes = menus.flatMap((menu) =>
+    menu.categories.flatMap((category) =>
+      category.items.map((item) => ({ name: item.name, imageUrl: item.imageUrl })),
+    ),
+  )
+  const credits = libraryPhotoCredits(dishes)
+  const ownPhotographs = dishes.filter((d) => d.imageUrl).length
 
   return (
     <div className="container-page py-10 sm:py-14">
@@ -33,16 +45,31 @@ export default function PhotoCreditsPage() {
         </p>
         <h1 className="mt-2 text-4xl sm:text-5xl">Photo credits</h1>
         <p className="mt-4 text-base leading-relaxed text-muted">
-          The photographs beside each dish on our{' '}
-          <Link href="/menu" className="underline underline-offset-2 hover:text-brand-text">
-            menu
-          </Link>{' '}
-          are library photographs of that kind of dish, not photographs of the plate we will bring
-          you. They are here to show you what a dish is while we photograph our own. Every one is
-          used under a licence that permits it, and the photographer is named below.
+          {ownPhotographs > 0 ? (
+            <>
+              {ownPhotographs} of the dishes on our{' '}
+              <Link href="/menu" className="underline underline-offset-2 hover:text-brand-text">
+                menu
+              </Link>{' '}
+              are photographed in our own kitchen. The rest still borrow a library photograph of
+              that kind of dish — not the plate we will bring you, but enough to show you what it
+              is until we have shot our own. Every borrowed one is used under a licence that
+              permits it, and its photographer is named below.
+            </>
+          ) : (
+            <>
+              The photographs beside each dish on our{' '}
+              <Link href="/menu" className="underline underline-offset-2 hover:text-brand-text">
+                menu
+              </Link>{' '}
+              are library photographs of that kind of dish, not photographs of the plate we will
+              bring you. Every one is used under a licence that permits it, and the photographer
+              is named below.
+            </>
+          )}
         </p>
         <p className="mt-3 text-sm text-muted">
-          {credits.length} photographs, all from Wikimedia Commons.
+          {credits.length} borrowed photographs, all from Wikimedia Commons.
         </p>
       </header>
 

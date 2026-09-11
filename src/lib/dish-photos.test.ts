@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 import menuSource from '../../javatri-menu.json'
-import { allDishPhotoCredits, dishPhotoKey, resolveDishPhoto } from '@/lib/dish-photos'
+import { libraryPhotoCredits, dishPhotoKey, resolveDishPhoto } from '@/lib/dish-photos'
 
 type SourceMenu = {
   categories: Array<{ items: Array<{ name: string; image?: string }> }>
@@ -67,14 +67,14 @@ describe('every dish has a photograph', () => {
 
   it('has the file on disk for every photograph it claims', () => {
     const root = path.resolve(__dirname, '../..')
-    const missing = allDishPhotoCredits()
+    const missing = libraryPhotoCredits(dishes)
       .filter((credit) => !existsSync(path.join(root, 'public', credit.src)))
       .map((credit) => credit.src)
     expect(missing).toEqual([])
   })
 
   it('credits every photograph to an author and a licence', () => {
-    const uncredited = allDishPhotoCredits()
+    const uncredited = libraryPhotoCredits(dishes)
       .filter((credit) => !credit.author || !credit.licence || !credit.sourceUrl)
       .map((credit) => credit.dish)
     expect(uncredited).toEqual([])
