@@ -5,16 +5,15 @@ import menuSource from '../../javatri-menu.json'
 import { allDishPhotoCredits, dishPhotoKey, resolveDishPhoto } from '@/lib/dish-photos'
 
 type SourceMenu = {
-  categories: Array<{ items: Array<{ name: string }> }>
+  categories: Array<{ items: Array<{ name: string; image?: string }> }>
 }
 
-const dishNames = [
-  ...new Set(
-    (menuSource.menus as SourceMenu[]).flatMap((menu) =>
-      menu.categories.flatMap((category) => category.items.map((item) => item.name)),
-    ),
+/** Every dish on the menu, with its own photograph if the PDF import gave it one. */
+const dishes = (menuSource.menus as SourceMenu[]).flatMap((menu) =>
+  menu.categories.flatMap((category) =>
+    category.items.map((item) => ({ name: item.name, imageUrl: item.image ?? null })),
   ),
-]
+)
 
 describe('resolveDishPhoto', () => {
   it("prefers Javatri's own photograph over the library one", () => {
@@ -46,14 +45,24 @@ describe('resolveDishPhoto', () => {
 })
 
 /**
- * The guard that matters. Dish photographs are keyed by name, so renaming a dish in
- * javatri-menu.json silently drops its photograph — this fails instead, and names the dish that
- * needs `node scripts/fetch-dish-images.mjs`.
+ * The guard that matters: no dish may render without a photograph.
+ *
+ * It can come from either source — Javatri's own, imported from the PDF, or the library
+ * stand-in, which is keyed by dish name. That second route is the fragile one: renaming a dish
+ * in javatri-menu.json silently drops its stand-in. A dish that has neither fails here, by name,
+ * rather than showing up as a hole on the menu.
  */
-describe('the library covers the menu', () => {
-  it('has a photograph for every dish', () => {
-    const missing = dishNames.filter((name) => !resolveDishPhoto({ name, imageUrl: null }))
+describe('every dish has a photograph', () => {
+  it('resolves one for all of them', () => {
+    const missing = dishes.filter((d) => !resolveDishPhoto(d)).map((d) => d.name)
     expect(missing).toEqual([])
+  })
+
+  it('uses our own photograph wherever the PDF supplied one', () => {
+    const ours = dishes.filter((d) => d.imageUrl)
+    expect(ours.length).toBeGreaterThan(0)
+    const wrong = ours.filter((d) => resolveDishPhoto(d)?.isLibrary).map((d) => d.name)
+    expect(wrong).toEqual([])
   })
 
   it('has the file on disk for every photograph it claims', () => {

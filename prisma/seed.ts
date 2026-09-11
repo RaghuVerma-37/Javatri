@@ -146,6 +146,7 @@ async function seedMenu(branchId: string, menu: SeedMenu) {
               // Structure refreshes; price, isAvailable, allergens and allergensConfirmed do not.
               name: itemFields.name,
               description: itemFields.description,
+              imageUrl: itemFields.imageUrl,
               spiceLevel: itemFields.spiceLevel,
               isVegetarian: itemFields.isVegetarian,
               isVegan: itemFields.isVegan,

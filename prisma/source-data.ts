@@ -31,6 +31,19 @@ type SourceItem = {
   tags?: string[]
   contains_alcohol?: boolean
   requires_variant_choice?: string[]
+  /**
+   * A photograph of Javatri's own food, served from /public. Set by the PDF import.
+   * Absent means the dish falls back to the library stand-in — see src/lib/dish-photos.ts.
+   */
+  image?: string
+  /**
+   * Pins the slug when the displayed name has changed.
+   *
+   * Slugs are otherwise derived from the name, ids from the slug, and the seed upserts on the
+   * slug — so renaming a dish without this would not rename anything. It would insert a second
+   * dish under the new slug and leave the original stranded.
+   */
+  slug?: string
 }
 
 type SourceCategory = {
@@ -115,6 +128,7 @@ export type SeedItem = {
   slug: string
   description: string
   priceInPence: number
+  imageUrl: string | null
   spiceLevel: SpiceLevel
   isVegetarian: boolean
   isVegan: boolean
@@ -598,7 +612,8 @@ function buildMenus(
 
         return {
           name,
-          slug: uniqueSlug(slugify(name), itemSlugs),
+          slug: uniqueSlug(sourceItem.slug ?? slugify(name), itemSlugs),
+          imageUrl: sourceItem.image ?? null,
           description,
           priceInPence,
           spiceLevel: spiceFromTags(tags),

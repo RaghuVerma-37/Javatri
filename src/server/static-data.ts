@@ -155,7 +155,7 @@ function toMenu(branchId: string, source: SeedMenu): MenuWithContent {
             // Never true here. Allergen data is entered by the kitchen and stored in the
             // database; without one there is nothing confirmed, and the UI must say so.
             allergensConfirmed: false,
-            imageUrl: null,
+            imageUrl: item.imageUrl,
             isAvailable: item.isAvailable,
             isOrderable: item.isOrderable,
             sortOrder: item.sortOrder,

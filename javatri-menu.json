@@ -4,9 +4,15 @@
     "scraped": "2026-09-05",
     "currency": "GBP",
     "note": "Prices scraped from server-rendered /menu-1 and /menu-2 showcase pages. The /online-ordering-1 page renders the same category names but its item data is client-side only. VERIFY EVERY PRICE against the till/EPOS before going live.",
-    "spice_and_diet_tags_available": ["mild", "hot", "extra_hot", "vegetarian", "vegan", "organic"]
+    "spice_and_diet_tags_available": [
+      "mild",
+      "hot",
+      "extra_hot",
+      "vegetarian",
+      "vegan",
+      "organic"
+    ]
   },
-
   "business": {
     "name": "Javatri",
     "trading_as": "Javatri at The Bell and Bottle",
@@ -28,14 +34,22 @@
     ],
     "opening_hours_CONFLICTING": {
       "homepage_block": {
-        "mon": "15:00-22:00", "tue": "15:00-22:00", "wed": "15:00-22:00",
-        "thu": "15:00-22:00", "fri": "12:00-22:00", "sat": "12:00-22:00",
+        "mon": "15:00-22:00",
+        "tue": "15:00-22:00",
+        "wed": "15:00-22:00",
+        "thu": "15:00-22:00",
+        "fri": "12:00-22:00",
+        "sat": "12:00-22:00",
         "sun": "12:00-20:00"
       },
       "menu_header_text": "MON-THURSDAY 15:00-22:00, FRIDAY-SUNDAY 12:00-22:00",
       "google_business_profile": {
-        "mon": "12:00-20:00", "tue": "15:00-22:00", "wed": "15:00-22:00",
-        "thu": "15:00-22:00", "fri": "15:00-22:00", "sat": "12:00-22:00",
+        "mon": "12:00-20:00",
+        "tue": "15:00-22:00",
+        "wed": "15:00-22:00",
+        "thu": "15:00-22:00",
+        "fri": "15:00-22:00",
+        "sat": "12:00-22:00",
         "sun": "12:00-22:00"
       },
       "resolution_required": "Three different sets of hours are published. Owner must confirm one source of truth."
@@ -49,7 +63,7 @@
     "third_party_ordering": "https://www.just-eat.co.uk/restaurants-javatri-at-the-bell-and-bottle-maidenhead/menu",
     "banqueting": {
       "capacity": 150,
-      "package_from_per_person": 40.00,
+      "package_from_per_person": 40,
       "package_includes": [
         "3 course meal (4 starters, 4 mains, 2 desserts)",
         "Unlimited soft drinks and juices",
@@ -71,7 +85,6 @@
       ]
     }
   },
-
   "menus": [
     {
       "id": "food-menu",
@@ -82,92 +95,525 @@
           "id": "chaat-corner",
           "name": "Chaat Corner",
           "items": [
-            { "name": "Samosa Chaat", "price": 7.50, "description": "Tangy, spicy samosa chaat. Spicy chole (chickpeas) served with samosa and dollops of yoghurt and homemade chutneys.", "tags": [] },
-            { "name": "Papri Chaat", "price": 7.50, "description": "Chickpeas, potatoes, various chutneys, sweet yoghurt, garnished with coriander.", "tags": [] },
-            { "name": "Aloo Tikki Chaat", "price": 7.50, "description": "Crispy Indian potato patty flavoured with spices, topped with yoghurt and chutneys.", "tags": [] },
-            { "name": "Pani Puri", "price": 8.15, "description": "Hollow fried dough balls stuffed with boiled potatoes and chickpeas, with sweet and spicy tangy water.", "tags": [] },
-            { "name": "Dahi Bhalla", "price": 7.50, "description": "Fried soaked and ground lentils dipped in sweetened yoghurt.", "tags": [] },
-            { "name": "Palak Patta Chaat", "price": 7.50, "description": "Crispy spinach leaves coated in gram flour batter, deep fried, topped with homemade chutneys.", "tags": [] }
+            {
+              "name": "Samosa Chaat",
+              "price": 7.5,
+              "description": "Crispy samosas topped with tangy chutneys & spices",
+              "tags": [],
+              "slug": "samosa-chaat",
+              "image": "/dishes/pdf/samosa-chaat.webp"
+            },
+            {
+              "name": "Papri Chaat",
+              "price": 7.5,
+              "description": "Crispy papris topped with tangy chutneys & yogurt",
+              "tags": [],
+              "slug": "papri-chaat",
+              "image": "/dishes/pdf/papri-chaat.webp"
+            },
+            {
+              "name": "Aloo Tikki Chaat",
+              "price": 7.5,
+              "description": "Crispy potato patties topped with tangy chutneys & spices",
+              "tags": [],
+              "slug": "aloo-tikki-chaat",
+              "image": "/dishes/pdf/aloo-tikki-chaat.webp"
+            },
+            {
+              "name": "Pani puri",
+              "price": 8.15,
+              "description": "Crispy hollow puris filled with spiced potatoes, chickpeas, and tangy flavored water.",
+              "tags": [],
+              "slug": "pani-puri",
+              "image": "/dishes/pdf/pani-puri.webp"
+            },
+            {
+              "name": "Dahi Bhalla",
+              "price": 7.5,
+              "description": "Fluffy lentil dumplings in cool yogurt with sweet and tangy chutneys",
+              "tags": [],
+              "slug": "dahi-bhalla",
+              "image": "/dishes/pdf/dahi-bhalla.webp"
+            },
+            {
+              "name": "Palak Patta chaat",
+              "price": 7.5,
+              "description": "Crispy spinach leaves topped with tangy chutneys & spices",
+              "tags": [],
+              "slug": "palak-patta-chaat",
+              "image": "/dishes/pdf/palak-patta-chaat.webp"
+            },
+            {
+              "name": "Javatri Chaat Blast",
+              "price": 8.5,
+              "description": "Tangy, sweet, and spicy street-style delight",
+              "tags": [],
+              "image": "/dishes/pdf/javatri-chaat-blast.webp"
+            }
           ]
         },
         {
           "id": "street-bite-veg",
           "name": "Classic Indian Street Bite (Veg)",
           "items": [
-            { "name": "Poppadum Basket", "price": 3.95, "description": "Served with homemade chutneys.", "tags": ["vegetarian", "vegan"] },
-            { "name": "Masala Poppadum", "price": 4.95, "description": "Served with masala and chopped salad.", "tags": ["vegetarian", "mild"] },
-            { "name": "Punjabi Samosa", "price": 7.95, "description": "Crispy spiced savoury patties made from mashed potatoes, ground spices and herbs.", "tags": ["vegetarian"] },
-            { "name": "Aloo Tikki with Chickpea", "price": 7.95, "description": "Spicy potato patty, a popular crisp North Indian street food, served with street-style chickpeas.", "tags": ["vegetarian", "mild"] },
-            { "name": "Hara Bhara Kebab", "price": 8.95, "description": "Vegetarian kebab of potatoes, mixed vegetables, paneer, spinach and Indian dry spices.", "tags": ["vegetarian", "vegan", "mild", "organic"] },
-            { "name": "Vegetable Pakora", "price": 7.95, "description": "Crispy fritters made with onions, potatoes, gram flour, spices and herbs.", "tags": ["vegetarian", "mild"] },
-            { "name": "Okra Fries / Kurkuri Bhindi", "price": 8.95, "description": "Spicy, crispy okra with gram flour, homemade spice and seasonings, served with homemade chutneys.", "tags": ["vegetarian", "mild"] },
-            { "name": "Vegetable Momos", "price": 6.95, "description": "Served with homemade sauce.", "tags": ["hot"] }
+            {
+              "name": "Poppadum Basket",
+              "price": 3.95,
+              "description": "Served with homemade chutneys.",
+              "tags": [
+                "vegetarian",
+                "vegan"
+              ]
+            },
+            {
+              "name": "Masala Poppadum",
+              "price": 4.95,
+              "description": "Served with masala and chopped salad.",
+              "tags": [
+                "vegetarian",
+                "mild"
+              ]
+            },
+            {
+              "name": "Punjabi Samosa",
+              "price": 7.95,
+              "description": "Crispy pastry stuffed with spiced mashed Patatoes and peas",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "punjabi-samosa",
+              "image": "/dishes/pdf/punjabi-samosa.webp"
+            },
+            {
+              "name": "Aloo Tikki with Chickpea",
+              "price": 7.95,
+              "description": "Spicy potato patty, a popular crisp North Indian street food, served with street-style chickpeas.",
+              "tags": [
+                "vegetarian",
+                "mild"
+              ]
+            },
+            {
+              "name": "Hara Bhara Kebab",
+              "price": 8.95,
+              "description": "Spinach and green veggie patties, lightly spiced",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild",
+                "organic"
+              ],
+              "slug": "hara-bhara-kebab",
+              "image": "/dishes/pdf/hara-bhara-kebab.webp"
+            },
+            {
+              "name": "Vegetable Pakora",
+              "price": 7.95,
+              "description": "Crispy fritters made with onions, potatoes, gram flour, spices and herbs.",
+              "tags": [
+                "vegetarian",
+                "mild"
+              ]
+            },
+            {
+              "name": "Okra Fries",
+              "price": 8.95,
+              "description": "Crispy, spiced okra sticks fried to perfection",
+              "tags": [
+                "vegetarian",
+                "mild"
+              ],
+              "slug": "okra-fries-kurkuri-bhindi",
+              "image": "/dishes/pdf/okra-fries-kurkuri-bhindi.webp"
+            },
+            {
+              "name": "Vegetarian Dumpling",
+              "price": 6.95,
+              "description": "Hand-folded dumplings filled with fresh, spiced vegetables, steamed to perfection",
+              "tags": [
+                "hot"
+              ],
+              "slug": "vegetable-momos",
+              "image": "/dishes/pdf/vegetable-momos.webp"
+            }
           ]
         },
         {
           "id": "street-bite-nonveg",
           "name": "Classic Indian Street Bite (Non-Veg)",
           "items": [
-            { "name": "Chicken Momos", "price": 7.95, "description": "Steamed dumplings stuffed with juicy minced chicken, served with homemade chutney.", "tags": [] },
-            { "name": "Lamb Momos", "price": 7.95, "description": "Steamed dumplings stuffed with juicy minced lamb, served with homemade chutney.", "tags": [] }
+            {
+              "name": "Chicken Dumpling",
+              "price": 7.95,
+              "description": "Tender chicken filling in melt-in-mouth dumplings",
+              "tags": [],
+              "slug": "chicken-momos",
+              "image": "/dishes/pdf/chicken-momos.webp"
+            },
+            {
+              "name": "Lamb Dumpling",
+              "price": 7.95,
+              "description": "Hand-folded dumplings filled with spiced minced lamb, steamed to perfection",
+              "tags": [],
+              "slug": "lamb-momos",
+              "image": "/dishes/pdf/lamb-momos.webp"
+            }
           ]
         },
         {
           "id": "tongue-ticklers-veg",
           "name": "Tongue Ticklers - Modern Starters (Veg)",
           "items": [
-            { "name": "Onion and Spinach Bhaji", "price": 8.50, "description": "Finely sliced onion and spinach in a fragrantly spiced batter, fried crisp, served with mint chutney.", "tags": ["hot", "vegetarian", "vegan"] },
-            { "name": "Salt and Pepper Mogo", "price": 6.95, "description": "Deep fried cassava, served plain, salted or tossed in special chilli garlic sauce.", "tags": ["mild"] },
-            { "name": "Tandoori Paneer Shashlick", "price": 10.50, "description": "Cottage cheese and peppers cooked in the tandoor with homemade sauce paste.", "tags": ["hot"] },
-            { "name": "Veg Chowmein", "price": 10.50, "description": "Noodles stir fried with vegetables, Indo-Chinese style.", "tags": ["extra_hot"] },
-            { "name": "Hakka Noodles", "price": 10.50, "description": "Noodles stir fried with vegetables, Indo-Chinese style.", "tags": ["hot"] },
-            { "name": "Chilli Paneer", "price": 10.50, "description": "Fried cottage cheese, peppers and onions tossed in chef's special hot spicy sauce.", "tags": [] },
-            { "name": "Paneer 65", "price": 10.95, "description": "Battered and fried paneer coated in a spicy yoghurt marinade, sautéed with tangy sauce.", "tags": ["hot"] },
-            { "name": "Paneer Pakoda (5 pieces)", "price": 10.95, "description": "Gram-flour battered Indian cottage cheese fritters.", "tags": ["hot"] },
-            { "name": "Gobi Manchurian", "price": 10.25, "description": "Fried cauliflower florets tossed in flavourful Manchurian sauce.", "tags": ["hot"] },
-            { "name": "Paneer Malai Tikka", "price": 10.95, "description": "Soft paneer cubes marinated in hung curd, cream, spices and herbs.", "tags": ["hot"] },
-            { "name": "Soya Chaap", "price": 11.95, "description": "Chunks of soya marinated in yoghurt and Indian spices, cooked in the tandoor.", "tags": ["hot"] }
+            {
+              "name": "Onion & Spinach Bhaji",
+              "price": 8.5,
+              "description": "Spiced onion and spinach fritters, crispy and golden",
+              "tags": [
+                "hot",
+                "vegetarian",
+                "vegan"
+              ],
+              "slug": "onion-and-spinach-bhaji",
+              "image": "/dishes/pdf/onion-and-spinach-bhaji.webp"
+            },
+            {
+              "name": "Salt and Pepper Mogo",
+              "price": 6.95,
+              "description": "Deep fried cassava, served plain, salted or tossed in special chilli garlic sauce.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Tandoori Panner shashlick",
+              "price": 10.5,
+              "description": "Chunks of paneer and vegetables marinated in spices, skewered and roasted in the tandoor",
+              "tags": [
+                "hot"
+              ],
+              "slug": "tandoori-paneer-shashlick",
+              "image": "/dishes/pdf/tandoori-paneer-shashlick.webp"
+            },
+            {
+              "name": "Veg-Chowmein",
+              "price": 10.5,
+              "description": "Stir-fried noodles with fresh vegetables & light sauces",
+              "tags": [
+                "extra_hot"
+              ],
+              "slug": "veg-chowmein",
+              "image": "/dishes/pdf/veg-chowmein.webp"
+            },
+            {
+              "name": "Hakka noodles",
+              "price": 10.5,
+              "description": "Authentic Hakka-style noodles with wok-tossed vegetables and aromatic seasonings.",
+              "tags": [
+                "hot"
+              ],
+              "slug": "hakka-noodles",
+              "image": "/dishes/pdf/hakka-noodles.webp"
+            },
+            {
+              "name": "Chilli Paneer",
+              "price": 10.5,
+              "description": "Fried cottage cheese, peppers and onions tossed in chef's special hot spicy sauce.",
+              "tags": []
+            },
+            {
+              "name": "Paneer 65",
+              "price": 10.95,
+              "description": "Soft, malai-marinated paneer roasted in tandoor heat",
+              "tags": [
+                "hot"
+              ],
+              "slug": "paneer-65",
+              "image": "/dishes/pdf/paneer-65.webp"
+            },
+            {
+              "name": "Paneer Pakoda",
+              "price": 10.95,
+              "description": "Crispy, golden-fried paneer bites with spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "paneer-pakoda-5-pieces",
+              "image": "/dishes/pdf/paneer-pakoda-5-pieces.webp"
+            },
+            {
+              "name": "Gobi Manchurian",
+              "price": 10.25,
+              "description": "Crispy cauliflower tossed in tangy Indo-Chinese sauce",
+              "tags": [
+                "hot"
+              ],
+              "slug": "gobi-manchurian",
+              "image": "/dishes/pdf/gobi-manchurian.webp"
+            },
+            {
+              "name": "Paneer Malai Tikka",
+              "price": 10.25,
+              "description": "Soft, malai-marinated paneer roasted in tandoor heat",
+              "tags": [
+                "hot"
+              ],
+              "slug": "paneer-malai-tikka",
+              "image": "/dishes/pdf/paneer-malai-tikka.webp"
+            },
+            {
+              "name": "Soya Chaap",
+              "price": 11.95,
+              "description": "Tandoor-roasted soya chaap marinated in aromatic spices, finished in the tandoor",
+              "tags": [
+                "hot"
+              ],
+              "slug": "soya-chaap",
+              "image": "/dishes/pdf/soya-chaap.webp"
+            },
+            {
+              "name": "Veg Manchurian",
+              "price": 9.95,
+              "description": "Crispy vegetable dumplings tossed in a tangy Indo-Chinese sauce",
+              "tags": [],
+              "image": "/dishes/pdf/veg-manchurian.webp"
+            },
+            {
+              "name": "Tandoori brocolli",
+              "price": 11.25,
+              "description": "Tandoori-roasted broccoli with delicate spices and an elegant smoky aroma.",
+              "tags": [],
+              "image": "/dishes/pdf/tandoori-brocolli.webp"
+            }
           ]
         },
         {
           "id": "tongue-ticklers-nonveg",
           "name": "Tongue Ticklers - Modern Starters (Non-Veg)",
           "items": [
-            { "name": "Chicken 65", "price": 11.50, "description": "Boneless chicken marinated in hot spices, deep fried and sautéed with peppers and chef's special sauces.", "tags": ["hot"] },
-            { "name": "Chilli Chicken", "price": 11.45, "description": "Pan fried chicken, spicy and slightly sour crispy appetiser.", "tags": ["hot"] },
-            { "name": "Chicken Noodles", "price": 11.45, "description": "Chicken noodles stir fried with mixed vegetables.", "tags": ["mild"] },
-            { "name": "Chicken Manchurian", "price": 10.95, "description": "Indo-Chinese appetiser of fried chicken tossed in Manchurian sauce.", "tags": [] },
-            { "name": "Fish Chilli", "price": 10.95, "description": "Pan fried fillets coated in a spicy and sour sauce with peppers.", "tags": [] },
-            { "name": "Lamb Samosa", "price": 8.95, "description": "Crisp flaky fried pastry filled with savoury spiced ground lamb and garden peas, served with homemade sauce.", "tags": [] }
+            {
+              "name": "Chicken 65",
+              "price": 11.5,
+              "description": "Boneless chicken marinated in hot spices, deep fried and sautéed with peppers and chef's special sauces.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Chilli Chicken",
+              "price": 11.45,
+              "description": "Stir-fried chicken with fiery chillies and aromatic spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chilli-chicken",
+              "image": "/dishes/pdf/chilli-chicken.webp"
+            },
+            {
+              "name": "Chicken Noodles",
+              "price": 11.45,
+              "description": "Chicken noodles stir fried with mixed vegetables.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Chicken Manchurian",
+              "price": 10.95,
+              "description": "Indo-Chinese appetiser of fried chicken tossed in Manchurian sauce.",
+              "tags": []
+            },
+            {
+              "name": "Chilli Fish",
+              "price": 10.95,
+              "description": "Crispy fish tossed in a tangy, spicy chilli sauce with peppers and spring onions",
+              "tags": [],
+              "slug": "fish-chilli",
+              "image": "/dishes/pdf/fish-chilli.webp"
+            },
+            {
+              "name": "Lamb Samosa",
+              "price": 8.95,
+              "description": "Crispy pastry stuffed with spiced lamb filling",
+              "tags": [],
+              "slug": "lamb-samosa",
+              "image": "/dishes/pdf/lamb-samosa.webp"
+            }
           ]
         },
         {
           "id": "indian-grill",
           "name": "Famous Indian Grill (Non-Veg)",
           "items": [
-            { "name": "Malai Chicken Tikka", "price": 11.50, "description": "Tender chunks of chicken marinated with nut paste, yoghurt and chef's special herbs and spices.", "tags": ["hot"] },
-            { "name": "Chicken Tikka Shashlick", "price": 11.50, "description": "Chicken cubes marinated in yoghurt and Indian spices, cooked in the tandoor.", "tags": ["hot"] },
-            { "name": "Garlic Chicken Tikka", "price": 11.75, "description": "Chicken cubes marinated with garlic paste and spices, tandoor cooked, served with mint chutney.", "tags": ["mild"] },
-            { "name": "Tandoori Chicken (6 pieces)", "price": 19.00, "description": "Chicken marinated in yoghurt, citrus and spices, roasted in the tandoor.", "tags": ["mild"] },
-            { "name": "Lamb Seekh Kebab", "price": 12.50, "description": "Soft and succulent, seasoned with ginger, garlic, green chilli and garam masala, with lemon juice, coriander and mint.", "tags": ["hot"] },
-            { "name": "Lamb Chops", "price": 15.50, "description": "Marinated with chef's special tandoori masala paste and cooked in the tandoor.", "tags": ["mild"] },
-            { "name": "Chicken Seekh Kebab", "price": 10.50, "description": "Minced chicken and Indian herbs cooked over charcoal.", "tags": ["extra_hot"] },
-            { "name": "Chicken Sharabi Tikka", "price": 13.50, "description": "Chicken marinated in Indian spices, clay-oven cooked, then flamed with rum.", "tags": ["hot"], "contains_alcohol": true }
+            {
+              "name": "Malai Chicken Tikka",
+              "price": 11.5,
+              "description": "Creamy, tender chicken cooked in the tandoor",
+              "tags": [
+                "hot"
+              ],
+              "slug": "malai-chicken-tikka",
+              "image": "/dishes/pdf/malai-chicken-tikka.webp"
+            },
+            {
+              "name": "Chicken Tikka Shahslick",
+              "price": 11.5,
+              "description": "Juicy chicken tikka and vegetables from the tandoor",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chicken-tikka-shashlick",
+              "image": "/dishes/pdf/chicken-tikka-shashlick.webp"
+            },
+            {
+              "name": "Garlic Chicken Tikka",
+              "price": 11.75,
+              "description": "Tandoor-roasted chicken with a rich garlic flavor",
+              "tags": [
+                "mild"
+              ],
+              "slug": "garlic-chicken-tikka",
+              "image": "/dishes/pdf/garlic-chicken-tikka.webp"
+            },
+            {
+              "name": "Tandoori Chicken",
+              "price": 17,
+              "description": "Juicy chicken marinated in spices and cooked in the tandoor",
+              "tags": [
+                "mild"
+              ],
+              "slug": "tandoori-chicken-6-pieces",
+              "image": "/dishes/pdf/tandoori-chicken-6-pieces.webp"
+            },
+            {
+              "name": "Lamb Seekh Kebab",
+              "price": 12.5,
+              "description": "Smoky, tender lamb kebabs straight from the tandoor",
+              "tags": [
+                "hot"
+              ],
+              "slug": "lamb-seekh-kebab",
+              "image": "/dishes/pdf/lamb-seekh-kebab.webp"
+            },
+            {
+              "name": "Lamb Chops",
+              "price": 15.5,
+              "description": "Juicy lamb chops marinated in spices and roasted to perfection in the tandoor",
+              "tags": [
+                "mild"
+              ],
+              "slug": "lamb-chops",
+              "image": "/dishes/pdf/lamb-chops.webp"
+            },
+            {
+              "name": "Chicken Seekh Kebab",
+              "price": 10.5,
+              "description": "Juicy spiced Chicken skewers cooked in the tandoor",
+              "tags": [
+                "extra_hot"
+              ],
+              "slug": "chicken-seekh-kebab",
+              "image": "/dishes/pdf/chicken-seekh-kebab.webp"
+            },
+            {
+              "name": "Chicken Sharabi Tikka",
+              "price": 13.5,
+              "description": "Juicy chicken tikka marinated in spiced rum",
+              "tags": [
+                "hot"
+              ],
+              "contains_alcohol": true,
+              "slug": "chicken-sharabi-tikka",
+              "image": "/dishes/pdf/chicken-sharabi-tikka.webp"
+            },
+            {
+              "name": "Chicken Wings",
+              "price": 14.95,
+              "description": "Juicy chicken wings marinated in spices and roasted to perfection in the tandoor",
+              "tags": [],
+              "image": "/dishes/pdf/chicken-wings.webp"
+            },
+            {
+              "name": "Lamb Boti",
+              "price": 14.95,
+              "description": "Juicy, marinated lamb cubes cooked to perfection",
+              "tags": [],
+              "image": "/dishes/pdf/lamb-boti.webp"
+            }
           ]
         },
         {
           "id": "seafood",
           "name": "Main Sea Food Galore",
           "items": [
-            { "name": "Tandoori Prawns", "price": 15.95, "description": "King prawns marinated with British herbs and Indian spices.", "tags": [] },
-            { "name": "Fish Jalandhari", "price": 10.95, "description": "Deep fried white fish lightly coated in spiced gram flour.", "tags": [] },
-            { "name": "Salt and Pepper Prawns", "price": 13.95, "description": "Battered fried prawns tossed with salt and pepper.", "tags": [] },
-            { "name": "Chilli Squid", "price": 10.50, "description": "Battered fried squid tossed with hot sauce and bell peppers.", "tags": [] },
-            { "name": "Salmon Tikka", "price": 19.95, "description": "Spicy, tangy succulent pieces of salmon cooked in the tandoor.", "tags": [] },
-            { "name": "Fish Masala", "price": 12.95, "description": "Fish tikka tossed in onion and tomato gravy, finished with lime juice, fresh herbs and homemade sauce.", "tags": [] },
-            { "name": "Jhinga Malai Curry", "price": 16.95, "description": "Tiger prawns in a coconut-based sauce with spices and house gravy.", "tags": [] },
-            { "name": "Prawn do Pyaza", "price": 17.95, "description": "Wild prawns tossed in onion and Indian spices with a touch of homemade gravy.", "tags": [] },
-            { "name": "Sea Food Moliee", "price": 16.50, "description": "Prawn, squid and white fish tempered with mustard and curry leaves, finished with coconut milk.", "tags": [] }
+            {
+              "name": "Tandoori Prawns",
+              "price": 15.95,
+              "description": "Tiger prawns infused with aromatic tandoori spices and finished in the clay oven.",
+              "tags": [],
+              "slug": "tandoori-prawns",
+              "image": "/dishes/pdf/tandoori-prawns.webp"
+            },
+            {
+              "name": "Fish Jalandhari",
+              "price": 10.95,
+              "description": "Spicy, dry-fried fish with aromatic Indian spices",
+              "tags": [],
+              "slug": "fish-jalandhari",
+              "image": "/dishes/pdf/fish-jalandhari.webp"
+            },
+            {
+              "name": "Salt and Pepper Prawns",
+              "price": 13.95,
+              "description": "Battered fried prawns tossed with salt and pepper.",
+              "tags": []
+            },
+            {
+              "name": "Chilli Squid",
+              "price": 10.5,
+              "description": "Battered fried squid tossed with hot sauce and bell peppers.",
+              "tags": []
+            },
+            {
+              "name": "Salmon Fish tikka",
+              "price": 19.95,
+              "description": "Tender salmon chunks marinated in spices and grilled to perfection",
+              "tags": [],
+              "slug": "salmon-tikka",
+              "image": "/dishes/pdf/salmon-tikka.webp"
+            },
+            {
+              "name": "Fish Masala",
+              "price": 12.95,
+              "description": "Tender fish cooked in a spicy, flavorful gravy",
+              "tags": [],
+              "slug": "fish-masala",
+              "image": "/dishes/pdf/fish-masala.webp"
+            },
+            {
+              "name": "Jhinga Malai Curry",
+              "price": 16.95,
+              "description": "Tiger prawns in a coconut-based sauce with spices and house gravy.",
+              "tags": []
+            },
+            {
+              "name": "Prawn do Pyaza",
+              "price": 17.95,
+              "description": "Wild prawns tossed in onion and Indian spices with a touch of homemade gravy.",
+              "tags": []
+            },
+            {
+              "name": "Sea Food Moliee",
+              "price": 16.5,
+              "description": "Prawn, squid and white fish tempered with mustard and curry leaves, finished with coconut milk.",
+              "tags": []
+            },
+            {
+              "name": "Tandoori monk Fish",
+              "price": 24.99,
+              "description": "Succulent Monkfish Marinated in Aromatic Tandoori Spices",
+              "tags": [],
+              "image": "/dishes/pdf/tandoori-monk-fish.webp"
+            }
           ]
         },
         {
@@ -175,145 +621,831 @@
           "name": "Biryanis",
           "category_note": "Served with salad, onion and homemade raita.",
           "items": [
-            { "name": "King Prawn Biryani", "price": 19.95, "description": "Tiger prawns tossed in onion tomato gravy, yoghurt and whole spices.", "tags": ["mild"] },
-            { "name": "Hyderabadi Gosht Biryani", "price": 19.99, "description": "Fragrant spicy dish of tender lamb cooked with onion tomato gravy and rice on dum.", "tags": [] },
-            { "name": "Chicken Biryani", "price": 19.99, "description": "Chicken marinated in yoghurt, garlic and spices, cooked with rice on dum.", "tags": ["mild"] },
-            { "name": "Veg Biryani", "price": 17.99, "description": "Fresh vegetables in an onion tomato gravy flavoured with spices and herbs.", "tags": ["vegetarian", "mild"] }
+            {
+              "name": "King Prawn Biryani",
+              "price": 19.95,
+              "description": "Tiger prawns tossed in onion tomato gravy, yoghurt and whole spices.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Hyderabadi Gosht Biryani",
+              "price": 19.99,
+              "description": "Fragrant spicy dish of tender lamb cooked with onion tomato gravy and rice on dum.",
+              "tags": []
+            },
+            {
+              "name": "Chicken Biryani",
+              "price": 19.99,
+              "description": "Fragrant basmati rice layered with tender, spiced chicken",
+              "tags": [
+                "mild"
+              ],
+              "slug": "chicken-biryani",
+              "image": "/dishes/pdf/chicken-biryani.webp"
+            },
+            {
+              "name": "Veg Biryani",
+              "price": 17.99,
+              "description": "Fresh vegetables in an onion tomato gravy flavoured with spices and herbs.",
+              "tags": [
+                "vegetarian",
+                "mild"
+              ]
+            },
+            {
+              "name": "Lamb Shank Biryani",
+              "price": 25.95,
+              "description": "Slow-cooked lamb shank with fragrant spiced rice",
+              "tags": [],
+              "image": "/dishes/pdf/lamb-shank-biryani.webp"
+            }
           ]
         },
         {
           "id": "vegetarian-delights",
           "name": "Vegetarian Delights",
           "items": [
-            { "name": "Channa Masala", "price": 10.25, "description": "Chickpeas in a spiced onion and tomato gravy.", "tags": ["vegetarian", "vegan", "mild"] },
-            { "name": "Bhindi do Pyaza", "price": 14.50, "description": "Okra cooked in garlic-ginger, onion and tomato gravy.", "tags": ["vegetarian", "vegan", "hot"] },
-            { "name": "Mirchi Baigan ka Salan", "price": 10.95, "description": "Baby aubergine tempered with mustard seed and curry leaves in a peanut flavoured sauce.", "tags": ["vegetarian", "vegan", "mild"] },
-            { "name": "Koftas", "price": 12.95, "description": "Fried vegetable dumplings in a nutty cream malai and tangy sauce.", "tags": ["vegetarian", "vegan", "mild"] },
-            { "name": "Baigan ka Bharta", "price": 14.50, "description": "Aubergine prepared in traditional Indian style.", "tags": ["vegetarian", "vegan", "mild"] },
-            { "name": "Mix Veg Curry", "price": 12.95, "description": "Fresh vegetables in an onion tomato gravy flavoured with spices and herbs.", "tags": ["vegetarian", "vegan", "hot"] },
-            { "name": "Veg Tawa Fry", "price": 13.50, "description": "Seasonal vegetables tossed with fresh herbs and onion tomato gravy.", "tags": ["vegetarian", "vegan", "mild"] },
-            { "name": "Choice of Potatoes", "price": 11.95, "description": "Bombay aloo, saag aloo, jeera aloo, methi aloo or gobi aloo.", "tags": ["hot"], "requires_variant_choice": ["Bombay Aloo", "Saag Aloo", "Jeera Aloo", "Methi Aloo", "Gobi Aloo"] }
+            {
+              "name": "Channa Masala",
+              "price": 10.25,
+              "description": "Tender chickpeas simmered in spicy, tangy gravy",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild"
+              ],
+              "slug": "channa-masala",
+              "image": "/dishes/pdf/channa-masala.webp"
+            },
+            {
+              "name": "Bhindi do Pyaza",
+              "price": 14.5,
+              "description": "Okra cooked in garlic-ginger, onion and tomato gravy.",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "hot"
+              ]
+            },
+            {
+              "name": "Mirchi Baigan ka Salan",
+              "price": 10.95,
+              "description": "Baby aubergine tempered with mustard seed and curry leaves in a peanut flavoured sauce.",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild"
+              ]
+            },
+            {
+              "name": "Koftas",
+              "price": 12.95,
+              "description": "Fried vegetable dumplings in a nutty cream malai and tangy sauce.",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild"
+              ]
+            },
+            {
+              "name": "Baigan ka Bharta",
+              "price": 14.5,
+              "description": "Aubergine prepared in traditional Indian style.",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild"
+              ]
+            },
+            {
+              "name": "Mix-Veg Curry",
+              "price": 12.95,
+              "description": "Seasonal vegetables cooked in a rich, aromatic curry with delicate spices",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "hot"
+              ],
+              "slug": "mix-veg-curry",
+              "image": "/dishes/pdf/mix-veg-curry.webp"
+            },
+            {
+              "name": "Tawa Sabzi",
+              "price": 13.5,
+              "description": "Fresh vegetables sautéed on a hot tawa with spices",
+              "tags": [
+                "vegetarian",
+                "vegan",
+                "mild"
+              ],
+              "slug": "veg-tawa-fry",
+              "image": "/dishes/pdf/veg-tawa-fry.webp"
+            },
+            {
+              "name": "Choice of Potatoes",
+              "price": 11.95,
+              "description": "Bombay aloo, saag aloo, jeera aloo, methi aloo or gobi aloo.",
+              "tags": [
+                "hot"
+              ],
+              "requires_variant_choice": [
+                "Bombay Aloo",
+                "Saag Aloo",
+                "Jeera Aloo",
+                "Methi Aloo",
+                "Gobi Aloo"
+              ]
+            },
+            {
+              "name": "Aloo Gobi",
+              "price": 10.95,
+              "description": "Tender potatoes and cauliflower cooked with spices",
+              "tags": [],
+              "image": "/dishes/pdf/aloo-gobi.webp"
+            },
+            {
+              "name": "Veg Jalfrezi",
+              "price": 12.95,
+              "description": "Crisp vegetables sautéed with tangy spices",
+              "tags": [],
+              "image": "/dishes/pdf/veg-jalfrezi.webp"
+            },
+            {
+              "name": "Saag Aloo",
+              "price": 10.95,
+              "description": "Spinach and potatoes cooked with aromatic spices",
+              "tags": [],
+              "image": "/dishes/pdf/saag-aloo.webp"
+            },
+            {
+              "name": "Aloo Methi",
+              "price": 10.95,
+              "description": "Tender potatoes cooked with fresh fenugreek leaves and mild spices",
+              "tags": [],
+              "image": "/dishes/pdf/aloo-methi.webp"
+            }
           ]
         },
         {
           "id": "sharing-platters",
           "name": "Sharing Platters",
           "items": [
-            { "name": "Vegetarian Platter", "price": 16.95, "description": "Six items: samosa, spring rolls, onion bhaji, tikki, paneer tikka, hara bhara kebab.", "tags": ["vegetarian"] },
-            { "name": "Mixed Tandoori Grill", "price": 20.95, "description": "Four types of tandoori kebab and tikka.", "tags": [] },
-            { "name": "Sea Food Platter", "price": 20.95, "description": "Fish tikka, chilli squid, butter garlic prawns, fish jalandhari.", "tags": [] },
-            { "name": "Vegetarian Tandoor Platter", "price": 17.95, "description": "Tandoori broccoli, gobi tikka, tandoori mushroom, tandoori paneer, veg seekh kebab.", "tags": ["vegetarian"] },
-            { "name": "B&B Special Family Mix Grill", "price": 30.50, "description": "Two pieces each of tandoori lamb, chicken, fish and vegetables.", "tags": [] }
+            {
+              "name": "Vegetarian Platter",
+              "price": 16.95,
+              "description": "A six-item selection of classic vegetarian starters Paneer malai tikka, Hara bhara kebab, Onion bhaji Punjabi samosa, Aloo tikki, Spring roll",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "vegetarian-platter",
+              "image": "/dishes/pdf/vegetarian-platter.webp"
+            },
+            {
+              "name": "Mix Sharing Platter",
+              "price": 20.95,
+              "description": "Juicy Malai Chicken, Chicken Tikka, Lamb & Prawns, perfect for sharing",
+              "tags": [],
+              "slug": "mixed-tandoori-grill",
+              "image": "/dishes/pdf/mixed-tandoori-grill.webp"
+            },
+            {
+              "name": "Sea Food Platter",
+              "price": 20.95,
+              "description": "Fish tikka, chilli squid, butter garlic prawns, fish jalandhari.",
+              "tags": []
+            },
+            {
+              "name": "Vegetarian Tandoor Platter",
+              "price": 17.95,
+              "description": "Tandoori broccoli, gobi tikka, tandoori mushroom, tandoori paneer, veg seekh kebab.",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "B&B Special Family Mix Grill",
+              "price": 30.5,
+              "description": "Two pieces each of tandoori lamb, chicken, fish and vegetables.",
+              "tags": []
+            }
           ]
         },
         {
           "id": "paneer",
           "name": "Choice of Paneer",
           "items": [
-            { "name": "Kadai Paneer", "price": 13.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Palak Paneer", "price": 13.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Matar Paneer", "price": 13.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Paneer Lababdar", "price": 13.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Paneer Butter Masala", "price": 13.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Saag Paneer", "price": 13.25, "description": "", "tags": ["vegetarian"] }
+            {
+              "name": "Kadai Paneer",
+              "price": 13.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Palak Paneer",
+              "price": 13.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Matar Paneer",
+              "price": 13.25,
+              "description": "Classic North Indian curry with paneer and peas",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "matar-paneer",
+              "image": "/dishes/pdf/matar-paneer.webp"
+            },
+            {
+              "name": "Paneer Lababdar",
+              "price": 13.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Paneer Butter Masala",
+              "price": 13.5,
+              "description": "Soft paneer cubes in rich, creamy tomato gravy",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "paneer-butter-masala",
+              "image": "/dishes/pdf/paneer-butter-masala.webp"
+            },
+            {
+              "name": "Saag Paneer",
+              "price": 13.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Paneer Pasanda",
+              "price": 13.3,
+              "description": "Soft paneer stuffed and simmered in creamy gravy",
+              "tags": [],
+              "image": "/dishes/pdf/paneer-pasanda.webp"
+            }
           ]
         },
         {
           "id": "lentils",
           "name": "Indian Lentils",
           "items": [
-            { "name": "Dal Makhani", "price": 11.00, "description": "Black lentils and kidney beans cooked overnight over charcoal with herbs and spices, finished with cream.", "tags": ["vegetarian"] },
-            { "name": "Dal Tadka", "price": 9.50, "description": "Yellow lentils tempered with cumin, onions, garlic and coriander.", "tags": ["vegetarian"] },
-            { "name": "Dal Palak", "price": 10.50, "description": "Spinach, lentils, spices and herbs.", "tags": ["vegetarian", "hot"] },
-            { "name": "Punjabi Rajma Masala", "price": 10.50, "description": "Kidney bean curry with onion, tomato and spices, with cream.", "tags": ["vegetarian", "hot"] }
+            {
+              "name": "Dal Makhani",
+              "price": 11,
+              "description": "Creamy black lentils slow-cooked with butter & spices",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "dal-makhani",
+              "image": "/dishes/pdf/dal-makhani.webp"
+            },
+            {
+              "name": "Tadka Dal",
+              "price": 9.5,
+              "description": "Classic Indian dal with garlic, cumin, and chili",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "dal-tadka",
+              "image": "/dishes/pdf/dal-tadka.webp"
+            },
+            {
+              "name": "Dal Palak",
+              "price": 10.5,
+              "description": "Spinach, lentils, spices and herbs.",
+              "tags": [
+                "vegetarian",
+                "hot"
+              ]
+            },
+            {
+              "name": "Punjabi Rajma Masala",
+              "price": 10.5,
+              "description": "Kidney bean curry with onion, tomato and spices, with cream.",
+              "tags": [
+                "vegetarian",
+                "hot"
+              ]
+            }
           ]
         },
         {
           "id": "lamb",
           "name": "Main Course Lamb",
           "items": [
-            { "name": "Railway Lamb Curry", "price": 17.95, "description": "Slow cooked meat flavoured with tamarind paste and coconut milk with whole spices.", "tags": ["mild"] },
-            { "name": "Rogan Josh", "price": 17.95, "description": "Kashmiri chillies, garam masala, yoghurt and green cardamom pods.", "tags": ["hot"] },
-            { "name": "Lamb Vindaloo", "price": 17.50, "description": "Tender meat in a fiery red vindaloo sauce of dry red chillies, vinegar, garlic and spices.", "tags": ["hot"] },
-            { "name": "Handi Gosht", "price": 17.95, "description": "Tender mutton cooked in a blend of spices.", "tags": ["hot"] },
-            { "name": "Rajasthani Laal Maas", "price": 17.95, "description": "Spicy red meat curry prepared with hot chilli paste and thick curd.", "tags": ["hot"] },
-            { "name": "Badami Lamb Korma", "price": 17.95, "description": "Meat braised in a yoghurt cream or nut-paste based sauce.", "tags": ["hot"] },
-            { "name": "Dhaba ka Keema", "price": 17.95, "description": "Minced mutton cooked in Indian spices with capsicum, tomato, lemon juice and milk.", "tags": ["hot"] },
-            { "name": "Lamb Madras", "price": 17.95, "description": "Freshly ground spices soothed with a rich coconut sauce.", "tags": ["mild"] },
-            { "name": "Punjabi Meat Masala", "price": 17.95, "description": "Whole spices with fried onion, slow cooked with mutton boti and tomato puree.", "tags": ["hot"] },
-            { "name": "Kadai Lamb", "price": 17.50, "description": "Boneless lamb tossed with peppers and herbs, cooked traditionally.", "tags": [] },
-            { "name": "Saag Lamb", "price": 17.95, "description": "Tender lamb slow cooked with saag and whole spices.", "tags": ["mild"] },
-            { "name": "Seekh Kebab Masala", "price": 16.95, "description": "Six pieces of seekh kebab cooked with onion and tomato gravy with Indian spices.", "tags": [] },
-            { "name": "Lamb Bhuna", "price": 17.95, "description": "Boneless meat cooked with chopped onions, tomato and coriander in homemade curry paste.", "tags": [] }
+            {
+              "name": "Railway Lamb curry",
+              "price": 17.95,
+              "description": "A timeless Anglo-Indian slow-cooked lamb curry from the era of railway dining.",
+              "tags": [
+                "mild"
+              ],
+              "slug": "railway-lamb-curry",
+              "image": "/dishes/pdf/railway-lamb-curry.webp"
+            },
+            {
+              "name": "Lamb Rogan Josh",
+              "price": 17.95,
+              "description": "Classic Kashmiri-style lamb with bold spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "rogan-josh",
+              "image": "/dishes/pdf/rogan-josh.webp"
+            },
+            {
+              "name": "Lamb Vindaloo",
+              "price": 17.5,
+              "description": "Tender lamb cooked in a fiery, tangy curry",
+              "tags": [
+                "hot"
+              ],
+              "slug": "lamb-vindaloo",
+              "image": "/dishes/pdf/lamb-vindaloo.webp"
+            },
+            {
+              "name": "Handi Gosht",
+              "price": 17.95,
+              "description": "Tender mutton cooked in a blend of spices.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Rajasthani Laal Maas",
+              "price": 17.95,
+              "description": "Spicy red meat curry prepared with hot chilli paste and thick curd.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Badami Lamb Korma",
+              "price": 17.95,
+              "description": "Meat braised in a yoghurt cream or nut-paste based sauce.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Dhaba-ka-keema",
+              "price": 17.95,
+              "description": "Spiced minced meat, cooked in  classic Indian spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "dhaba-ka-keema",
+              "image": "/dishes/pdf/dhaba-ka-keema.webp"
+            },
+            {
+              "name": "Lamb Madras",
+              "price": 17.95,
+              "description": "Freshly ground spices soothed with a rich coconut sauce.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Punjabi Meat Masala",
+              "price": 17.95,
+              "description": "Whole spices with fried onion, slow cooked with mutton boti and tomato puree.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Kadai Lamb",
+              "price": 17.5,
+              "description": "Boneless lamb tossed with peppers and herbs, cooked traditionally.",
+              "tags": []
+            },
+            {
+              "name": "Saag Lamb",
+              "price": 17.95,
+              "description": "Tender lamb slow cooked with saag and whole spices.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Seekh Kebab Masala",
+              "price": 16.95,
+              "description": "Juicy kebabs cooked in aromatic masala gravy",
+              "tags": [],
+              "slug": "seekh-kebab-masala",
+              "image": "/dishes/pdf/seekh-kebab-masala.webp"
+            },
+            {
+              "name": "Lamb Bhuna",
+              "price": 17.95,
+              "description": "Boneless meat cooked with chopped onions, tomato and coriander in homemade curry paste.",
+              "tags": []
+            },
+            {
+              "name": "Lamb Shank",
+              "price": 24.95,
+              "description": "Slow-braised lamb shank simmered until fall-off-the-bone tender.",
+              "tags": [],
+              "image": "/dishes/pdf/lamb-shank.webp"
+            }
           ]
         },
         {
           "id": "chicken",
           "name": "Main Course Chicken",
           "items": [
-            { "name": "Butter Chicken Dilli Wala", "price": 15.95, "description": "Succulent tandoori chicken tikka in a smooth tomato and rich nut paste gravy.", "tags": ["mild"] },
-            { "name": "Kadai Murg", "price": 15.95, "description": "Boneless chicken tossed with spices, herbs and chef's special kadai masala with peppers and gravy.", "tags": ["mild"] },
-            { "name": "Kori Gassi", "price": 15.95, "description": "Chicken tempered with curry leaves, chillies and coconut milk.", "tags": ["mild"] },
-            { "name": "Chicken Badami Korma", "price": 15.95, "description": "Peshawari dish with a rich nutty gravy and spices.", "tags": ["mild"] },
-            { "name": "Dhaba Chicken", "price": 15.95, "description": "Chicken on the bone cooked in homemade curry paste.", "tags": ["hot"] },
-            { "name": "Chicken Balti", "price": 15.95, "description": "Tomato-based curry with extra spinach and peppers.", "tags": ["hot"] },
-            { "name": "Chicken Tikka Masala", "price": 15.95, "description": "Tender chicken cooked in the tandoor with a rich creamy tomato onion gravy.", "tags": ["hot"] },
-            { "name": "Chicken Dhansak", "price": 15.50, "description": "Tangy, sweet and slightly spicy sauce made thick and rich with lentils.", "tags": ["hot"] },
-            { "name": "Chicken Jalfrezi", "price": 15.50, "description": "Tomato-based curry with boneless chicken and bell peppers.", "tags": ["hot"] },
-            { "name": "Saag Wala Chicken", "price": 15.95, "description": "Chicken tikka simmered in a creamy spinach gravy.", "tags": ["hot"] },
-            { "name": "Chicken Madras", "price": 15.95, "description": "Freshly ground spices soothed with a rich coconut sauce.", "tags": ["hot"] },
-            { "name": "Methi Murgh", "price": 15.95, "description": "Mildly spicy chicken in a sauce of fresh fenugreek leaves, yoghurt, cream and spices.", "tags": ["hot"] },
-            { "name": "Chicken do Pyaza", "price": 15.50, "description": "Chunks of chicken in a tomato-based curry with caramelised onion.", "tags": ["hot"] }
+            {
+              "name": "Dilli wala Butter Chicken",
+              "price": 15.95,
+              "description": "Mild, flavorful chicken curry with a creamy touch",
+              "tags": [
+                "mild"
+              ],
+              "slug": "butter-chicken-dilli-wala",
+              "image": "/dishes/pdf/butter-chicken-dilli-wala.webp"
+            },
+            {
+              "name": "Kadai Chicken",
+              "price": 15.95,
+              "description": "Tender chicken cooked with fresh bell peppers & spices",
+              "tags": [
+                "mild"
+              ],
+              "slug": "kadai-murg",
+              "image": "/dishes/pdf/kadai-murg.webp"
+            },
+            {
+              "name": "Kori Gassi",
+              "price": 15.95,
+              "description": "Chicken tempered with curry leaves, chillies and coconut milk.",
+              "tags": [
+                "mild"
+              ]
+            },
+            {
+              "name": "Chicken Badami Korma",
+              "price": 15.95,
+              "description": "Tender chicken cooked in a rich, creamy almond-infused korma sauce",
+              "tags": [
+                "mild"
+              ],
+              "slug": "chicken-badami-korma",
+              "image": "/dishes/pdf/chicken-badami-korma.webp"
+            },
+            {
+              "name": "Dhaba Chicken",
+              "price": 15.95,
+              "description": "Spicy, homestyle chicken curry with bold flavors on the bone",
+              "tags": [
+                "hot"
+              ],
+              "slug": "dhaba-chicken",
+              "image": "/dishes/pdf/dhaba-chicken.webp"
+            },
+            {
+              "name": "Chicken Balti",
+              "price": 15.95,
+              "description": "Juicy chicken simmered with aromatic herbs and spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chicken-balti",
+              "image": "/dishes/pdf/chicken-balti.webp"
+            },
+            {
+              "name": "Chicken Tikka Masala",
+              "price": 15.95,
+              "description": "Juicy tandoor-cooked chicken in creamy spiced gravy",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chicken-tikka-masala",
+              "image": "/dishes/pdf/chicken-tikka-masala.webp"
+            },
+            {
+              "name": "Chicken Dhansak",
+              "price": 15.5,
+              "description": "Classic Parsi-style chicken with lentils & aromatic spices",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chicken-dhansak",
+              "image": "/dishes/pdf/chicken-dhansak.webp"
+            },
+            {
+              "name": "Chicken Jalfrezi",
+              "price": 15.5,
+              "description": "Tomato-based curry with boneless chicken and bell peppers.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Saag wala Chicken",
+              "price": 15.95,
+              "description": "Tender chicken cooked in flavorful spinach gravy",
+              "tags": [
+                "hot"
+              ],
+              "slug": "saag-wala-chicken",
+              "image": "/dishes/pdf/saag-wala-chicken.webp"
+            },
+            {
+              "name": "Chicken Madras",
+              "price": 15.95,
+              "description": "Tender chicken simmered in a bold, tangy South Indian-style curry",
+              "tags": [
+                "hot"
+              ],
+              "slug": "chicken-madras",
+              "image": "/dishes/pdf/chicken-madras.webp"
+            },
+            {
+              "name": "Methi Chicken",
+              "price": 15.95,
+              "description": "Tender chicken cooked with aromatic fenugreek and spices.",
+              "tags": [
+                "hot"
+              ],
+              "slug": "methi-murgh",
+              "image": "/dishes/pdf/methi-murgh.webp"
+            },
+            {
+              "name": "Chicken do Pyaza",
+              "price": 15.5,
+              "description": "Chunks of chicken in a tomato-based curry with caramelised onion.",
+              "tags": [
+                "hot"
+              ]
+            },
+            {
+              "name": "Chicken Curry",
+              "price": 15.95,
+              "description": "Classic Indian chicken curry with rich flavours",
+              "tags": [],
+              "image": "/dishes/pdf/chicken-curry.webp"
+            },
+            {
+              "name": "Chicken Changezi on the Bone",
+              "price": 15.95,
+              "description": "Tender chicken simmered in a rich, Mughal-inspired tomato and cream gravy.",
+              "tags": [],
+              "image": "/dishes/pdf/chicken-changezi-on-the-bone.webp"
+            }
           ]
         },
         {
           "id": "rice",
           "name": "Choice of Rice (Basmati)",
           "items": [
-            { "name": "Plain Rice", "price": 4.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Pulao Rice", "price": 5.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Veg Pulao", "price": 5.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Egg Rice", "price": 6.50, "description": "", "tags": [] },
-            { "name": "Mushroom & Garlic Rice", "price": 6.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Lemon Rice", "price": 5.45, "description": "", "tags": ["vegetarian"] }
+            {
+              "name": "Plain Rice",
+              "price": 4.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Pulao Rice",
+              "price": 5.5,
+              "description": "Fragrant basmati rice cooked with subtle spices and herbs",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "pulao-rice",
+              "image": "/dishes/pdf/pulao-rice.webp"
+            },
+            {
+              "name": "Veg Pulao",
+              "price": 5.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Egg Rice",
+              "price": 6.5,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Mushroom & Garlic Rice",
+              "price": 6.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Lemon Rice",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            }
           ]
         },
         {
           "id": "breads",
           "name": "Choice of Naan & Breads",
           "items": [
-            { "name": "Plain Naan", "price": 3.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Butter Naan", "price": 3.85, "description": "", "tags": ["vegetarian"] },
-            { "name": "Garlic Naan", "price": 4.35, "description": "", "tags": ["vegetarian"] },
-            { "name": "Chilli Garlic Naan", "price": 4.35, "description": "", "tags": ["vegetarian"] },
-            { "name": "Peshwari Naan", "price": 4.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Cheese Naan", "price": 5.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Keema Naan", "price": 5.50, "description": "", "tags": [] },
-            { "name": "Lacha Parantha", "price": 4.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Pudina Paratha", "price": 4.00, "description": "", "tags": ["vegetarian"] },
-            { "name": "Tawa Paratha", "price": 3.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Aloo Parantha", "price": 6.50, "description": "PRICE CONFLICT: listed at 8.50 on the Indian Street Food menu.", "tags": ["vegetarian"] },
-            { "name": "Tandoori Roti", "price": 3.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Missi Roti", "price": 4.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Roti Basket", "price": 17.95, "description": "VERIFY: price looks anomalous versus individual breads.", "tags": ["vegetarian"] }
+            {
+              "name": "Plain Naan",
+              "price": 3.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Butter Naan",
+              "price": 3.85,
+              "description": "Soft tandoor-baked naan brushed with melted butter",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "butter-naan",
+              "image": "/dishes/pdf/butter-naan.webp"
+            },
+            {
+              "name": "Garlic Naan",
+              "price": 4.35,
+              "description": "Soft, fluffy bread topped with fresh garlic",
+              "tags": [
+                "vegetarian"
+              ],
+              "slug": "garlic-naan",
+              "image": "/dishes/pdf/garlic-naan.webp"
+            },
+            {
+              "name": "Chilli Garlic Naan",
+              "price": 4.35,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Peshwari Naan",
+              "price": 4.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Cheese Naan",
+              "price": 5.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Keema Naan",
+              "price": 5.5,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Lacha Parantha",
+              "price": 4.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Pudina Paratha",
+              "price": 4,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Tawa Paratha",
+              "price": 3.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Aloo Parantha",
+              "price": 6.5,
+              "description": "PRICE CONFLICT: listed at 8.50 on the Indian Street Food menu.",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Tandoori Roti",
+              "price": 3.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Missi Roti",
+              "price": 4.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Roti Basket",
+              "price": 17.95,
+              "description": "VERIFY: price looks anomalous versus individual breads.",
+              "tags": [
+                "vegetarian"
+              ]
+            }
           ]
         },
         {
           "id": "salad-raita",
           "name": "Salads & Raita",
           "items": [
-            { "name": "Green Salad", "price": 5.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Onion Salad", "price": 4.00, "description": "", "tags": ["vegetarian", "vegan"] },
-            { "name": "Desi Kachumber", "price": 5.00, "description": "", "tags": ["vegetarian", "vegan"] },
-            { "name": "Plain Yoghurt", "price": 4.00, "description": "", "tags": ["vegetarian"] },
-            { "name": "Cumin Raita", "price": 5.00, "description": "", "tags": ["vegetarian"] },
-            { "name": "Mix-Veg Raita", "price": 5.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Boondi Raita", "price": 5.00, "description": "", "tags": ["vegetarian"] }
+            {
+              "name": "Green Salad",
+              "price": 5.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Onion Salad",
+              "price": 4,
+              "description": "",
+              "tags": [
+                "vegetarian",
+                "vegan"
+              ]
+            },
+            {
+              "name": "Desi Kachumber",
+              "price": 5,
+              "description": "",
+              "tags": [
+                "vegetarian",
+                "vegan"
+              ]
+            },
+            {
+              "name": "Plain Yoghurt",
+              "price": 4,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Cumin Raita",
+              "price": 5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Mix-Veg Raita",
+              "price": 5.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Boondi Raita",
+              "price": 5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            }
           ]
         }
       ]
     },
-
     {
       "id": "indian-street-food",
       "name": "Indian Street Food",
@@ -323,27 +1455,138 @@
           "id": "street-food",
           "name": "Indian Street Food",
           "items": [
-            { "name": "Paper Dosa", "price": 9.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Masala Dosa", "price": 10.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Mysore Masala Dosa", "price": 10.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Paneer Dosa", "price": 10.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Rawa Dosa", "price": 9.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Upma", "price": 9.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Onion Vada Sambhar", "price": 9.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Onion Tomato Uttapam", "price": 9.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Pongal", "price": 10.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Sambar", "price": 7.99, "description": "", "tags": ["vegetarian"] },
-            { "name": "Chole Bhature", "price": 12.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Puri Bhaji", "price": 12.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Bombay Pav Bhaji", "price": 8.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Aloo Parantha", "price": 8.50, "description": "PRICE CONFLICT: listed at 6.50 on the main food menu.", "tags": ["vegetarian"] },
-            { "name": "Gobi Parantha", "price": 8.50, "description": "", "tags": ["vegetarian"] },
-            { "name": "Paneer Parantha", "price": 8.50, "description": "", "tags": ["vegetarian"] }
+            {
+              "name": "Paper Dosa",
+              "price": 9.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Masala Dosa",
+              "price": 10.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Mysore Masala Dosa",
+              "price": 10.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Paneer Dosa",
+              "price": 10.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Rawa Dosa",
+              "price": 9.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Upma",
+              "price": 9.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Onion Vada Sambhar",
+              "price": 9.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Onion Tomato Uttapam",
+              "price": 9.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Pongal",
+              "price": 10.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Sambar",
+              "price": 7.99,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Chole Bhature",
+              "price": 12.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Puri Bhaji",
+              "price": 12.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Bombay Pav Bhaji",
+              "price": 8.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Aloo Parantha",
+              "price": 8.5,
+              "description": "PRICE CONFLICT: listed at 6.50 on the main food menu.",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Gobi Parantha",
+              "price": 8.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Paneer Parantha",
+              "price": 8.5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            }
           ]
         }
       ]
     },
-
     {
       "id": "dessert-menu",
       "name": "Desserts, Coffee & Liqueurs",
@@ -352,18 +1595,107 @@
           "id": "desserts",
           "name": "Desserts",
           "items": [
-            { "name": "Red Velvet Cheesecake", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "New York Cheesecake", "price": 6.25, "description": "", "tags": ["vegetarian"] },
-            { "name": "Lemon Meringue Pie", "price": 5.00, "description": "", "tags": ["vegetarian"] },
-            { "name": "Black Forest Gateau", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Carrot Cake", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Chocolate Fudge Cake", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Chocolate Brownie Cake", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Choice of Ice Cream", "price": 4.95, "description": "Chocolate, vanilla or strawberry.", "tags": ["vegetarian"], "requires_variant_choice": ["Chocolate", "Vanilla", "Strawberry"] },
-            { "name": "Malai Kulfi Ice Cream", "price": 5.95, "description": "", "tags": ["vegetarian"] },
-            { "name": "Gulab Jamun", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Gajar ka Halwa", "price": 5.45, "description": "", "tags": ["vegetarian"] },
-            { "name": "Apple Crumble", "price": 5.95, "description": "Listed on the live site as 'Apple Crambled' - typo.", "tags": ["vegetarian"] }
+            {
+              "name": "Red Velvet Cheesecake",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "New York Cheesecake",
+              "price": 6.25,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Lemon Meringue Pie",
+              "price": 5,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Black Forest Gateau",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Carrot Cake",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Chocolate Fudge Cake",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Chocolate Brownie Cake",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Choice of Ice Cream",
+              "price": 4.95,
+              "description": "Chocolate, vanilla or strawberry.",
+              "tags": [
+                "vegetarian"
+              ],
+              "requires_variant_choice": [
+                "Chocolate",
+                "Vanilla",
+                "Strawberry"
+              ]
+            },
+            {
+              "name": "Malai Kulfi Ice Cream",
+              "price": 5.95,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Gulab Jamun",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Gajar ka Halwa",
+              "price": 5.45,
+              "description": "",
+              "tags": [
+                "vegetarian"
+              ]
+            },
+            {
+              "name": "Apple Crumble",
+              "price": 5.95,
+              "description": "Listed on the live site as 'Apple Crambled' - typo.",
+              "tags": [
+                "vegetarian"
+              ]
+            }
           ]
         },
         {
@@ -371,30 +1703,100 @@
           "name": "Coffee & Tea",
           "category_note": "PRICING LOOKS WRONG: Cappuccino 6.25 > Espresso 5.45 > Latte 5.00 > Americano 3.45. Verify before launch.",
           "items": [
-            { "name": "Americano", "price": 3.45, "description": "", "tags": [] },
-            { "name": "Cappuccino", "price": 6.25, "description": "VERIFY PRICE", "tags": [] },
-            { "name": "Café Latte", "price": 5.00, "description": "", "tags": [] },
-            { "name": "Espresso", "price": 5.45, "description": "VERIFY PRICE", "tags": [] },
-            { "name": "Masala Chai", "price": 5.45, "description": "", "tags": [] },
-            { "name": "English Breakfast Tea", "price": 5.45, "description": "", "tags": [] },
-            { "name": "Liqueur Coffee", "price": 5.45, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Hot Chocolate", "price": 4.95, "description": "", "tags": [] }
+            {
+              "name": "Americano",
+              "price": 3.45,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Cappuccino",
+              "price": 6.25,
+              "description": "VERIFY PRICE",
+              "tags": []
+            },
+            {
+              "name": "Café Latte",
+              "price": 5,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Espresso",
+              "price": 5.45,
+              "description": "VERIFY PRICE",
+              "tags": []
+            },
+            {
+              "name": "Masala Chai",
+              "price": 5.45,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "English Breakfast Tea",
+              "price": 5.45,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Liqueur Coffee",
+              "price": 5.45,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Hot Chocolate",
+              "price": 4.95,
+              "description": "",
+              "tags": []
+            }
           ]
         },
         {
           "id": "liqueurs",
           "name": "Liqueurs",
           "items": [
-            { "name": "Bailey's", "price": 3.75, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Tia Maria", "price": 3.75, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Drambuie", "price": 3.50, "description": "Listed on the live site as 'Drambiue' - typo.", "tags": [], "contains_alcohol": true },
-            { "name": "Amaretto", "price": 3.50, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Southern Comfort", "price": 3.75, "description": "", "tags": [], "contains_alcohol": true }
+            {
+              "name": "Bailey's",
+              "price": 3.75,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Tia Maria",
+              "price": 3.75,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Drambuie",
+              "price": 3.5,
+              "description": "Listed on the live site as 'Drambiue' - typo.",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Amaretto",
+              "price": 3.5,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Southern Comfort",
+              "price": 3.75,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            }
           ]
         }
       ]
     },
-
     {
       "id": "drinks-delight",
       "name": "Drinks Delight (Bar)",
@@ -404,20 +1806,73 @@
           "id": "beer-cider",
           "name": "Beer & Cider (partial, unverified)",
           "items": [
-            { "name": "Cobra", "price": 5.95, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Peroni", "price": 6.55, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Foster's", "price": 5.75, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Kingfisher (650ml)", "price": 5.95, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Guinness (500ml)", "price": 5.25, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Inch's Cider", "price": 5.25, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Magner's", "price": 5.25, "description": "", "tags": [], "contains_alcohol": true },
-            { "name": "Beck's Zero", "price": 3.75, "description": "", "tags": [], "contains_alcohol": false },
-            { "name": "Peroni Zero", "price": 3.95, "description": "", "tags": [], "contains_alcohol": false }
+            {
+              "name": "Cobra",
+              "price": 5.95,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Peroni",
+              "price": 6.55,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Foster's",
+              "price": 5.75,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Kingfisher (650ml)",
+              "price": 5.95,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Guinness (500ml)",
+              "price": 5.25,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Inch's Cider",
+              "price": 5.25,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Magner's",
+              "price": 5.25,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": true
+            },
+            {
+              "name": "Beck's Zero",
+              "price": 3.75,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": false
+            },
+            {
+              "name": "Peroni Zero",
+              "price": 3.95,
+              "description": "",
+              "tags": [],
+              "contains_alcohol": false
+            }
           ]
         }
       ]
     },
-
     {
       "id": "pub-menu",
       "name": "Pub Menu",
