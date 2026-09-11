@@ -19,3 +19,11 @@ src/generated
 # Local artefacts
 coverage
 *.log
+
+# The client's source PDF: 72 MB, read once by scripts/extract-pdf-images.py to produce
+# public/dishes/pdf. The built site never touches it, and leaving it here made `vercel deploy`
+# upload 72 MB on every attempt.
+*.pdf
+
+# Screenshots dropped into the project root while reviewing.
+Screenshot*.png
