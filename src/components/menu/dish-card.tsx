@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import { Leaf, Sprout, TriangleAlert, Wine } from 'lucide-react'
 import { AddToCartButton } from '@/components/cart/add-to-cart-button'
+import { DishPhoto } from '@/components/menu/dish-photo'
 import { Badge } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
 import { cn } from '@/lib/cn'
@@ -82,34 +82,12 @@ export function DishCard({
       */}
       <div className="flex min-w-0 flex-1 gap-3.5 sm:gap-5">
         {photo ? (
-          <div
-            className={cn(
-              /*
-                White, not the surface colour. Javatri's own photographs are cut-outs on a
-                transparent background, so whatever sits behind them becomes the plate's
-                backdrop — on this dark menu that read as a black box around the food. White
-                gives the product-shot look the photographs were lit for. Library photographs
-                are opaque and fill the frame, so they are unaffected.
-              */
-              'relative size-20 shrink-0 overflow-hidden rounded-lg bg-white sm:size-28',
-              soldOut && 'grayscale',
-            )}
-          >
-            <Image
-              src={photo.src}
-              alt={photo.isLibrary ? '' : `${item.name} at Javatri`}
-              /*
-                A library photograph is decoration, not information: it shows what the dish is
-                generally like, and announcing "picture of chicken biryani" to a screen reader
-                after the dish name and description adds nothing. An empty alt hides it. A real
-                photograph of our own food is worth describing.
-              */
-              aria-hidden={photo.isLibrary || undefined}
-              fill
-              sizes="(min-width: 640px) 112px, 80px"
-              className="object-cover"
-            />
-          </div>
+          <DishPhoto
+            src={photo.src}
+            name={item.name}
+            isOwnPhotograph={!photo.isLibrary}
+            soldOut={soldOut}
+          />
         ) : null}
 
         <div className="min-w-0 flex-1">

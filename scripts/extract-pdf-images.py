@@ -75,6 +75,29 @@ def dish_image(doc, page):
     return Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
 
 
+def extract_logo(doc) -> None:
+    """
+    The 384x672 panel repeated on every page is the Javatri wordmark. Saved out once, trimmed to
+    its artwork, so the site has the real logo rather than a redrawn approximation.
+    """
+    for entry in doc[0].get_images(full=True):
+        xref, smask_xref = entry[0], entry[1]
+        info = doc.extract_image(xref)
+        if (info["width"], info["height"]) != FURNITURE:
+            continue
+        pix = pymupdf.Pixmap(doc, xref)
+        if smask_xref:
+            pix = pymupdf.Pixmap(pix, pymupdf.Pixmap(doc, smask_xref))
+        logo = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
+        box = logo.getbbox()
+        if box:
+            logo = logo.crop(box)
+        out = ROOT / "public" / "javatri-logo.webp"
+        logo.save(out, "WEBP", quality=90, method=6, lossless=True)
+        print(f"logo written to {out.relative_to(ROOT)} ({logo.width}x{logo.height})")
+        return
+
+
 def main() -> int:
     dishes = json.loads((ROOT / "scripts" / "pdf-dishes.json").read_text())
     mapping = json.loads((ROOT / "scripts" / "pdf-menu-map.json").read_text())
@@ -97,6 +120,7 @@ def main() -> int:
 
     OUT.mkdir(parents=True, exist_ok=True)
     doc = pymupdf.open(PDF)
+    extract_logo(doc)
     written = 0
     for page_no, slug in sorted(targets.items()):
         img = dish_image(doc, doc[page_no - 1])
