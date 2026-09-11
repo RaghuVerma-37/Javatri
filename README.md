@@ -200,6 +200,22 @@ node scripts/fetch-dish-images.mjs --force   # re-fetch all of them
 node scripts/fetch-dish-images.mjs --only "Chicken Biryani"
 ```
 
+### Importing the client's dish PDF
+
+The restaurant's own photography and copy arrive as a PDF, one dish per page.
+
+```bash
+python3 scripts/extract-pdf-images.py    # PDF -> public/dishes/pdf/*.webp (needs pymupdf, pillow)
+node scripts/import-pdf-menu.mjs         # dry run: what would change
+node scripts/import-pdf-menu.mjs --write # apply it to javatri-menu.json
+npm run db:seed -- --force               # --force, or PDF prices will not overwrite live ones
+```
+
+Both scripts read `scripts/pdf-menu-map.json`, which says by hand which page is which dish and
+why. That file is the important one: no fuzzy match can tell that "Veg Manchurian" is a new dish
+while "Kadai Chicken" is the existing "Kadai Murg". A matched dish keeps its slug so its id
+survives a rename, and dishes the PDF never mentions are left completely alone.
+
 The search behind each dish photograph is in `scripts/dish-image-queries.mjs`. Photographs are keyed
 by dish name, so renaming a dish in `javatri-menu.json` drops its photograph — the test suite fails
 and names the dish rather than letting the menu render a hole.
