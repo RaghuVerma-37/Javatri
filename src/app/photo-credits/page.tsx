@@ -76,7 +76,7 @@ export default async function PhotoCreditsPage() {
       <ul className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {credits.map((credit) => (
           <li key={credit.slug} className="flex gap-3">
-            <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
+            <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-white">
               <Image
                 src={credit.src}
                 alt=""

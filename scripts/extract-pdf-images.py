@@ -6,6 +6,10 @@ Run once, with pymupdf installed:
 
 Three things it has to get right:
 
+  * The transparency. A PDF keeps a cut-out's alpha in a separate soft-mask object, and
+    doc.extract_image() hands back only the base image — which arrives with a solid black field
+    where the background should be. The mask has to be fetched by its own xref and applied, or
+    every dish ends up in a black box.
   * The furniture. Every page carries a 384x672 decorative panel as well as the food. Taking the
     largest image per page picks the food; taking the first would pick whichever the PDF happened
     to store first.
@@ -15,8 +19,10 @@ Three things it has to get right:
   * The shape. The cards are square and use object-cover, which crops. Fitting the trimmed food
     inside a square canvas rather than filling it means nothing is ever cut off the plate.
 
-Transparency is preserved, so the card background shows through instead of a white box.
+The result is composited onto white, the way the photographs were lit and the way the client
+asked for them — a product shot rather than a cut-out floating on whatever colour is behind it.
 """
+import io
 import json
 import pathlib
 import re
@@ -42,16 +48,31 @@ def slugify(value: str) -> str:
 
 
 def dish_image(doc, page):
-    """The largest image on the page that is not the repeated decorative panel."""
+    """
+    The largest image on the page that is not the repeated decorative panel, with its soft mask
+    applied so the cut-out is actually cut out.
+
+    Returns a PIL RGBA image, or None.
+    """
     best = None
     for entry in page.get_images(full=True):
-        info = doc.extract_image(entry[0])
+        xref, smask_xref = entry[0], entry[1]
+        info = doc.extract_image(xref)
         if (info["width"], info["height"]) == FURNITURE:
             continue
         area = info["width"] * info["height"]
         if best is None or area > best[0]:
-            best = (area, info)
-    return None if best is None else best[1]
+            best = (area, xref, smask_xref)
+
+    if best is None:
+        return None
+
+    _, xref, smask_xref = best
+    pix = pymupdf.Pixmap(doc, xref)
+    if smask_xref:
+        # Pixmap(base, mask) returns the base with the mask as its alpha channel.
+        pix = pymupdf.Pixmap(pix, pymupdf.Pixmap(doc, smask_xref))
+    return Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGBA")
 
 
 def main() -> int:
@@ -78,14 +99,10 @@ def main() -> int:
     doc = pymupdf.open(PDF)
     written = 0
     for page_no, slug in sorted(targets.items()):
-        info = dish_image(doc, doc[page_no - 1])
-        if info is None:
+        img = dish_image(doc, doc[page_no - 1])
+        if img is None:
             print(f"  page {page_no}: no dish image", file=sys.stderr)
             continue
-
-        tmp = OUT / f".raw-{page_no}.{info['ext']}"
-        tmp.write_bytes(info["image"])
-        img = Image.open(tmp).convert("RGBA")
 
         box = img.getbbox()  # bounding box of the non-transparent pixels
         if box:
@@ -95,10 +112,9 @@ def main() -> int:
         scale = min(inner / img.width, inner / img.height)
         img = img.resize((max(1, round(img.width * scale)), max(1, round(img.height * scale))), Image.LANCZOS)
 
-        canvas = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
+        canvas = Image.new("RGB", (CANVAS, CANVAS), (255, 255, 255))
         canvas.paste(img, ((CANVAS - img.width) // 2, (CANVAS - img.height) // 2), img)
         canvas.save(OUT / f"{slug}.webp", "WEBP", quality=82, method=6)
-        tmp.unlink()
         written += 1
 
     print(f"{written} dish photographs written to {OUT.relative_to(ROOT)}")

@@ -84,7 +84,14 @@ export function DishCard({
         {photo ? (
           <div
             className={cn(
-              'relative size-20 shrink-0 overflow-hidden rounded-lg bg-surface-2 sm:size-28',
+              /*
+                White, not the surface colour. Javatri's own photographs are cut-outs on a
+                transparent background, so whatever sits behind them becomes the plate's
+                backdrop — on this dark menu that read as a black box around the food. White
+                gives the product-shot look the photographs were lit for. Library photographs
+                are opaque and fill the frame, so they are unaffected.
+              */
+              'relative size-20 shrink-0 overflow-hidden rounded-lg bg-white sm:size-28',
               soldOut && 'grayscale',
             )}
           >
