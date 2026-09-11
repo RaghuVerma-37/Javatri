@@ -94,7 +94,8 @@ export const DISH_QUERIES = {
   'Baigan ka Bharta': 'baingan bharta',
   'Mix Veg Curry': 'mixed vegetable curry',
   'Veg Tawa Fry': 'tawa vegetable fry',
-  'Choice of Potatoes': 'jeera aloo potato',
+  'Bombay Aloo': "file:Anjum's Indian Vegetarian Feast - Bombay Potatoes.jpg",
+  'Jeera Aloo': 'jeera aloo cumin potato',
 
   // Sharing Platters
   'Vegetarian Platter': 'vegetarian thali platter',

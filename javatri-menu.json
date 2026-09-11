@@ -744,21 +744,6 @@
               "image": "/dishes/pdf/veg-tawa-fry.webp"
             },
             {
-              "name": "Choice of Potatoes",
-              "price": 11.95,
-              "description": "Bombay aloo, saag aloo, jeera aloo, methi aloo or gobi aloo.",
-              "tags": [
-                "hot"
-              ],
-              "requires_variant_choice": [
-                "Bombay Aloo",
-                "Saag Aloo",
-                "Jeera Aloo",
-                "Methi Aloo",
-                "Gobi Aloo"
-              ]
-            },
-            {
               "name": "Aloo Gobi",
               "price": 10.95,
               "description": "Tender potatoes and cauliflower cooked with spices",
@@ -785,6 +770,18 @@
               "description": "Tender potatoes cooked with fresh fenugreek leaves and mild spices",
               "tags": [],
               "image": "/dishes/pdf/aloo-methi.webp"
+            },
+            {
+              "name": "Bombay Aloo",
+              "price": 10.95,
+              "description": "",
+              "tags": []
+            },
+            {
+              "name": "Jeera Aloo",
+              "price": 10.95,
+              "description": "",
+              "tags": []
             }
           ]
         },

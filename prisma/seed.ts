@@ -43,6 +43,8 @@ async function main() {
 
   await seedAdminUser()
 
+  await warnAboutStrandedDishes(result)
+
   const dishes = await prisma.menuItem.count()
   const unconfirmed = await prisma.menuItem.count({ where: { allergensConfirmed: false } })
   console.log(`\nDone. ${dishes} dishes in the database.`)
@@ -51,6 +53,37 @@ async function main() {
       `${unconfirmed} of them still have no confirmed allergen information. See ALLERGEN_TODO.md — this is a legal blocker, not a nice-to-have.`,
     )
   }
+}
+
+/**
+ * Names any dish still in the database that the source file no longer lists.
+ *
+ * The seed only ever upserts — it has no business deleting a restaurant's menu because a JSON
+ * file changed shape. But that means removing a dish from javatri-menu.json, or renaming one
+ * without pinning its slug, leaves the old row behind and still on sale. Silently. This says so
+ * rather than leaving someone to find out from a customer's order.
+ */
+async function warnAboutStrandedDishes(result: ReturnType<typeof transform>) {
+  const expected = new Set<string>()
+  for (const branch of result.branches) {
+    for (const menu of branch.menus) {
+      for (const category of menu.categories) {
+        for (const item of category.items) expected.add(`${menu.slug}/${category.slug}/${item.slug}`)
+      }
+    }
+  }
+
+  const live = await prisma.menuItem.findMany({
+    select: { name: true, slug: true, category: { select: { slug: true, menu: { select: { slug: true } } } } },
+  })
+  const stranded = live.filter(
+    (item) => !expected.has(`${item.category.menu.slug}/${item.category.slug}/${item.slug}`),
+  )
+  if (stranded.length === 0) return
+
+  console.log(`\n${stranded.length} dish(es) in the database are no longer in javatri-menu.json:`)
+  for (const item of stranded) console.log(`  ${item.category.menu.slug}/${item.category.slug}/${item.slug} — "${item.name}"`)
+  console.log('They are still on sale. Delete them deliberately, or put them back in the source file.')
 }
 
 async function seedBranch(branch: SeedBranch) {
