@@ -774,13 +774,13 @@
             {
               "name": "Bombay Aloo",
               "price": 10.95,
-              "description": "",
+              "description": "Spiced potatoes cooked with tomatoes and aromatic spices",
               "tags": []
             },
             {
               "name": "Jeera Aloo",
               "price": 10.95,
-              "description": "",
+              "description": "Tender potatoes tossed with cumin seeds and mild spices",
               "tags": []
             }
           ]
