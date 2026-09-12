@@ -63,15 +63,15 @@ export async function sendEmail(mail: Mail): Promise<{ sent: boolean; reason?: s
 // ---------------------------------------------------------------------------
 
 const STYLES = {
-  wrap: 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#fbf7f1;padding:24px;color:#1b1714;',
-  card: 'max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e4d9c9;border-radius:16px;overflow:hidden;',
+  wrap: 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#dce6c8;padding:24px;color:#182112;',
+  card: 'max-width:560px;margin:0 auto;background:#f4f8ed;border:1px solid #c5d2b2;border-radius:16px;overflow:hidden;',
   head: 'padding:24px 24px 8px;',
   body: 'padding:8px 24px 24px;font-size:15px;line-height:1.6;',
   table: 'width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;',
-  th: 'text-align:left;padding:8px 0;border-bottom:1px solid #e4d9c9;color:#6a5e52;font-weight:600;',
-  td: 'padding:8px 0;border-bottom:1px solid #f4ece0;vertical-align:top;',
+  th: 'text-align:left;padding:8px 0;border-bottom:1px solid #c5d2b2;color:#475d37;font-weight:600;',
+  td: 'padding:8px 0;border-bottom:1px solid #e9e0d0;vertical-align:top;',
   right: 'text-align:right;white-space:nowrap;',
-  foot: 'max-width:560px;margin:16px auto 0;font-size:12px;color:#6a5e52;text-align:center;line-height:1.6;',
+  foot: 'max-width:560px;margin:16px auto 0;font-size:12px;color:#475d37;text-align:center;line-height:1.6;',
 }
 
 function escapeHtml(value: string): string {
@@ -108,8 +108,8 @@ function itemRows(order: OrderEmailData): string {
       (item) => `<tr>
         <td style="${STYLES.td}">
           <strong>${item.quantity}×</strong> ${escapeHtml(item.name)}
-          ${item.options.length > 0 ? `<div style="color:#6a5e52;font-size:13px;">${escapeHtml(item.options.join(' · '))}</div>` : ''}
-          ${item.notes ? `<div style="color:#6a5e52;font-size:13px;font-style:italic;">“${escapeHtml(item.notes)}”</div>` : ''}
+          ${item.options.length > 0 ? `<div style="color:#475d37;font-size:13px;">${escapeHtml(item.options.join(' · '))}</div>` : ''}
+          ${item.notes ? `<div style="color:#475d37;font-size:13px;font-style:italic;">“${escapeHtml(item.notes)}”</div>` : ''}
         </td>
         <td style="${STYLES.td}${STYLES.right}">${formatPence(item.lineTotalInPence)}</td>
       </tr>`,
@@ -133,13 +133,13 @@ export function customerOrderEmail(order: OrderEmailData): { subject: string; ht
     html: `<div style="${STYLES.wrap}">
   <div style="${STYLES.card}">
     <div style="${STYLES.head}">
-      <p style="margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#7a1818;">Order confirmed</p>
+      <p style="margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4c5e26;">Order confirmed</p>
       <h1 style="margin:6px 0 0;font-size:24px;">Thank you, ${escapeHtml(order.customerName.split(' ')[0])}</h1>
     </div>
     <div style="${STYLES.body}">
       <p style="margin:0 0 4px;">Your order <strong>${order.orderNumber}</strong> is paid and with the kitchen.</p>
       <p style="margin:0;">${TYPE_LABEL[order.type]} — ${verb} <strong>${when}</strong>.</p>
-      ${order.address ? `<p style="margin:12px 0 0;color:#6a5e52;">Delivering to ${escapeHtml(order.address)}</p>` : ''}
+      ${order.address ? `<p style="margin:12px 0 0;color:#475d37;">Delivering to ${escapeHtml(order.address)}</p>` : ''}
 
       <table style="${STYLES.table}">
         <thead><tr><th style="${STYLES.th}">Your order</th><th style="${STYLES.th}${STYLES.right}"></th></tr></thead>
@@ -148,21 +148,21 @@ export function customerOrderEmail(order: OrderEmailData): { subject: string; ht
 
       ${
         order.allergyNotes
-          ? `<p style="margin:0 0 12px;padding:12px;background:#fbf0dc;border-radius:10px;"><strong>Allergy note you gave us:</strong> ${escapeHtml(order.allergyNotes)}</p>`
+          ? `<p style="margin:0 0 12px;padding:12px;background:#f6ecda;border-radius:10px;"><strong>Allergy note you gave us:</strong> ${escapeHtml(order.allergyNotes)}</p>`
           : ''
       }
 
-      <p style="margin:0 0 12px;padding:12px;background:#fbf0dc;border-radius:10px;font-size:13px;">
+      <p style="margin:0 0 12px;padding:12px;background:#f6ecda;border-radius:10px;font-size:13px;">
         <strong>Allergies.</strong> Our dishes are prepared in a kitchen that handles all 14 regulated
         allergens, so we cannot guarantee any dish is free from traces. If you have an allergy and
         have not already spoken to us, please call before you eat.
       </p>
 
       <p style="margin:16px 0 0;">
-        <a href="${absoluteUrl(`/order/${order.publicId}`)}" style="display:inline-block;background:#8a1c1c;color:#fff8f0;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:600;">Track your order</a>
+        <a href="${absoluteUrl(`/order/${order.publicId}`)}" style="display:inline-block;background:#b6c94f;color:#182112;text-decoration:none;padding:12px 20px;border-radius:999px;font-weight:600;">Track your order</a>
       </p>
-      <p style="margin:16px 0 0;color:#6a5e52;">
-        Something wrong? Call us on <a href="tel:+441628825753" style="color:#7a1818;">01628 825753</a> and ask for order ${order.orderNumber}.
+      <p style="margin:16px 0 0;color:#475d37;">
+        Something wrong? Call us on <a href="tel:+441628825753" style="color:#4c5e26;">01628 825753</a> and ask for order ${order.orderNumber}.
       </p>
     </div>
   </div>
@@ -185,7 +185,7 @@ export function kitchenOrderEmail(order: OrderEmailData): { subject: string; htm
     <div style="${STYLES.body}">
       ${
         order.allergyNotes
-          ? `<p style="margin:0 0 16px;padding:12px;background:#fbe9e9;border:1px solid #a11b1b;border-radius:10px;"><strong>ALLERGY:</strong> ${escapeHtml(order.allergyNotes)}</p>`
+          ? `<p style="margin:0 0 16px;padding:12px;background:#f6e6e4;border:1px solid #851917;border-radius:10px;"><strong>ALLERGY:</strong> ${escapeHtml(order.allergyNotes)}</p>`
           : ''
       }
       <table style="${STYLES.table}"><tbody>${itemRows(order)}${totals(order)}</tbody></table>
@@ -195,7 +195,7 @@ export function kitchenOrderEmail(order: OrderEmailData): { subject: string; htm
         ${order.address ? `${escapeHtml(order.address)}<br>` : ''}
         ${escapeHtml(order.customerEmail)}
       </p>
-      <p style="margin:16px 0 0;"><a href="${absoluteUrl('/admin/orders')}" style="color:#7a1818;">Open in the admin area</a></p>
+      <p style="margin:16px 0 0;"><a href="${absoluteUrl('/admin/orders')}" style="color:#4c5e26;">Open in the admin area</a></p>
     </div>
   </div>
 </div>`,
@@ -218,9 +218,9 @@ export function reservationEmail(reservation: {
       <div style="${STYLES.body}">
         <p style="margin:0;">We have your request for <strong>${reservation.partySize} ${reservation.partySize === 1 ? 'person' : 'people'}</strong> on <strong>${when}</strong>.</p>
         <p style="margin:12px 0 0;">Reference <strong>${reservation.reference}</strong>. We will call or email to confirm shortly — the table is not held until we do.</p>
-        ${reservation.allergyNotes ? `<p style="margin:12px 0 0;padding:12px;background:#fbf0dc;border-radius:10px;"><strong>Allergy note:</strong> ${escapeHtml(reservation.allergyNotes)}</p>` : ''}
-        ${reservation.notes ? `<p style="margin:12px 0 0;color:#6a5e52;">${escapeHtml(reservation.notes)}</p>` : ''}
-        <p style="margin:16px 0 0;color:#6a5e52;">Need to change it? Call <a href="tel:+441628825753" style="color:#7a1818;">01628 825753</a>.</p>
+        ${reservation.allergyNotes ? `<p style="margin:12px 0 0;padding:12px;background:#f6ecda;border-radius:10px;"><strong>Allergy note:</strong> ${escapeHtml(reservation.allergyNotes)}</p>` : ''}
+        ${reservation.notes ? `<p style="margin:12px 0 0;color:#475d37;">${escapeHtml(reservation.notes)}</p>` : ''}
+        <p style="margin:16px 0 0;color:#475d37;">Need to change it? Call <a href="tel:+441628825753" style="color:#4c5e26;">01628 825753</a>.</p>
       </div>
     </div></div>`,
   }
@@ -242,7 +242,7 @@ export function enquiryEmail(enquiry: {
           enquiry.estimatedGuests ? ` for around <strong>${enquiry.estimatedGuests} guests</strong>` : ''
         }${enquiry.preferredDate ? ` on <strong>${formatInLondon(enquiry.preferredDate, 'EEEE d MMMM yyyy')}</strong>` : ''}.</p>
         <p style="margin:12px 0 0;">Reference <strong>${enquiry.reference}</strong>. One of us will be in touch within a day to talk it through.</p>
-        <p style="margin:16px 0 0;color:#6a5e52;">In a hurry? Call <a href="tel:+441628825753" style="color:#7a1818;">01628 825753</a>.</p>
+        <p style="margin:16px 0 0;color:#475d37;">In a hurry? Call <a href="tel:+441628825753" style="color:#4c5e26;">01628 825753</a>.</p>
       </div>
     </div></div>`,
   }

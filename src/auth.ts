@@ -20,7 +20,7 @@ import { prisma } from '@/lib/db'
  *   • Sessions are JWTs, so there is no session table and no database round trip per request.
  *
  * This module imports Prisma and therefore only ever runs in a Node handler. The Edge-safe half
- * of the configuration lives in auth.config.ts, which is what the middleware uses.
+ * of the configuration lives in auth.config.ts, which is what the proxy uses.
  */
 
 const credentialsSchema = z.object({

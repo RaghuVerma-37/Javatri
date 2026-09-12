@@ -39,7 +39,7 @@ export function MenuSectionNav({ menus }: { menus: MenuWithContent[] }) {
           <li key={section.id}>
             <a
               href={`#${section.id}`}
-              className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full border border-line-strong px-4 text-sm transition-colors hover:bg-surface-2"
+              className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full border border-line-strong px-4 text-sm transition-colors hover:border-olive hover:bg-lime"
             >
               {section.name}
               <span className="text-xs tabular-nums text-muted">{section.count}</span>

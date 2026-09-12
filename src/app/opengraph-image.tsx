@@ -23,9 +23,10 @@ export default async function OpengraphImage() {
           flexDirection: 'column',
           justifyContent: 'center',
           padding: '72px 80px',
+          // Lime Cream with one Pistachio lift, the same construction as the hero it stands for.
           background:
-            'radial-gradient(1100px 620px at 12% 18%, #58150f 0%, transparent 62%), radial-gradient(900px 520px at 92% 78%, #7a1533 0%, transparent 58%), #120d0b',
-          color: '#f9f2e7',
+            'radial-gradient(1100px 620px at 88% 8%, #9bb979 0%, transparent 62%), #dce6c8',
+          color: '#182112',
           fontFamily: 'Georgia, serif',
         }}
       >
@@ -35,7 +36,7 @@ export default async function OpengraphImage() {
             fontSize: 22,
             letterSpacing: 6,
             textTransform: 'uppercase',
-            color: '#e2b25f',
+            color: '#3f582d',
             fontFamily: 'Helvetica, Arial, sans-serif',
           }}
         >
@@ -62,7 +63,7 @@ export default async function OpengraphImage() {
             marginTop: 34,
             width: 380,
             height: 3,
-            background: 'linear-gradient(90deg, #d99a2b, transparent)',
+            background: 'linear-gradient(90deg, #6c8a56, transparent)',
           }}
         />
 
@@ -71,7 +72,7 @@ export default async function OpengraphImage() {
             display: 'flex',
             fontSize: 28,
             marginTop: 32,
-            color: '#c9bba6',
+            color: '#475d37',
             fontFamily: 'Helvetica, Arial, sans-serif',
           }}
         >

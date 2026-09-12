@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRef, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import { ArrowRight } from 'lucide-react'
@@ -19,7 +20,8 @@ export function TiltCard({
   title,
   children,
   cta,
-  accent = '#d99a2b',
+  image,
+  accent = '#b6c94f',
   className,
   ...rest
 }: {
@@ -28,6 +30,8 @@ export function TiltCard({
   title: string
   children: ReactNode
   cta: string
+  /** Decorative: the card's own link text already names the destination. */
+  image?: { src: string; alt?: string }
   accent?: string
   className?: string
 } & Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'title' | 'children' | 'className'>) {
@@ -62,13 +66,29 @@ export function TiltCard({
       onPointerMove={onPointerMove}
       onPointerLeave={reset}
       onBlur={reset}
-      style={{ ['--accent' as string]: accent }}
+      /* --card-accent, not --accent: setting the token itself here would have quietly recoloured
+         every `text-accent` inside the card along with the glow. */
+      style={{ ['--card-accent' as string]: accent }}
       className={cn(
-        'tilt-card group relative flex flex-col overflow-hidden rounded-3xl border border-line bg-surface p-6 sm:p-7',
+        'tilt-card lift group relative flex flex-col overflow-hidden rounded-3xl border border-line bg-surface',
         className,
       )}
       {...rest}
     >
+      {image ? (
+        <div className="relative aspect-[16/10] w-full overflow-hidden">
+          <Image
+            src={image.src}
+            alt=""
+            aria-hidden
+            fill
+            sizes="(min-width: 768px) 30vw, 100vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
+        </div>
+      ) : null}
+
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text">{eyebrow}</p>
       <h3 className="mt-3 text-2xl">{title}</h3>
       <div className="mt-2.5 flex-1 text-[0.9375rem] leading-relaxed text-muted">{children}</div>
@@ -79,6 +99,7 @@ export function TiltCard({
           className="size-4 transition-transform duration-300 group-hover:translate-x-1"
         />
       </p>
+      </div>
     </Link>
   )
 }

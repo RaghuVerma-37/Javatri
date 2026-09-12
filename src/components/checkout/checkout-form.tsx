@@ -139,11 +139,14 @@ export function CheckoutForm({ slots }: { slots: Record<string, SlotOption[]> })
           appearance: {
             theme: 'flat',
             variables: {
-              colorPrimary: '#8a1c1c',
-              colorBackground: '#ffffff',
-              colorText: '#1b1714',
+              /* Stripe paints its own focus rings from colorPrimary, so this is the deep
+                 brand-text olive rather than Pear Green itself — Pear on a white field is 1.6:1
+                 and would make the focused input look unfocused. */
+              colorPrimary: '#4c5e26',
+              colorBackground: '#f4f8ed',
+              colorText: '#182112',
               borderRadius: '12px',
-              fontFamily: 'system-ui, sans-serif',
+              fontFamily: 'Karla, system-ui, sans-serif',
             },
           },
         }}

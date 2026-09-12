@@ -7,7 +7,7 @@ import { OpenStatus } from '@/components/open-status'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { localDateKey, addDaysToDateKey, summariseWeek } from '@/lib/hours'
 import { absoluteUrl, formatPhone, telHref } from '@/lib/site'
-import { getServiceState, getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 import { RESERVATION_HORIZON_DAYS } from '@/server/ordering'
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function BookPage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const now = new Date()
   const today = localDateKey(now, branch.timezone)

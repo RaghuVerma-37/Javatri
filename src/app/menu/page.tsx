@@ -14,7 +14,7 @@ import { OpenStatus } from '@/components/open-status'
 import { ButtonLink } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, menuSchema } from '@/lib/jsonld'
 import { absoluteUrl } from '@/lib/site'
-import { getServiceState, getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 import { getPublishedMenus, getUnpublishedMenuNotes } from '@/server/menu'
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function MenuPage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const [menus, unpublished] = await Promise.all([
     getPublishedMenus(branch.id),

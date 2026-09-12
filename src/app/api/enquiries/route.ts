@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { enquiryEmail, sendEmail } from '@/lib/email'
 import { enquirySchema, fieldErrors } from '@/lib/validation'
-import { requireBranch } from '@/server/branch'
+import { getSelectedBranchSlug, requireBranch } from '@/server/branch'
 import { isDatabaseConfigured } from '@/server/static-data'
 import { generateReference } from '@/server/orders'
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const branch = await requireBranch()
+    const branch = await requireBranch(await getSelectedBranchSlug())
     const enquiry = await prisma.eventEnquiry.create({
       data: {
         reference: generateReference('EV'),

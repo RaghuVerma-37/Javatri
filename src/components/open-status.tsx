@@ -1,3 +1,4 @@
+import { Diya } from '@/components/ornament/diya'
 import { Badge } from '@/components/ui'
 import { formatInLondon } from '@/lib/hours'
 import type { BranchWithHours, ServiceState } from '@/server/branch'
@@ -20,7 +21,7 @@ export function OpenStatus({
   if (state.isOpen && state.closesAt) {
     return (
       <Badge tone="ok" className={className}>
-        <Dot className="bg-ok" />
+        <Diya lit className="-my-1 mr-0.5" />
         Open now until {formatInLondon(state.closesAt, 'HH:mm', branch.timezone)}
       </Badge>
     )
@@ -45,12 +46,8 @@ export function OpenStatus({
 
   return (
     <Badge tone="warn" className={className}>
-      <Dot className="bg-warn" />
+      <Diya lit={false} className="-my-1 mr-0.5" />
       Closed — opens {when}
     </Badge>
   )
-}
-
-function Dot({ className }: { className?: string }) {
-  return <span aria-hidden className={`inline-block size-1.5 rounded-full ${className}`} />
 }

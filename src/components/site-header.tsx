@@ -3,12 +3,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
-import { Menu, Phone, ShoppingBag, X } from 'lucide-react'
+import { Menu, Phone, X } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-context'
+import { Tiffin } from '@/components/cart/tiffin'
+import { OutletSwitcher } from '@/components/outlet/outlet-switcher'
+import { useOutlet } from '@/components/outlet/outlet-context'
 import { buttonClass } from '@/components/ui'
 import Image from 'next/image'
 import { cn } from '@/lib/cn'
-import { SITE } from '@/lib/site'
+import { SITE, formatPhone, telHref } from '@/lib/site'
 
 /**
  * One header, one set of destinations.
@@ -26,20 +29,25 @@ const NAV = [
   { href: '/contact', label: 'Contact' },
 ] as const
 
-const PHONE = '+441628825753'
+/*
+  The fallback number, used when there is no outlet context or the chosen outlet has no phone of
+  its own. It is Littlewick Green's, which is the only number Javatri publishes anywhere.
+*/
+const PHONE = 'tel:+441628825753'
 const PHONE_DISPLAY = '01628 825753'
 
-/**
- * Pages that open with the full-bleed dark hero. The header floats over those, transparent, until
- * you scroll off it — a pale bar laid across a dark block looks like a mistake.
- *
- * A list rather than a measurement: the alternative is having the hero tell the header about
- * itself through context or an effect, which is a lot of machinery for two routes.
- */
-const DARK_HERO_ROUTES = new Set(['/', '/events'])
+/*
+  There is no longer a dark hero for the header to float over.
 
-const LOGO_DARK = '/javatri-logo.webp'
-const LOGO_LIGHT = '/javatri-logo-light.webp'
+  Both heroes open in Lime Cream now, which is the same colour this bar is, so the whole
+  transparent-over-a-dark-block state is gone — and with it the scroll listener that drove it, the
+  route list it had to be kept in step with, and three sets of override colours. The header is one
+  thing on every route.
+*/
+
+/* The red wordmark, full stop. The light-on-dark variant went with the dark theme: on cream the
+   logo's #851917 is 8.9:1, which is the best ground this mark has had here. */
+const LOGO = '/javatri-logo.webp'
 /** Intrinsic size of the wordmark, so the header reserves the right box before it loads. */
 const LOGO_SIZE = { width: 313, height: 113 } as const
 const LOGO_CLASS = 'h-8 w-auto sm:h-9'
@@ -48,11 +56,14 @@ export function SiteHeader() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const { itemCount, isHydrated } = useCart()
+  const outlet = useOutlet()
 
-  const hasDarkHero = DARK_HERO_ROUTES.has(pathname)
-  const isScrolled = useScrolledPast(80)
+  // The number belongs to the outlet you are looking at. An outlet with no published number falls
+  // back rather than rendering a dead `tel:` link.
+  const phone = telHref(outlet?.current?.phone) || PHONE
+  const phoneDisplay = formatPhone(outlet?.current?.phone) || PHONE_DISPLAY
 
-  const isOverHero = hasDarkHero && !isScrolled && !isOpen
+  const isScrolled = useScrolledPast(24)
 
   useEffect(() => {
     if (!isOpen) return
@@ -65,43 +76,32 @@ export function SiteHeader() {
 
   const isCurrent = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
+  // /outlets is the question "which kitchen?" — a header offering an Order button and an outlet
+  // switcher on top of it would be answering the question and asking it at the same time.
+  if (pathname === '/outlets') return null
+
   return (
     <header
+      /* Condenses once you leave the hero: the bar loses a little height and gains a shadow, so
+         it reads as lifting off the page rather than sitting in it. */
       className={cn(
-        'sticky top-0 z-50 border-b transition-colors duration-300',
-        isOverHero
-          ? 'border-transparent bg-transparent text-[#f7efe4]'
-          : 'border-line bg-bg/90 text-ink backdrop-blur-md',
+        'sticky top-0 z-50 border-b bg-bg/90 text-ink backdrop-blur-md transition-[box-shadow,border-color] duration-300',
+        isScrolled ? 'border-line shadow-[0_10px_30px_-24px_rgba(28,36,20,0.55)]' : 'border-transparent',
       )}
     >
-      <div className="container-page flex h-16 items-center justify-between gap-3 sm:h-18">
+      <div
+        className={cn(
+          'container-page flex items-center justify-between gap-3 transition-[height] duration-300',
+          isScrolled ? 'h-14 sm:h-16' : 'h-16 sm:h-18',
+        )}
+      >
         <Link
           href="/"
           className="-ml-1 flex min-h-11 shrink-0 items-center rounded-lg px-1 py-1"
           aria-label={`${SITE.name} home`}
         >
-          {/*
-            The wordmark, in the version that can actually be seen.
-
-            The logo's red is #851917. On the light theme's cream header that reads fine; on the
-            dark theme's #14110f it is a 1.85:1 contrast ratio, under the 3:1 a graphic needs and
-            in practice close to invisible. So the red is used on light backgrounds and a
-            recoloured version on dark ones — same letterforms, which are the brand.
-
-            Over the hero the background is a dark photograph whatever the theme, so that case is
-            decided in JS; the rest is left to prefers-color-scheme, which is how this theme is
-            switched everywhere else.
-
-            The images are decorative: the link already carries the accessible name.
-          */}
-          {isOverHero ? (
-            <Image src={LOGO_LIGHT} alt="" priority {...LOGO_SIZE} className={LOGO_CLASS} />
-          ) : (
-            <>
-              <Image src={LOGO_DARK} alt="" priority {...LOGO_SIZE} className={cn(LOGO_CLASS, 'dark:hidden')} />
-              <Image src={LOGO_LIGHT} alt="" priority {...LOGO_SIZE} className={cn(LOGO_CLASS, 'hidden dark:block')} />
-            </>
-          )}
+          {/* Decorative: the link already carries the accessible name. */}
+          <Image src={LOGO} alt="" priority {...LOGO_SIZE} className={LOGO_CLASS} />
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
@@ -113,11 +113,9 @@ export function SiteHeader() {
                   aria-current={isCurrent(item.href) ? 'page' : undefined}
                   className={cn(
                     'rounded-full px-3.5 py-2 text-[0.9375rem] transition-colors',
-                    isOverHero
-                      ? 'text-[#e8dcca] hover:bg-white/10 hover:text-[#f9f2e7]'
-                      : isCurrent(item.href)
-                        ? 'bg-brand-wash font-medium text-brand-text'
-                        : 'text-ink/80 hover:bg-surface-2 hover:text-ink',
+                    isCurrent(item.href)
+                      ? 'bg-brand-wash font-medium text-brand-text'
+                      : 'text-ink/80 hover:bg-surface-2 hover:text-ink',
                   )}
                 >
                   {item.label}
@@ -128,17 +126,19 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Renders nothing at all while there is only one outlet switched on. */}
+          <OutletSwitcher className="hidden sm:block" />
+
           <a
-            href={`tel:${PHONE}`}
+            href={phone}
             className={cn(
               buttonClass({ variant: 'secondary', size: 'sm' }),
               // 44px on anything thumb-operated; the desktop header keeps its lighter 36px.
               'hidden min-h-11 sm:inline-flex lg:min-h-9',
-              isOverHero && 'border-[#5a4a3a] bg-transparent text-[#f2e8d9] hover:bg-white/10',
             )}
           >
             <Phone aria-hidden className="size-4" />
-            <span className="hidden md:inline">{PHONE_DISPLAY}</span>
+            <span className="hidden md:inline">{phoneDisplay}</span>
             <span className="md:hidden">Call</span>
           </a>
 
@@ -146,7 +146,7 @@ export function SiteHeader() {
             href="/order"
             className={cn(buttonClass({ variant: 'primary', size: 'sm' }), 'relative min-h-11 lg:min-h-9')}
           >
-            <ShoppingBag aria-hidden className="size-4" />
+            <Tiffin count={isHydrated ? itemCount : 0} className="size-5" />
             <span>Order</span>
             {isHydrated && itemCount > 0 ? (
               <span
@@ -166,7 +166,6 @@ export function SiteHeader() {
             className={cn(
               buttonClass({ variant: 'secondary', size: 'sm' }),
               'min-h-11 min-w-11 px-3 lg:hidden',
-              isOverHero && 'border-[#5a4a3a] bg-transparent text-[#f2e8d9] hover:bg-white/10',
             )}
           >
             {isOpen ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
@@ -199,13 +198,18 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
-            <li className="mt-2 border-t border-line pt-2">
+            <li className="mt-2 border-t border-line pt-2 sm:hidden">
+              <div className="px-3 py-2">
+                <OutletSwitcher />
+              </div>
+            </li>
+            <li className="border-t border-line pt-2">
               <a
-                href={`tel:${PHONE}`}
+                href={phone}
                 onClick={() => setIsOpen(false)}
                 className="block rounded-xl px-3 py-3 text-base text-ink hover:bg-surface-2"
               >
-                Call {PHONE_DISPLAY}
+                Call {phoneDisplay}
               </a>
             </li>
           </ul>
@@ -220,8 +224,8 @@ export function SiteHeader() {
  *
  * Scroll position is browser state, not React state, so it is read with `useSyncExternalStore`
  * rather than mirrored into a `useState` from inside an effect. That also means the very first
- * render already knows the answer — landing on a deep link with a hash does not flash the
- * transparent header for a frame before correcting itself.
+ * render already knows the answer — landing on a deep link with a hash does not flash the tall
+ * header for a frame before correcting itself.
  */
 function useScrolledPast(threshold: number): boolean {
   const subscribe = useCallback((onChange: () => void) => {
@@ -236,8 +240,8 @@ function useScrolledPast(threshold: number): boolean {
   return useSyncExternalStore(
     subscribe,
     () => window.scrollY > threshold,
-    // The server cannot know, and the hero is at the top of the page, so "not scrolled" is the
-    // correct assumption for the markup React hydrates against.
+    // The server cannot know, and every page starts at the top, so "not scrolled" is the correct
+    // assumption for the markup React hydrates against.
     () => false,
   )
 }

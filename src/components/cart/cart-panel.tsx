@@ -2,8 +2,9 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { ShoppingBag, TriangleAlert, Trash2 } from 'lucide-react'
+import { TriangleAlert, Trash2 } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-context'
+import { Tiffin } from '@/components/cart/tiffin'
 import { Button, buttonClass } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import { formatPence } from '@/lib/money'
@@ -23,7 +24,7 @@ function CartContents({ onNavigate }: { onNavigate?: () => void }) {
   if (state.lines.length === 0) {
     return (
       <div className="px-5 py-10 text-center">
-        <ShoppingBag aria-hidden className="mx-auto size-8 text-muted/60" />
+        <Tiffin count={0} className="mx-auto size-11 text-muted/60" />
         <p className="mt-3 font-medium text-ink">Your basket is empty</p>
         <p className="mt-1 text-sm text-muted">Add something from the menu below.</p>
       </div>
@@ -180,7 +181,8 @@ export function CartPanel() {
       // 171-dish menu and one you have to scroll back up to find.
       className="sticky top-24 hidden self-start overflow-hidden rounded-2xl border border-line bg-surface lg:block"
     >
-      <h2 className="border-b border-line px-5 py-4 font-display text-lg font-semibold">
+      <h2 className="flex items-center gap-2.5 border-b border-line px-5 py-4 font-display text-lg font-semibold">
+        <Tiffin count={isHydrated ? itemCount : 0} className="size-6 text-brand-text" />
         Your basket{isHydrated && itemCount > 0 ? ` (${itemCount})` : ''}
       </h2>
       {/* A twenty-line basket must not push the checkout button below the fold. */}
@@ -218,7 +220,7 @@ export function CartBar() {
     <>
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 p-3 backdrop-blur-md lg:hidden">
         <Button size="lg" className="w-full" onClick={() => setIsOpen(true)}>
-          <ShoppingBag aria-hidden className="size-4" />
+          <Tiffin count={itemCount} className="size-5" />
           View basket ({itemCount})
           <span className="ml-auto tabular-nums">
             {pricing ? formatPence(pricing.totalInPence) : ''}

@@ -17,7 +17,7 @@ import { SlotPicker } from '@/components/order/slot-picker'
 import { OpenStatus } from '@/components/open-status'
 import { DemoNotice } from '@/components/demo-notice'
 import { absoluteUrl } from '@/lib/site'
-import { getServiceState, getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 import { isDatabaseConfigured } from '@/server/static-data'
 import { getOrderableMenus } from '@/server/menu'
 import { slotOptionsByType } from '@/server/ordering'
@@ -42,7 +42,7 @@ export const dynamic = 'force-dynamic'
  */
 export default async function OrderPage() {
   const now = new Date()
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const menus = await getOrderableMenus(branch.id)
   const state = getServiceState(branch, now)

@@ -1,23 +1,39 @@
 import type { Metadata, Viewport } from 'next'
-import { Fraunces, Inter } from 'next/font/google'
+import { Karla, Newsreader } from 'next/font/google'
 import { CartProvider } from '@/components/cart/cart-context'
+import { OutletProvider } from '@/components/outlet/outlet-context'
+import { OutletPrompt } from '@/components/outlet/outlet-prompt'
+import { getActiveBranches, getSelectedBranchSlug } from '@/server/branch'
+import { OUTLET_COOKIE } from '@/lib/outlet'
+import { cookies } from 'next/headers'
 import { RevealOnScroll } from '@/components/reveal-on-scroll'
 import { SiteFooter } from '@/components/site-footer'
+import { SiteChrome } from '@/components/site-chrome'
 import { SiteHeader } from '@/components/site-header'
 import { SITE } from '@/lib/site'
 import './globals.css'
 
-const inter = Inter({
-  variable: '--font-inter',
+/*
+  Newsreader for display, Karla for everything else.
+
+  Newsreader carries a real optical-size axis, so a 5rem headline and a 15px caption can be the
+  same face without the headline looking inflated or the caption spindly. That suits a page built
+  on restraint: the type does the work the colour used to.
+
+  Karla is the counterweight — a grotesque with flat terminals, quiet at 15px and audibly not the
+  default UI sans. Both are variable, so the whole range costs two files.
+*/
+const newsreader = Newsreader({
+  variable: '--font-newsreader',
   subsets: ['latin'],
   display: 'swap',
+  axes: ['opsz'],
 })
 
-const fraunces = Fraunces({
-  variable: '--font-fraunces',
+const karla = Karla({
+  variable: '--font-karla',
   subsets: ['latin'],
   display: 'swap',
-  axes: ['SOFT', 'WONK', 'opsz'],
 })
 
 export const metadata: Metadata = {
@@ -50,27 +66,54 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fbf7f1' },
-    { media: '(prefers-color-scheme: dark)', color: '#14110f' },
-  ],
+  // One colour: the site is light only.
+  themeColor: '#f8f4ed',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  /*
+    Read once, here, and handed down — every page under this layout then shares the same answer
+    without each one querying for it.
+
+    `cookies()` is only reached when two or more outlets are switched on (see
+    getSelectedBranchSlug), so with one outlet this layout still renders statically and the
+    chooser never mounts.
+  */
+  const active = await getActiveBranches()
+  const selectedSlug = await getSelectedBranchSlug()
+  const hasChosen = active.length < 2 || Boolean((await cookies()).get(OUTLET_COOKIE)?.value)
+  const outlets = active.map((branch) => ({
+    slug: branch.slug,
+    name: branch.name,
+    addressLine1: branch.addressLine1,
+    addressLine2: branch.addressLine2,
+    city: branch.city,
+    postcode: branch.postcode,
+    phone: branch.phone,
+    acceptsOrders: branch.acceptsOrders,
+    acceptsDelivery: branch.acceptsDelivery,
+    deliveryRadiusMiles: branch.deliveryRadiusMiles,
+  }))
+
   return (
-    <html lang="en-GB" className={`${inter.variable} ${fraunces.variable} h-full antialiased`}>
+    <html lang="en-GB" className={`${karla.variable} ${newsreader.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <CartProvider>
-          <a href="#main" className="skip-link">
-            Skip to main content
-          </a>
-          <RevealOnScroll />
-          <SiteHeader />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <SiteFooter />
-        </CartProvider>
+        <OutletProvider outlets={outlets} selectedSlug={selectedSlug} hasChosen={hasChosen}>
+          <CartProvider>
+            <a href="#main" className="skip-link">
+              Skip to main content
+            </a>
+            <RevealOnScroll />
+            <SiteHeader />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <SiteChrome>
+              <SiteFooter />
+              <OutletPrompt />
+            </SiteChrome>
+          </CartProvider>
+        </OutletProvider>
       </body>
     </html>
   )

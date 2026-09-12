@@ -3,7 +3,7 @@ import { NotConfigured } from '@/components/not-configured'
 import Link from 'next/link'
 import { CheckoutForm } from '@/components/checkout/checkout-form'
 import { CheckoutSummary } from '@/components/checkout/checkout-summary'
-import { getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug } from '@/server/branch'
 import { slotOptionsByType } from '@/server/ordering'
 import { isDatabaseConfigured } from '@/server/static-data'
 import { DemoNotice } from '@/components/demo-notice'
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function CheckoutPage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const slots = slotOptionsByType(branch)
 

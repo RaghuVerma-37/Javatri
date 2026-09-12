@@ -3,68 +3,60 @@
 /*
   Javatri — design tokens.
 
-  Warm paper, tandoori red, brass. The palette is checked for WCAG AA at the sizes it is used:
-  --muted on --bg is 5.4:1, --brand-text on --bg is 8.7:1, --on-brand on --brand is 11.2:1.
-  Nothing below 4.5:1 is used for body text and nothing below 3:1 for large text or borders that
-  carry meaning.
+  Light only. There is no dark theme: the palette the restaurant chose is a light palette, and
+  inverting it produced a second set of colours nobody picked.
+
+  How the five are used — this is the part that matters, because the first attempt got it wrong by
+  making the palest green the page and letting it become wallpaper:
+
+    cream tones  (Vanilla Beige #E9E0D0 and a lifted version of it)  — the grounds. Most of the
+                 site is this. Warm, quiet, and it makes food photography look like food.
+    Pistachio    #9BB979  — the brand tone. Full-bleed bands, mats and blocks. It appears in a
+                 few large, deliberate places instead of underneath everything.
+    Lime Cream   #DCE6C8  — the pale green surface, for panels that want a green cast.
+    Pear Green   #B6C94F  — the accent you press. Buttons, and nothing else.
+    Olive Mist   #6E8B59  — the accent you read. Deepened to #415A30 where it carries text, kept
+                 at full strength for rules and icons.
+
+  Contrast, checked at the sizes each token is used (sRGB, WCAG 2.1):
+    ink/cream 14.6:1 · muted/cream 5.7:1 · olive-text/cream 7.0:1 · ink on Pear 8.7:1
+    ink on Pistachio 7.3:1 · line-strong/cream 3.2:1 · the wordmark's #851917 on cream 8.9:1
+  On a Pistachio band only `ink` (and ink at 80%, 4.9:1) may carry text — `muted` is 2.9:1 there
+  and is never used on one.
 */
 
 :root {
-  --bg: #fbf7f1;
-  --surface: #ffffff;
-  --surface-2: #f4ece0;
-  --ink: #1b1714;
-  --muted: #6a5e52;
-  --line: #e4d9c9;
-  --line-strong: #cdbda6;
+  color-scheme: light;
 
-  --brand: #8a1c1c;
-  --brand-hover: #6f1616;
-  --on-brand: #fff8f0;
-  --brand-text: #7a1818;
-  --brand-wash: #f6e9e5;
+  --bg: #f8f4ed;          /* cream — the page */
+  --surface: #fcfbf7;     /* near-white cream — cards and panels */
+  --surface-2: #e9e0d0;   /* Vanilla Beige — the deeper cream band */
+  --ink: #1c2414;
+  --muted: #5e6345;
+  --line: #e5dfd1;
+  --line-strong: #8c8a69;
 
-  --accent: #9a6f16;
-  --accent-wash: #f7efdc;
+  /* Pear Green is the accent you press, and the only thing it does. Text on it is the page's own
+     ink — 8.7:1, where white would be 1.8:1. */
+  --brand: #b6c94f;
+  --brand-hover: #a2b536;
+  --on-brand: #1c2414;
+  --brand-text: #415a30;
+  --brand-wash: #eff4dc;
 
-  --ok: #1c6340;
-  --ok-wash: #e4f1ea;
-  --warn: #8a5300;
-  --warn-wash: #fbf0dc;
-  --danger: #a11b1b;
-  --danger-wash: #fbe9e9;
+  --accent: #415a30;      /* Olive Mist, deepened to where it can be read at 14px */
+  --accent-wash: #e6eedd;
 
-  --focus: #1f4fd8;
-}
+  /* Status. Green carries brand meaning here, so "ok" is a bluer pine that cannot be mistaken
+     for it, and danger is the wordmark's own red. */
+  --ok: #245c3e;
+  --ok-wash: #e3efe8;
+  --warn: #7b4b14;
+  --warn-wash: #f7eddc;
+  --danger: #851917;
+  --danger-wash: #f8e7e4;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14110f;
-    --surface: #1d1815;
-    --surface-2: #262019;
-    --ink: #f6efe5;
-    --muted: #b3a595;
-    --line: #362d25;
-    --line-strong: #4c4036;
-
-    --brand: #a52323;
-    --brand-hover: #bd2c2c;
-    --on-brand: #fff6ef;
-    --brand-text: #f0a08f;
-    --brand-wash: #2b1817;
-
-    --accent: #d9a63f;
-    --accent-wash: #2a2114;
-
-    --ok: #6ec49a;
-    --ok-wash: #16261e;
-    --warn: #e0ac5b;
-    --warn-wash: #2a2013;
-    --danger: #f08b8b;
-    --danger-wash: #2c1717;
-
-    --focus: #8fb0ff;
-  }
+  --focus: #2039b6;
 }
 
 @theme inline {
@@ -92,8 +84,39 @@
   --color-danger: var(--danger);
   --color-danger-wash: var(--danger-wash);
 
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* The palette itself, addressable by name, so a band or a mat draws from the five rather than
+     inventing a sixth. */
+  --color-cream: #f8f4ed;
+  --color-pistachio: #9bb979;
+  --color-lime: #dce6c8;
+  --color-vanilla: #e9e0d0;
+  --color-pear: #b6c94f;
+  --color-olive: #6e8b59;
+  --color-forest: #37492a;   /* Olive Mist taken down for the footer; cream on it is 8.3:1 */
+
+  /*
+    Conventions rather than brand colours, and kept out of the palette on purpose.
+    veg / nonveg  the green and brown of the Indian food mark; both clear 3:1 on cream and on white
+    chilli        the chilli red, close to the wordmark's own red so it reads as family
+    clay / flame  the diya's bowl and its flame — a flame has to be flame-coloured
+  */
+  --color-veg: #2c7a3b;
+  --color-nonveg: #7a3b12;
+  --color-chilli: #b3301d;
+  --color-clay: #8a4f24;
+  --color-flame: #eb9a2a;
+  --color-flame-core: #fde7a6;
+
+  /*
+    Newsreader for display, Karla for everything else.
+
+    Newsreader has real optical sizing, so the headlines can be set light and wide without going
+    spindly at 15px — which is what this direction needs: the page is quiet now, and the type
+    carries it rather than shouting over it. Karla underneath is a grotesque with flat terminals,
+    legible small and audibly not the default UI sans.
+  */
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
@@ -128,8 +151,10 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.015em;
+    /* 500, not 600. Newsreader at display size has enough presence without the extra weight, and
+       the whole point of this direction is that the page does not shout. */
+    font-weight: 500;
+    letter-spacing: -0.012em;
     text-wrap: balance;
   }
 
@@ -246,17 +271,21 @@
 
 /*
   ---------------------------------------------------------------------------
-  Hero motion
+  Hero
   ---------------------------------------------------------------------------
 
-  Javatri has no photography — the old site had almost none worth keeping — so the hero earns its
-  drama typographically and generatively rather than with a stock curry photograph. Everything
-  here animates only `opacity`, `transform` and `filter`, which the compositor can do without
-  touching layout, and the LCP element (the h1) is server-rendered text that is painted before any
-  of it runs.
+  This used to be a near-black block with drifting ember gradients, a grain overlay and a canvas
+  of warm motes, on the reasoning that Javatri had no photography worth showing. That reasoning
+  still holds — every dish photograph on this site is a Wikimedia stand-in the menu labels as a
+  serving suggestion, which is exactly the thing you cannot put behind a headline and call yours.
 
-  Every animation in this block is switched off wholesale by the reduced-motion rule in @layer
-  base above.
+  So the hero still earns its drama without a picture, but it now does it in the client's palette
+  and with the page's own data rather than with atmosphere. The ember canvas, the aurora blobs,
+  the film grain and the scroll cue are gone; what is left is Lime Cream, one hairline that draws
+  itself, and the times the kitchen can actually hand food over, set as large as the headline.
+
+  Everything here animates only `opacity` and `transform`, and the whole block is switched off by
+  the reduced-motion rule in @layer base above.
 */
 
 @layer components {
@@ -264,79 +293,15 @@
     position: relative;
     isolation: isolate;
     overflow: clip;
-    /* The hero commits to a dark ground in both themes: it reads as evening, which is when
-       people are deciding where dinner comes from. */
-    background: #120d0b;
-    color: #f7efe4;
+    background: var(--bg);
   }
 
-  /* Slow-drifting heat blooms. Three layers at different speeds so the movement never resolves
-     into an obvious loop. */
-  .hero-aurora {
-    position: absolute;
-    inset: -30%;
-    z-index: -2;
-    filter: blur(80px);
-    opacity: 0.75;
-    pointer-events: none;
-  }
-
-  .hero-aurora span {
-    position: absolute;
-    display: block;
-    border-radius: 999px;
-    mix-blend-mode: screen;
-    will-change: transform;
-  }
-
-  .hero-aurora span:nth-child(1) {
-    width: 46vw;
-    height: 46vw;
-    left: 4%;
-    top: 8%;
-    background: radial-gradient(circle at 40% 40%, #b8341f, transparent 68%);
-    animation: hero-drift-a 26s ease-in-out infinite alternate;
-  }
-
-  .hero-aurora span:nth-child(2) {
-    width: 40vw;
-    height: 40vw;
-    right: 2%;
-    top: 22%;
-    background: radial-gradient(circle at 60% 40%, #d99a2b, transparent 66%);
-    animation: hero-drift-b 32s ease-in-out infinite alternate;
-  }
-
-  .hero-aurora span:nth-child(3) {
-    width: 52vw;
-    height: 52vw;
-    left: 28%;
-    bottom: -18%;
-    background: radial-gradient(circle at 50% 50%, #7a1533, transparent 70%);
-    animation: hero-drift-c 38s ease-in-out infinite alternate;
-  }
-
-  @keyframes hero-drift-a {
-    from { transform: translate3d(0, 0, 0) scale(1); }
-    to   { transform: translate3d(9vw, 5vh, 0) scale(1.18); }
-  }
-  @keyframes hero-drift-b {
-    from { transform: translate3d(0, 0, 0) scale(1.1); }
-    to   { transform: translate3d(-8vw, 8vh, 0) scale(0.92); }
-  }
-  @keyframes hero-drift-c {
-    from { transform: translate3d(0, 0, 0) scale(0.95); }
-    to   { transform: translate3d(6vw, -7vh, 0) scale(1.15); }
-  }
-
-  /* Film grain, so the blurred gradients do not band on a cheap phone screen. */
-  .hero-grain {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0.35;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  /*
+    The banqueting opening. Same construction on the palette's warm neutral, so /events reads as
+    the other half of the business rather than as a second homepage.
+  */
+  .hero-banquet {
+    background-color: var(--surface-2);
   }
 
   /* Word-by-word mask reveal. Pure CSS with staggered delays — no JavaScript stands between the
@@ -384,26 +349,117 @@
     to { transform: scaleX(1); }
   }
 
-  /* The rotating dish word. Each word is absolutely stacked and takes its turn. */
-  .word-rotator {
-    position: relative;
-    display: inline-grid;
-    vertical-align: bottom;
-    overflow: hidden;
+  /* A time, set to be read rather than announced. Display face and tabular figures so the two
+     rows line up, at about the size of a heading rather than a billboard. */
+  .time-figure {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    color: var(--ink);
   }
 
-  .word-rotator > span {
-    grid-area: 1 / 1;
-    opacity: 0;
-    transform: translateY(0.9em);
-    animation: word-cycle var(--cycle-duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  /*
+    ---------------------------------------------------------------------------
+    Motion
+    ---------------------------------------------------------------------------
+
+    Three jobs, and nothing outside them:
+
+      entrance    the hero orchestrates itself once, on load
+      arrival     everything below the fold fades up as it reaches the reader
+      response    things you point at or press acknowledge it
+
+    Everything animates `opacity`, `transform` or `clip-path` only — properties the compositor can
+    handle without touching layout — and the whole block is switched off by the reduced-motion
+    rule in @layer base, which is why none of it is guarded individually.
+  */
+
+  /* The hero photograph fills its arch from the base up, once. */
+  .arch-reveal {
+    clip-path: inset(100% 0 0 0);
+    animation: arch-fill 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: var(--delay, 0ms);
   }
 
-  @keyframes word-cycle {
-    0%          { opacity: 0; transform: translateY(0.9em); }
-    4%, 20%     { opacity: 1; transform: translateY(0); }
-    24%, 100%   { opacity: 0; transform: translateY(-0.9em); }
+  @keyframes arch-fill {
+    to { clip-path: inset(0 0 0 0); }
+  }
+
+  /* …and then never quite settles. Twenty-eight seconds end to end: slow enough that you notice
+     it only if you look for it, which is the point of ambient motion. */
+  .ken-burns {
+    animation: ken-burns 28s ease-in-out infinite alternate;
+  }
+
+  @keyframes ken-burns {
+    from { transform: scale(1.02) translate3d(0, 0, 0); }
+    to   { transform: scale(1.12) translate3d(-1.5%, -2%, 0); }
+  }
+
+  /* The lattice drifts behind the arch, at a different rate again so the two never lock. */
+  .jali-drift {
+    animation: jali-drift 40s ease-in-out infinite alternate;
+  }
+
+  @keyframes jali-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-2.5%, 2%, 0); }
+  }
+
+  /* A rule that draws itself sideways when it arrives. */
+  .grow-x {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  html.js-reveal [data-shown] .grow-x,
+  html:not(.js-reveal) .grow-x {
+    animation: rule-draw 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+
+  /* Cards lift towards the pointer as well as tilting into it. */
+  .lift {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -22px rgba(28, 36, 20, 0.45);
+  }
+
+  /*
+    The chooser page arrives rather than appears: the words, the border and then the two cards
+    rise in sequence.
+  */
+  .outlet-rise {
+    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  /*
+    The outlet dialog: the ground dims, then the small window comes up under it. It waits for the
+    page to paint before either happens, so the site is up and readable before it is asked
+    anything.
+  */
+  .prompt-veil {
+    animation: veil-in 0.35s ease-out both;
+  }
+
+  @keyframes veil-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .prompt-panel {
+    animation: prompt-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes prompt-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
   }
 
   /* Infinite marquee. The track holds the list twice, so translating by exactly -50% loops with
@@ -450,7 +506,7 @@
     transition: opacity 0.3s ease;
     background: radial-gradient(
       22rem circle at var(--mx, 50%) var(--my, 50%),
-      color-mix(in oklab, var(--accent) 26%, transparent),
+      color-mix(in oklab, var(--card-accent, var(--accent)) 26%, transparent),
       transparent 60%
     );
   }
@@ -477,12 +533,179 @@
     animation: fade-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .scroll-cue span {
-    animation: scroll-cue 2.2s ease-in-out infinite;
+  /*
+    A group whose children arrive one after another rather than all at once. The stagger is
+    nth-child in CSS rather than a delay written onto each element in JS, so a section can gain or
+    lose a card without anyone having to renumber anything.
+
+    Same fail-safe direction as the rest of the reveal system: without `js-reveal` on <html>,
+    nothing here hides anything.
+  */
+  html.js-reveal [data-reveal-group]:not([data-shown]) > * {
+    opacity: 0;
+    transform: translateY(22px);
   }
 
-  @keyframes scroll-cue {
-    0%, 100% { transform: translateY(0); opacity: 0.35; }
-    50%      { transform: translateY(6px); opacity: 1; }
+  html.js-reveal [data-reveal-group][data-shown] > * {
+    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(1) { animation-delay: 0ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(2) { animation-delay: 90ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(3) { animation-delay: 180ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(4) { animation-delay: 270ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(5) { animation-delay: 360ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(6) { animation-delay: 450ms; }
+  html.js-reveal [data-reveal-group][data-shown] > *:nth-child(n + 7) { animation-delay: 540ms; }
+}
+
+/*
+  ---------------------------------------------------------------------------
+  Cultural details: the diya, the tiffin, the mehndi and the doorway
+  ---------------------------------------------------------------------------
+
+  Each of these moves only in answer to something: the kitchen being open, a dish being added, a
+  section arriving, a doorway being pointed at. The reduced-motion rule in @layer base stops all of
+  them, and each one's resting state is its finished state.
+*/
+@layer components {
+  /* The diya's flame leans and stretches from its base, never in step with its glow. */
+  .diya-flame {
+    transform-box: view-box;
+    transform-origin: 10px 11px;
+    animation: diya-flicker 3.4s ease-in-out infinite;
+  }
+
+  .diya-glow {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: diya-glow 2.3s ease-in-out infinite;
+  }
+
+  @keyframes diya-flicker {
+    0%, 100% { transform: none; }
+    18% { transform: scale(0.94, 1.07) skewX(-4deg); }
+    40% { transform: scale(1.03, 0.95) skewX(2deg); }
+    62% { transform: scale(0.97, 1.09) skewX(-1.5deg); }
+    82% { transform: scale(1.01, 0.98) skewX(3deg); }
+  }
+
+  @keyframes diya-glow {
+    0%, 100% { opacity: 0.16; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.14); }
+  }
+
+  /* A new tin drops onto the tiffin stack; the lid hops on every addition. */
+  .tiffin-tier {
+    transform-box: fill-box;
+    animation: tiffin-drop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes tiffin-drop {
+    from { opacity: 0; transform: translateY(-6px); }
+  }
+
+  .tiffin-lid {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: tiffin-hop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes tiffin-hop {
+    45% { transform: translateY(-2.2px) rotate(-8deg); }
+  }
+
+  /*
+    Mehndi draws itself once it is revealed. Hidden only under `js-reveal`, like every other reveal,
+    so the design is fully drawn whenever the script is not running.
+  */
+  .mehndi [data-dot] {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  html.js-reveal .mehndi [data-draw] {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+
+  html.js-reveal .mehndi [data-dot] {
+    opacity: 0;
+  }
+
+  html.js-reveal .mehndi[data-shown] [data-draw] {
+    animation: mehndi-draw var(--dur, 700ms) cubic-bezier(0.45, 0.05, 0.3, 1) var(--d, 0ms) forwards;
+  }
+
+  html.js-reveal .mehndi[data-shown] [data-dot] {
+    animation: mehndi-dot 0.35s ease-out var(--d, 0ms) forwards;
+  }
+
+  @keyframes mehndi-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes mehndi-dot {
+    from { opacity: 0; transform: scale(0.2); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /*
+    The outlet doorways. Doors rest ajar, swing wide under the pointer or keyboard focus, and open
+    fully while that outlet is being chosen. They start shut and ease ajar on arrival.
+  */
+  .doorway-leaf {
+    transform: rotateY(var(--door-rest));
+    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) var(--door-delay, 0ms);
+    backface-visibility: hidden;
+  }
+
+  /* Ajar enough at rest that the room behind is the first thing you see. */
+  .doorway-leaf[data-side='left'] { --door-rest: 54deg; --door-open: 82deg; }
+  .doorway-leaf[data-side='right'] { --door-rest: -54deg; --door-open: -82deg; }
+
+  .group:hover .doorway-leaf,
+  .group:focus-visible .doorway-leaf,
+  .group[aria-busy='true'] .doorway-leaf {
+    transform: rotateY(var(--door-open));
+    transition-delay: 0ms;
+  }
+
+  /* No hover to open them with: open from the start. */
+  @media (hover: none) {
+    .doorway-leaf {
+      transform: rotateY(var(--door-open));
+    }
+  }
+
+  @starting-style {
+    .doorway .doorway-leaf {
+      transform: rotateY(0deg);
+    }
+  }
+
+  .doorway-room {
+    transform: scale(1.1);
+    transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .group:hover .doorway-room,
+  .group:focus-visible .doorway-room {
+    transform: scale(1.02);
+  }
+
+  /* The mango leaves sway from their nails when the doorway is pointed at, one after another. */
+  .toran-leaf {
+    transform-box: fill-box;
+    transform-origin: 50% 0;
+  }
+
+  .group:hover .toran-leaf {
+    animation: toran-sway 1.8s ease-in-out calc(var(--i, 0) * 45ms);
+  }
+
+  @keyframes toran-sway {
+    30% { transform: rotate(8deg); }
+    65% { transform: rotate(-5deg); }
   }
 }

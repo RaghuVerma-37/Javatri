@@ -1,5 +1,7 @@
 import { cache } from 'react'
+import { cookies } from 'next/headers'
 import { prisma } from '@/lib/db'
+import { OUTLET_COOKIE } from '@/lib/outlet'
 import {
   isOpenAt,
   nextOpeningAt,
@@ -138,3 +140,43 @@ export const getOtherBranches = cache(async (excludeSlug: string) => {
     return []
   }
 })
+
+/**
+ * The outlets a customer is allowed to choose between.
+ *
+ * `isActive` is the gate, and it is the whole safety mechanism here. Farnham Common is in the
+ * database with no address, no phone and no opening hours — it is advertised that way on the old
+ * site — and it is seeded inactive precisely so it cannot be offered to somebody who would then
+ * have no way to find it. Switching it on is a field in /admin once the client sends the details;
+ * nothing here needs changing for it to appear.
+ */
+export const getActiveBranches = cache(async () => {
+  if (!isDatabaseConfigured()) return [staticBranch()]
+  try {
+    return await prisma.branch.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
+    })
+  } catch {
+    return []
+  }
+})
+
+/**
+ * Which outlet this request is for.
+ *
+ * The cookie is only read when there is actually a choice to be made. That is not a micro
+ * optimisation: `cookies()` opts a route out of static rendering, and with one active outlet
+ * there is nothing to opt out for — so today every page still prerenders exactly as it did, and
+ * the moment a second outlet goes live they become per-request on their own.
+ *
+ * An unknown or stale slug falls back to the default rather than 404ing, so a cookie left over
+ * from an outlet that was later switched off cannot strand anybody.
+ */
+export async function getSelectedBranchSlug(): Promise<string> {
+  const active = await getActiveBranches()
+  if (active.length < 2) return DEFAULT_BRANCH_SLUG
+
+  const chosen = (await cookies()).get(OUTLET_COOKIE)?.value
+  return chosen && active.some((branch) => branch.slug === chosen) ? chosen : DEFAULT_BRANCH_SLUG
+}

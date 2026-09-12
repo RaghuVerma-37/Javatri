@@ -6,11 +6,13 @@ import { DishMarquee } from '@/components/home/dish-marquee'
 import { Hero } from '@/components/home/hero'
 import { TiltCard } from '@/components/home/tilt-card'
 import { ButtonLink, SectionHeading } from '@/components/ui'
+import Image from 'next/image'
+import { SectionDivider } from '@/components/ornament/section-divider'
 import { JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { summariseWeek } from '@/lib/hours'
 import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
-import { getServiceState, getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 import { getPublishedMenus } from '@/server/menu'
 import { slotOptionsByType } from '@/server/ordering'
 
@@ -33,7 +35,7 @@ const BANQUETING_INCLUDES = [
 ]
 
 export default async function HomePage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const menus = await getPublishedMenus(branch.id)
   const state = getServiceState(branch)
@@ -50,8 +52,12 @@ export default async function HomePage() {
 
   // Real dish names for the marquee, spread across the menu rather than taken from the top of it.
   const allDishes = menus.flatMap((menu) => menu.categories.flatMap((c) => c.items))
+
   const step = Math.max(1, Math.floor(allDishes.length / 22))
-  const marqueeDishes = allDishes.filter((_, index) => index % step === 0).slice(0, 22).map((i) => i.name)
+  const marqueeDishes = allDishes
+    .filter((_, index) => index % step === 0)
+    .slice(0, 22)
+    .map((item) => item.name)
 
   const dishCount = allDishes.length
   const categoryCount = menus.reduce((n, menu) => n + menu.categories.length, 0)
@@ -70,14 +76,14 @@ export default async function HomePage() {
         <h2 id="ways-heading" className="sr-only">
           Ways to eat with us
         </h2>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div data-reveal-group className="grid gap-4 md:grid-cols-3">
           <TiltCard
             href="/order"
             eyebrow="Collection & delivery"
             title="Order online"
             cta="Start an order"
-            accent="#d99a2b"
-            data-reveal
+            image={{ src: '/img/spread.webp' }}
+            accent="#b6c94f"
           >
             The whole menu, priced, with a time you choose. Closed right now? Pick a slot for
             tomorrow and it still goes through.
@@ -88,8 +94,8 @@ export default async function HomePage() {
             eyebrow="Dine in"
             title="Book a table"
             cta="Choose a time"
-            accent="#b8341f"
-            data-reveal
+            image={{ src: '/img/dining-room.webp' }}
+            accent="#9bb979"
           >
             Sunday lunch, a birthday, or a Tuesday when nobody wants to cook. Tell us when and how
             many and we will confirm by phone.
@@ -100,14 +106,18 @@ export default async function HomePage() {
             eyebrow="Up to 150 guests"
             title="Weddings & events"
             cta="Plan an event"
-            accent="#7a1533"
-            data-reveal
+            image={{ src: '/img/banquet.webp' }}
+            accent="#6e8b59"
           >
             A banqueting hall from {formatPenceCompact(SITE.banqueting.fromPerPersonInPence)} a head,
             with staff, uplighting and parking included.
           </TiltCard>
         </div>
       </section>
+
+      <div className="container-page">
+        <SectionDivider />
+      </div>
 
       {/* The menu, summarised honestly: real counts, real section names. */}
       <section
@@ -116,19 +126,56 @@ export default async function HomePage() {
         className="border-y border-line bg-surface py-16 sm:py-24"
       >
         <div className="container-page">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading
-              eyebrow="The food"
-              id="menu-heading"
-              title={`${dishCount} dishes, ${categoryCount} sections, one list`}
-              lead="Chaat and street food, the charcoal grill, biryanis cooked on dum, South Indian dosas, and a dessert list that ends in kulfi. The ordering system reads this same list — there is no second copy that can disagree with it."
-            />
-            <ButtonLink href="/menu" variant="secondary">
-              See the full menu
-            </ButtonLink>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-14">
+            <div>
+              <SectionHeading
+                eyebrow="The food"
+                id="menu-heading"
+                title={`${dishCount} dishes, ${categoryCount} sections, one list`}
+                lead="Chaat and street food, the charcoal grill, biryanis cooked on dum, South Indian dosas, and a dessert list that ends in kulfi. The ordering system reads this same list — there is no second copy that can disagree with it."
+              />
+              <ButtonLink href="/menu" variant="secondary" className="mt-7">
+                See the full menu
+              </ButtonLink>
+            </div>
+
+            {/*
+              A collage rather than a grid: two tall, two square, one round, offset from each
+              other. Four identical tiles would read as a stock-photo strip, which is exactly what
+              this has to avoid.
+            */}
+            <div aria-hidden className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="relative row-span-2 aspect-[3/5] overflow-hidden rounded-[1.75rem] bg-surface-2">
+                <Image
+                  src="/img/spices.webp"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 190px, 45vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative aspect-square overflow-hidden rounded-[1.75rem] bg-surface-2">
+                <Image
+                  src="/img/dosa.webp"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 190px, 45vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="relative aspect-square overflow-hidden rounded-full bg-surface-2">
+                <Image
+                  src="/img/samosa.webp"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 190px, 45vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
           </div>
 
-          <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul data-reveal-group className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {menus.flatMap((menu) =>
               menu.categories.slice(0, 6).map((category) => (
                 <li key={category.id}>
@@ -148,9 +195,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Events get the space they earn: it is the highest-margin line and the old site buried it. */}
-      <section aria-labelledby="events-heading" className="container-page py-16 sm:py-24">
-        <div data-reveal className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      {/* Events get the space they earn: it is the highest-margin line and the old site buried it.
+          On Vanilla Beige, full bleed, which is the same ground /events opens on. */}
+      <section aria-labelledby="events-heading" className="bg-surface-2 py-16 sm:py-24">
+        <div data-reveal className="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             <SectionHeading
               eyebrow="Banqueting"
@@ -166,12 +214,23 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-line bg-surface p-6 sm:p-8">
+          <div className="overflow-hidden rounded-3xl border border-olive/25 bg-surface">
+            <div className="relative aspect-[16/9] w-full">
+              <Image
+                src="/img/hall.webp"
+                alt=""
+                aria-hidden
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="p-6 sm:p-8">
             <p className="flex items-center gap-2 text-sm font-semibold text-brand-text">
               <Users aria-hidden className="size-4" />
               Included from {formatPenceCompact(SITE.banqueting.fromPerPersonInPence)} per person
             </p>
-            <ul className="mt-5 space-y-3">
+            <ul data-reveal-group className="mt-5 space-y-3">
               {BANQUETING_INCLUDES.map((line) => (
                 <li key={line} className="flex gap-3 text-[0.9375rem] leading-relaxed">
                   <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-ok" />
@@ -179,6 +238,7 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
+            </div>
           </div>
         </div>
       </section>

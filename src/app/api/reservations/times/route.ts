@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug } from '@/server/branch'
 import { reservationTimesFor } from '@/server/ordering'
 
 export const runtime = 'nodejs'
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const branch = await getBranchSafe()
+    const branch = await getBranchSafe(await getSelectedBranchSlug())
     if (!branch) return NextResponse.json({ times: [], closed: true, reason: 'not_configured' })
     if (!branch.acceptsReservations) {
       return NextResponse.json({ times: [], closed: true, reason: 'not_taking_bookings' })

@@ -1,18 +1,16 @@
-import { ArrowRight, ChevronDown, Clock } from 'lucide-react'
-import { SpiceField } from '@/components/home/spice-field'
+import { ArrowRight } from 'lucide-react'
 import { OpenStatus } from '@/components/open-status'
+import Image from 'next/image'
+import { Jali } from '@/components/home/jali'
+import { Diya } from '@/components/ornament/diya'
 import { buttonClass } from '@/components/ui'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
 import type { BranchWithHours, ServiceState } from '@/server/branch'
 
-/** Cycled under the headline. Real sections of the real menu, not invented atmosphere. */
-const DISHES = ['chaat', 'the tandoor', 'biryani', 'dosas', 'kulfi'] as const
-const WORD_SECONDS = 2.6
-
 const HEADLINE = [
   ['Indian', 'cooking,'],
-  ['on', 'the', 'Bath', 'Road.'],
+  ['on', 'the', 'Bath', 'Road'],
 ]
 
 export type TonightPanel = {
@@ -23,6 +21,18 @@ export type TonightPanel = {
   earliestDeliveryDay: string | null
 }
 
+/**
+ * The homepage opening.
+ *
+ * Quiet on purpose. The page ground is cream, the only green in the hero is the ordering panel
+ * and the button, and the headline carries the weight — the brand tone arrives immediately below
+ * this, in the full-bleed Pistachio band, where it can be a colour rather than a backdrop.
+ *
+ * The times are real: `slotOptionsByType` derives them from the published opening hours and the
+ * kitchen's lead time, so when the kitchen is shut this offers tomorrow rather than going quiet.
+ * That was the old site's actual failure, and it is still the thing this block exists to answer —
+ * it just no longer shouts it.
+ */
 export function Hero({
   branch,
   state,
@@ -35,218 +45,234 @@ export function Hero({
   let wordIndex = 0
 
   return (
-    /*
-      Pulled up under the header. The header stays sticky and in normal flow — it just paints on
-      top of the hero rather than pushing it down, so the transparent state has something dark
-      behind it instead of the page background.
-    */
     <section className="hero -mt-16 sm:-mt-18">
-      <div aria-hidden className="hero-aurora">
-        <span />
-        <span />
-        <span />
-      </div>
-      <div aria-hidden className="hero-grain" />
-      <SpiceField />
-
-      <div className="container-page relative grid min-h-[min(96svh,46rem)] items-center gap-14 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
-      <div className="flex flex-col justify-center">
-        <p
-          className="fade-up text-xs font-semibold uppercase tracking-[0.2em] text-[#e2b25f]"
-          style={{ ['--delay' as string]: '120ms' }}
-        >
-          The Bell and Bottle · Littlewick Green
-        </p>
-
-        <h1 className="mt-5 max-w-4xl text-[clamp(2.75rem,9vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.03em] text-[#f9f2e7]">
-          {HEADLINE.map((line, lineIndex) => (
-            <span key={lineIndex} className="reveal-line">
-              {line.map((word) => {
-                const delay = 220 + wordIndex++ * 70
-                return (
-                  <span
-                    key={word}
-                    className="reveal-word"
-                    style={{ ['--delay' as string]: `${delay}ms` }}
-                  >
-                    {word}
-                    {' '}
-                  </span>
-                )
-              })}
-            </span>
-          ))}
-        </h1>
-
-        <div
-          aria-hidden
-          className="rule-draw mt-8 h-px w-full max-w-md bg-gradient-to-r from-[#d99a2b] to-transparent"
-          style={{ ['--delay' as string]: '700ms' }}
-        />
-
-        <p
-          className="fade-up mt-7 text-lg text-[#e8dcca] sm:text-xl"
-          style={{ ['--delay' as string]: '760ms' }}
-        >
-          <span className="text-[#b3a48c]">Tonight, from </span>
-          {/*
-            Decorative motion. A screen reader gets the flat sentence below instead of five words
-            taking it in turns, which is the same information without the theatre.
-          */}
-          <span
-            aria-hidden
-            className="word-rotator font-display font-semibold text-[#f0b755]"
-            style={{ ['--cycle-duration' as string]: `${DISHES.length * WORD_SECONDS}s` }}
+      <div className="container-page relative grid items-center gap-12 pb-8 pt-20 sm:pb-10 sm:pt-28 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:gap-14">
+        <div>
+          <div
+            className="fade-up flex flex-wrap items-center gap-x-4 gap-y-3"
+            style={{ ['--delay' as string]: '120ms' }}
           >
-            {DISHES.map((dish, index) => (
-              <span key={dish} style={{ ['--delay' as string]: `${index * WORD_SECONDS}s` }}>
-                {dish}
+            {/* Derived, not written down. With a second outlet selected this used to keep
+                announcing Littlewick Green underneath Farnham Common's opening hours. */}
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              {[branch.name, branch.addressLine2 ?? branch.city].filter(Boolean).join(' · ')}
+            </p>
+            <OpenStatus branch={branch} state={state} />
+          </div>
+
+          <h1 className="mt-6 max-w-3xl text-[clamp(2.5rem,7.5vw,4.75rem)] leading-[1.02] tracking-[-0.025em] text-ink">
+            {HEADLINE.map((line, lineIndex) => (
+              <span key={lineIndex} className="reveal-line">
+                {line.map((word) => {
+                  const delay = 220 + wordIndex++ * 70
+                  return (
+                    <span key={word}>
+                      <span
+                        className="reveal-word"
+                        style={{ ['--delay' as string]: `${delay}ms` }}
+                      >
+                        {word}
+                      </span>
+                      {/* Outside the animated span: a space at the end of an inline-block is
+                          trailing whitespace on that box's own line and gets dropped. */}
+                      {' '}
+                    </span>
+                  )
+                })}
               </span>
             ))}
-          </span>
-          <span className="sr-only">chaat, the tandoor, biryani, dosas and kulfi</span>
-        </p>
+          </h1>
 
-        <p
-          className="fade-up mt-5 max-w-xl text-base leading-relaxed text-[#c9bba6] sm:text-lg"
-          style={{ ['--delay' as string]: '840ms' }}
-        >
-          Chaat, charcoal and slow-cooked curries in a Berkshire village pub. Collect it, have it
-          delivered, book a table — or fill the banqueting hall with a hundred and fifty guests.
-        </p>
+          <div
+            aria-hidden
+            className="rule-draw mt-8 h-px w-full max-w-sm bg-olive/60"
+            style={{ ['--delay' as string]: '700ms' }}
+          />
 
-        <div
-          className="fade-up mt-9 flex flex-wrap items-center gap-3"
-          style={{ ['--delay' as string]: '920ms' }}
-        >
-          <Link href="/order" className={cn(buttonClass({ size: 'lg' }), 'group')}>
-            Order online
-            <ArrowRight
-              aria-hidden
-              className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-          <Link
-            href="/menu"
-            className="inline-flex min-h-13 items-center rounded-full border border-[#5a4a3a] px-7 text-base text-[#f2e8d9] transition-colors hover:border-[#d99a2b] hover:text-[#f7d9a0]"
+          <p
+            className="fade-up mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
+            style={{ ['--delay' as string]: '760ms' }}
           >
-            See the menu
-          </Link>
-          <Link
-            href="/book"
-            className="inline-flex min-h-13 items-center px-2 text-base text-[#c9bba6] underline underline-offset-8 transition-colors hover:text-[#f7d9a0]"
+            Chaat, charcoal and slow-cooked curries in a Berkshire village pub. Collect it, have it
+            delivered, book a table — or fill the banqueting hall with a hundred and fifty guests.
+          </p>
+
+          <div
+            className="fade-up mt-9 flex flex-wrap items-center gap-x-7 gap-y-4"
+            style={{ ['--delay' as string]: '900ms' }}
           >
-            Book a table
-          </Link>
+            <Link href="/order" className={cn(buttonClass({ size: 'lg' }), 'group')}>
+              Order online
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+            <Link
+              href="/menu"
+              className="inline-flex min-h-11 items-center text-base text-ink underline decoration-line-strong underline-offset-8 transition-colors hover:decoration-ink"
+            >
+              See the menu
+            </Link>
+            <Link
+              href="/book"
+              className="inline-flex min-h-11 items-center text-base text-muted underline decoration-line-strong underline-offset-8 transition-colors hover:text-ink hover:decoration-ink"
+            >
+              Book a table
+            </Link>
+          </div>
+
+          <ServiceCard branch={branch} state={state} tonight={tonight} className="mt-10" />
         </div>
 
-        <div className="fade-up mt-9" style={{ ['--delay' as string]: '1000ms' }}>
-          <OpenStatus branch={branch} state={state} />
-        </div>
-      </div>
-
-      <TonightCard branch={branch} state={state} tonight={tonight} />
-      </div>
-
-      <div
-        aria-hidden
-        className="scroll-cue pointer-events-none absolute inset-x-0 bottom-5 flex justify-center text-[#8d7c66]"
-      >
-        <span>
-          <ChevronDown className="size-5" />
-        </span>
+        <HeroImage />
       </div>
     </section>
   )
 }
 
 /**
- * The panel on the right of the hero.
+ * When you can eat, stated once, at reading size.
  *
- * It exists because the answer to "shall we get a curry" is almost always "how soon can we have
- * it", and the old site made that unanswerable. It states the earliest real collection time,
- * computed from the opening hours and the kitchen's lead time — and when the kitchen is shut it
- * says so and offers tomorrow, rather than going quiet.
+ * On Lime Cream rather than the page's cream: it is the one panel in the hero that should read as
+ * a separate object, and the pale green is what the palette has for that.
  */
-function TonightCard({
+/**
+ * One photograph, in an arch.
+ *
+ * The arch is the shape Mughal architecture puts a doorway in, and it is the same vocabulary the
+ * jali behind it comes from — so the cultural note survives the thali being cut, without the page
+ * needing six pictures to make it.
+ *
+ * Two pieces of motion, and only two. The image wipes up from its own base once on load, as if
+ * the arch is being filled; then it holds a very slow drift so the block is never quite static.
+ * Both stop dead under prefers-reduced-motion.
+ */
+function HeroImage() {
+  return (
+    <div className="relative">
+      {/*
+        The lattice sits behind the arch as a panel of its own, inset from the top and running off
+        the right edge — a screen the arch is set against. Clipped to an arch itself, so the two
+        shapes rhyme instead of a rectangle of pattern appearing behind a curve.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-6 left-[18%] right-[-12%] hidden overflow-hidden rounded-t-[10rem] rounded-b-[2rem] text-olive/55 sm:block"
+      >
+        <Jali id="jali-hero" opacity={0.75} className="jali-drift size-full" />
+      </div>
+
+      <div
+        className="arch-reveal relative mx-auto aspect-[4/5] w-full max-w-[19rem] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-surface-2 shadow-[0_30px_60px_-40px_rgba(28,36,20,0.7)] sm:mx-0 sm:max-w-[23rem] lg:max-w-[26rem]"
+        style={{ ['--delay' as string]: '380ms' }}
+      >
+        <Image
+          src="/img/spread.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="(min-width: 1024px) 420px, (min-width: 640px) 370px, 80vw"
+          className="ken-burns object-cover"
+        />
+      </div>
+
+    </div>
+  )
+}
+
+function ServiceCard({
   branch,
   state,
   tonight,
+  className,
 }: {
   branch: BranchWithHours
   state: ServiceState
   tonight: TonightPanel
+  className?: string
 }) {
+  const canDeliver = branch.acceptsDelivery && Boolean(tonight.earliestDelivery)
+
   return (
     <aside
-      aria-label="Ordering tonight"
-      /*
-        Shown at every width. This is the block that answers "can I actually get food, and when" —
-        hiding it below lg meant the one module that converts was missing on the devices nearly
-        all of this site's traffic uses.
-      */
-      className="fade-up rounded-3xl border border-white/12 bg-white/[0.055] p-5 backdrop-blur-xl sm:p-6"
-      style={{ ['--delay' as string]: '1080ms' }}
+      aria-label="When you can eat"
+      className={cn(
+        'fade-up max-w-md rounded-2xl border border-olive/30 bg-lime p-5 sm:p-6',
+        className,
+      )}
+      style={{ ['--delay' as string]: '1000ms' }}
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e2b25f]">
+      <p className="flex items-center gap-2 font-display text-lg text-ink">
+        <Diya lit={state.isOpen} className="size-7" />
         {state.isOpen ? 'Open now' : 'Order ahead'}
       </p>
 
-      <dl className="mt-5 space-y-4 text-sm">
-        <div className="flex items-baseline justify-between gap-4 border-b border-white/10 pb-4">
-          <dt className="text-[#b3a48c]">Collection</dt>
-          <dd className="text-right font-medium text-[#f2e8d9]">
-            {tonight.earliestPickup ? (
-              <>
-                <span className="tabular-nums">{tonight.earliestPickup}</span>
-                <span className="block text-xs font-normal text-[#b3a48c]">
-                  {tonight.earliestPickupDay}
-                </span>
-              </>
-            ) : (
-              <span className="text-xs font-normal text-[#b3a48c]">Call us</span>
-            )}
-          </dd>
-        </div>
-
-        <div className="flex items-baseline justify-between gap-4 border-b border-white/10 pb-4">
-          <dt className="text-[#b3a48c]">Delivery</dt>
-          <dd className="text-right font-medium text-[#f2e8d9]">
-            {branch.acceptsDelivery && tonight.earliestDelivery ? (
-              <>
-                <span className="tabular-nums">{tonight.earliestDelivery}</span>
-                <span className="block text-xs font-normal text-[#b3a48c]">
-                  within {branch.deliveryRadiusMiles} miles
-                </span>
-              </>
-            ) : (
-              <span className="text-xs font-normal text-[#b3a48c]">Not tonight</span>
-            )}
-          </dd>
-        </div>
-
-        <div className="flex items-baseline justify-between gap-4">
-          <dt className="text-[#b3a48c]">Kitchen</dt>
-          <dd className="flex items-center gap-1.5 text-right font-medium text-[#f2e8d9]">
-            <Clock aria-hidden className="size-3.5 text-[#e2b25f]" />
-            {state.isOpen ? 'Cooking' : 'Closed'}
-          </dd>
-        </div>
+      <dl className="mt-4 grid gap-x-6 sm:grid-cols-2">
+        <TimeRow
+          label="Collect from"
+          time={tonight.earliestPickup}
+          note={tonight.earliestPickupDay}
+          fallback="Call us"
+        />
+        <TimeRow
+          label="Delivered from"
+          time={canDeliver ? tonight.earliestDelivery : null}
+          note={canDeliver ? `within ${branch.deliveryRadiusMiles} miles` : null}
+          fallback={branch.acceptsDelivery ? 'Not tonight' : 'Collection only'}
+        />
       </dl>
 
-      <Link
-        href="/order"
-        className={cn(buttonClass({ size: 'md' }), 'mt-6 w-full')}
-      >
-        Start an order
-      </Link>
+      <p className="mt-4 text-sm leading-relaxed text-muted">
+        {state.isOpen
+          ? 'The kitchen is cooking now.'
+          : 'The kitchen is closed — pick a slot and the order still goes through.'}
+      </p>
 
-      <p className="mt-4 text-center text-xs text-[#9d8d78]">
+      <p className="mt-4 text-sm text-muted">
         or call{' '}
-        <a href="tel:+441628825753" className="underline underline-offset-4 hover:text-[#f7d9a0]">
+        <a
+          href="tel:+441628825753"
+          className="text-accent underline underline-offset-4 hover:text-ink"
+        >
           01628 825753
         </a>
       </p>
     </aside>
+  )
+}
+
+function TimeRow({
+  label,
+  time,
+  note,
+  fallback,
+}: {
+  label: string
+  time: string | null
+  note: string | null
+  fallback: string
+}) {
+  return (
+    /* The note sits under the figure rather than beside it, so the two times line up on the
+       right edge instead of being pushed around by how long their notes are. */
+    <div className="flex items-baseline justify-between gap-3 border-b border-olive/20 py-2.5 last:border-0 sm:block sm:border-0 sm:py-0">
+      <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{label}</dt>
+      <dd className="sm:mt-1">
+        {time ? (
+          <>
+            <span className="time-figure">{time}</span>
+            {/* Under the figure on a phone, beside it from sm up: inline on mobile, the two
+                times stopped lining up because their notes are different lengths. */}
+            {note ? (
+              <span className="block text-xs text-muted sm:ml-2 sm:inline">{note}</span>
+            ) : null}
+          </>
+        ) : (
+          <span className="text-base font-medium text-ink">{fallback}</span>
+        )}
+      </dd>
+    </div>
   )
 }

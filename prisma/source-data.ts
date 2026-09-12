@@ -351,7 +351,6 @@ export function transform(source: SourceFile): TransformResult {
 
   // --- branches ------------------------------------------------------------
   const littlewick = source.business.branches.find((b) => b.id === 'littlewick-green')
-  const farnham = source.business.branches.find((b) => b.id === 'farnham-common')
 
   const menus = buildMenus(source, copyChanges, questions, allergenTodo)
 
@@ -378,27 +377,42 @@ export function transform(source: SourceFile): TransformResult {
       menus,
     },
     {
-      // Advertised on the old homepage and in the banqueting branch dropdown with no address,
-      // no phone and no hours. Seeded inactive so it cannot be selected for anything, exactly as
-      // the brief requires, but present so the client can fill it in rather than being rebuilt for.
+      /*
+        Switched on by the owner, with the details they supplied: the trading name, the locality,
+        and Javatri's single phone number, which both outlets share.
+
+        Three things are deliberately still missing, because nobody has published them and
+        guessing any of them would be worse than leaving them out:
+
+          No street or postcode. The card and the contact page show the locality alone.
+          No latitude/longitude — which is why `acceptsDelivery` is false. checkDelivery needs a
+          coordinate to measure a radius from, and without one every postcode a customer typed
+          would come back "we cannot check right now, please call us". A delivery option that
+          cannot answer is the dead end this rebuild exists to remove; collection, dining in and
+          events all work without a coordinate, so those are on.
+          No menu of its own — it serves Littlewick Green's, resolved by fallback rather than
+          copied, so the two can never drift apart.
+
+        Hours are Littlewick Green's, on the owner's instruction.
+      */
       name: 'Javatri Farnham Common',
       slug: 'farnham-common',
       addressLine1: null,
       addressLine2: null,
       city: 'Farnham Common',
       postcode: null,
-      phone: null,
+      phone: source.business.phone,
       latitude: null,
       longitude: null,
-      isActive: false,
-      acceptsOrders: false,
+      isActive: true,
+      acceptsOrders: true,
       acceptsDelivery: false,
-      acceptsDineIn: false,
-      acceptsReservations: false,
+      acceptsDineIn: true,
+      acceptsReservations: true,
       ...DELIVERY_PLACEHOLDERS,
-      notes: farnham?.address ?? 'No address, phone or hours published anywhere.',
+      notes: 'Street address and postcode still to come. Delivery stays off until there is a postcode to measure a radius from.',
       sortOrder: 1,
-      openingHours: [],
+      openingHours,
       menus: [],
     },
   ]

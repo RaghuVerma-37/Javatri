@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 import { Search, SlidersHorizontal, TriangleAlert, X } from 'lucide-react'
+import { Chillies } from '@/components/menu/chilli-scale'
 import { Badge, Button } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
 import { cn } from '@/lib/cn'
@@ -21,9 +22,9 @@ import type { Allergen } from '@/generated/prisma/enums'
  */
 
 const SPICE_OPTIONS = [
-  { value: 'any', label: 'Any' },
-  { value: 'mild', label: 'Mild' },
-  { value: 'hot', label: 'Hot' },
+  { value: 'any', label: 'Any', heat: 0 },
+  { value: 'mild', label: 'Mild', heat: 1 },
+  { value: 'hot', label: 'Hot', heat: 2 },
 ] as const
 
 type Spice = (typeof SPICE_OPTIONS)[number]['value']
@@ -204,7 +205,7 @@ export function MenuFilters({
                 <label
                   key={option.value}
                   className={cn(
-                    'cursor-pointer rounded-full border px-3.5 py-1.5 text-sm transition-colors',
+                    'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-colors',
                     spice === option.value
                       ? 'border-brand bg-brand text-on-brand'
                       : 'border-line-strong hover:bg-surface-2',
@@ -217,6 +218,7 @@ export function MenuFilters({
                     checked={spice === option.value}
                     onChange={() => setSpice(option.value)}
                   />
+                  {option.heat ? <Chillies heat={option.heat} of={option.heat} /> : null}
                   {option.label}
                 </label>
               ))}

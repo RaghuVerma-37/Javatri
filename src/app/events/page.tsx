@@ -5,11 +5,13 @@ import { isDatabaseConfigured } from '@/server/static-data'
 import Link from 'next/link'
 import { Car, Check, Lightbulb, Users, Utensils, Wine } from 'lucide-react'
 import { EnquiryForm } from '@/components/forms/enquiry-form'
+import Image from 'next/image'
+import { MehndiBand } from '@/components/ornament/mehndi'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
-import { getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug } from '@/server/branch'
 
 export const metadata: Metadata = {
   title: 'Weddings & events',
@@ -44,7 +46,7 @@ const EVENT_TYPES = [
 ]
 
 export default async function EventsPage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
 
   return (
@@ -56,29 +58,43 @@ export default async function EventsPage() {
         ])}
       />
 
-      {/* Dark opening, echoing the homepage hero — events is the line the old site buried, so it
-          gets the same weight here as ordering does there. */}
-      <section className="hero -mt-16 sm:-mt-18">
-        <div aria-hidden className="hero-aurora">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div aria-hidden className="hero-grain" />
-        <div className="container-page relative py-24 sm:py-32">
-          <p className="fade-up text-xs font-semibold uppercase tracking-[0.2em] text-[#e2b25f]">
+      {/*
+        The one dark opening on the site. Events is sold in the evening, under lights, so this
+        page starts on a photograph with a deep olive scrim over it rather than on the cream the
+        rest of the site opens on — cream type lands at about 9:1 against the scrim, which is why
+        the scrim is that heavy.
+      */}
+      <section className="relative -mt-16 overflow-clip bg-forest text-cream sm:-mt-18">
+        <Image
+          src="/img/banquet.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        {/* Graded, not flat. At a uniform 85% the room turned into a green rectangle; this keeps
+            the scrim dense under the text on the left — where cream still lands at about 9:1 —
+            and lets it thin out to the right so the hall is actually visible. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/85 to-forest/55"
+        />
+        <div className="container-page relative py-28 sm:py-36">
+          <p className="fade-up text-xs font-semibold uppercase tracking-[0.2em] text-pear">
             Banqueting · up to {SITE.banqueting.maxGuests} guests
           </p>
-          <h1 className="reveal-line mt-5 max-w-3xl text-[clamp(2.5rem,7vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-[#f9f2e7]">
+          <h1 className="reveal-line mt-5 max-w-3xl text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.02] tracking-[-0.025em] text-cream">
             <span className="reveal-word" style={{ ['--delay' as string]: '150ms' }}>
               A hall for a hundred and fifty,
             </span>{' '}
             <span className="reveal-word" style={{ ['--delay' as string]: '260ms' }}>
-              and a kitchen that can feed them.
+              and a kitchen that can feed them
             </span>
           </h1>
           <p
-            className="fade-up mt-7 max-w-2xl text-lg leading-relaxed text-[#c9bba6]"
+            className="fade-up mt-7 max-w-2xl text-lg leading-relaxed text-lime"
             style={{ ['--delay' as string]: '420ms' }}
           >
             Wedding functions, corporate days, private parties and exhibitions, from{' '}
@@ -91,13 +107,18 @@ export default async function EventsPage() {
             </ButtonLink>
             <a
               href={telHref(branch.phone)}
-              className="inline-flex min-h-13 items-center rounded-full border border-[#5a4a3a] px-7 text-base text-[#f2e8d9] transition-colors hover:border-[#d99a2b] hover:text-[#f7d9a0]"
+              className="inline-flex min-h-13 items-center rounded-full border border-cream/35 px-7 text-base text-cream transition-colors hover:border-pear hover:text-pear"
             >
               Call {formatPhone(branch.phone)}
             </a>
           </div>
         </div>
       </section>
+
+      {/* Where the weddings are, the page is hennaed. */}
+      <div className="container-page pt-12 text-accent/85 sm:pt-16">
+        <MehndiBand />
+      </div>
 
       <section aria-labelledby="package-heading" className="container-page py-16 sm:py-24">
         <div data-reveal className="grid gap-10 lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-16">

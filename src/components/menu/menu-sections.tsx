@@ -1,5 +1,36 @@
+import { Chillies } from '@/components/menu/chilli-scale'
+import { DietMark } from '@/components/menu/diet-mark'
 import { DishCard } from '@/components/menu/dish-card'
 import type { MenuWithContent } from '@/server/menu'
+
+/** What the marks on the dishes mean, stated once above the list. */
+function MenuKey() {
+  return (
+    <p className="mb-10 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-sm text-muted">
+      <span className="inline-flex items-center gap-2">
+        <span aria-hidden className="contents">
+          <DietMark diet="veg" />
+        </span>
+        Vegetarian
+      </span>
+      <span className="inline-flex items-center gap-2">
+        <span aria-hidden className="contents">
+          <DietMark diet="non-veg" />
+        </span>
+        Meat, fish or egg
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Chillies heat={1} /> Mild
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Chillies heat={2} /> Hot
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <Chillies heat={3} /> Extra hot
+      </span>
+    </p>
+  )
+}
 
 /**
  * The menu itself. Server components all the way down — no dish data crosses into the browser,
@@ -18,6 +49,8 @@ export function MenuSections({
   const CategoryHeading = headingLevel === 2 ? 'h3' : 'h4'
 
   return (
+    <div>
+    <MenuKey />
     <div className="space-y-14">
       {menus.map((menu) => (
         <section key={menu.id} aria-labelledby={`menu-${menu.slug}`} data-menu-section>
@@ -46,9 +79,19 @@ export function MenuSections({
                 aria-labelledby={`category-${menu.slug}-${category.slug}`}
                 data-menu-section
               >
+                {/* A short Pistachio rule above every category. It is the brand tone's only job
+                    on this page — twenty-one small marks down a very long list, rather than a
+                    green wash under the whole of it.
+
+                    Static, and the sections do not fade in either. This page exists to be read:
+                    revealing each category on scroll left the first dishes blank under their own
+                    heading until you moved, and twenty-one fades is noise in a list people scan
+                    fast. The motion lives on the homepage, where it is atmosphere rather than an
+                    obstacle. */}
+                <span aria-hidden className="block h-1 w-10 rounded-full bg-pistachio" />
                 <CategoryHeading
                   id={`category-${menu.slug}-${category.slug}`}
-                  className="scroll-mt-24 text-xl sm:text-2xl"
+                  className="mt-3 scroll-mt-24 text-xl sm:text-2xl"
                 >
                   {category.name}
                 </CategoryHeading>
@@ -58,7 +101,12 @@ export function MenuSections({
 
                 <ul className="mt-4">
                   {category.items.map((item) => (
-                    <DishCard key={item.id} item={item} orderable={orderable} />
+                    <DishCard
+                      key={item.id}
+                      item={item}
+                      orderable={orderable}
+                      categoryName={category.name}
+                    />
                   ))}
                 </ul>
               </section>
@@ -66,6 +114,7 @@ export function MenuSections({
           </div>
         </section>
       ))}
+    </div>
     </div>
   )
 }

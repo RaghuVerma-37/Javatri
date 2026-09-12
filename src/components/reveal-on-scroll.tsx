@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 
 /**
- * Reveals `[data-reveal]` elements as they scroll into view.
+ * Reveals `[data-reveal]` elements as they scroll into view, and `[data-reveal-group]` elements
+ * whose children then arrive one after another (the stagger itself is nth-child in CSS).
  *
  * Mounted once, in the root layout. The important property is the direction of the switch: this
  * component *opts in* to hiding by putting `js-reveal` on <html>, rather than the CSS hiding
@@ -38,14 +39,19 @@ export function RevealOnScroll() {
       { rootMargin: '0px 0px -12% 0px', threshold: 0.01 },
     )
 
-    const targets = document.querySelectorAll('[data-reveal]:not([data-shown])')
+    const targets = document.querySelectorAll(
+      '[data-reveal]:not([data-shown]), [data-reveal-group]:not([data-shown])',
+    )
     for (const target of targets) observer.observe(target)
 
     // A safety net: anything still hidden after five seconds is shown regardless. An element
     // inside a container that never intersects (a stuck scroll container, an odd viewport) would
     // otherwise stay invisible forever.
     const failsafe = window.setTimeout(() => {
-      for (const target of document.querySelectorAll('[data-reveal]:not([data-shown])')) {
+      const stragglers = document.querySelectorAll(
+        '[data-reveal]:not([data-shown]), [data-reveal-group]:not([data-shown])',
+      )
+      for (const target of stragglers) {
         target.setAttribute('data-shown', '')
       }
     }, 5000)

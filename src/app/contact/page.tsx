@@ -7,7 +7,7 @@ import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { summariseWeek } from '@/lib/hours'
 import { absoluteUrl, formatPhone, telHref } from '@/lib/site'
-import { getServiceState, getBranchSafe, getOtherBranches } from '@/server/branch'
+import { getBranchSafe, getOtherBranches, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 
 export const metadata: Metadata = {
   title: 'Find us',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function ContactPage() {
-  const branch = await getBranchSafe()
+  const branch = await getBranchSafe(await getSelectedBranchSlug())
   if (!branch) return <NotConfigured />
   const state = getServiceState(branch)
 

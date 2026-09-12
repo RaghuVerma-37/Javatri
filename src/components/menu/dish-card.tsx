@@ -1,18 +1,15 @@
-import { Leaf, Sprout, TriangleAlert, Wine } from 'lucide-react'
+import { Sprout, TriangleAlert, Wine } from 'lucide-react'
 import { AddToCartButton } from '@/components/cart/add-to-cart-button'
+import { ChilliScale } from '@/components/menu/chilli-scale'
+import { DietMark } from '@/components/menu/diet-mark'
 import { DishPhoto } from '@/components/menu/dish-photo'
 import { Badge } from '@/components/ui'
 import { ALLERGEN_LABELS } from '@/lib/allergens'
 import { cn } from '@/lib/cn'
+import { dietOf } from '@/lib/diet'
 import { resolveDishPhoto } from '@/lib/dish-photos'
 import { formatPence } from '@/lib/money'
 import type { ItemWithOptions } from '@/server/menu'
-
-const SPICE_LABEL: Record<string, string> = {
-  MILD: 'Mild',
-  HOT: 'Hot',
-  EXTRA_HOT: 'Extra hot',
-}
 
 /** Maps the enum to the short attribute name the CSS filter rules key off. */
 const ALLERGEN_ATTR: Record<string, string> = {
@@ -35,13 +32,18 @@ const ALLERGEN_ATTR: Record<string, string> = {
 export function DishCard({
   item,
   orderable = false,
+  categoryName,
   className,
 }: {
   item: ItemWithOptions
   /** True on /order, where the card grows an add-to-basket control. */
   orderable?: boolean
+  /** The section the dish sits in: "Main Course Lamb" is evidence for the non-veg mark. */
+  categoryName?: string
   className?: string
 }) {
+  const diet = dietOf(item, categoryName)
+
   // The filter rules read these. They are also the honest record of what we know: an item with
   // allergensConfirmed="0" has not been checked, and the card says so out loud.
   const filterAttributes: Record<string, string> = {
@@ -92,7 +94,20 @@ export function DishCard({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h4 className="font-display text-lg font-semibold leading-snug text-ink">{item.name}</h4>
+            <h4
+              className={cn(
+                'font-display text-lg font-semibold leading-snug text-ink',
+                /* A hanging indent the width of the mark and its gap, so a name that wraps
+                   continues under the name rather than under the mark. */
+                diet && 'pl-[calc(0.67em+0.5rem)] -indent-[calc(0.67em+0.5rem)]',
+              )}
+            >
+              {/* In the line, on the baseline, and exactly as tall as a capital (0.67em is
+                  Newsreader's cap height), so its top and bottom meet the top and foot of the
+                  letters beside it. */}
+              {diet ? <DietMark diet={diet} className="mr-2 text-[0.67em]" /> : null}
+              {item.name}
+            </h4>
             <p className="ml-auto shrink-0 font-display text-lg font-semibold tabular-nums text-brand-text sm:hidden">
               {formatPence(item.priceInPence)}
             </p>
@@ -104,20 +119,14 @@ export function DishCard({
 
           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
             {soldOut ? <Badge tone="danger">Sold out tonight</Badge> : null}
+            {/* Vegetarian is the mark beside the name now; vegan is a stricter claim and keeps
+                its word. */}
             {item.isVegan ? (
               <Badge tone="ok">
                 <Sprout aria-hidden className="size-3" /> Vegan
               </Badge>
-            ) : item.isVegetarian ? (
-              <Badge tone="ok">
-                <Leaf aria-hidden className="size-3" /> Vegetarian
-              </Badge>
             ) : null}
-            {SPICE_LABEL[item.spiceLevel] ? (
-              <Badge tone={item.spiceLevel === 'MILD' ? 'neutral' : 'brand'}>
-                {SPICE_LABEL[item.spiceLevel]}
-              </Badge>
-            ) : null}
+            <ChilliScale level={item.spiceLevel} className="mr-1.5" />
             {item.containsAlcohol ? (
               <Badge tone="accent">
                 <Wine aria-hidden className="size-3" /> Contains alcohol

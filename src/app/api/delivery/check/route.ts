@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { checkDelivery } from '@/lib/delivery'
 import { deliveryCheckSchema } from '@/lib/validation'
-import { getBranchSafe } from '@/server/branch'
+import { getBranchSafe, getSelectedBranchSlug } from '@/server/branch'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const branch = await getBranchSafe()
+    const branch = await getBranchSafe(await getSelectedBranchSlug())
     if (!branch) {
       return NextResponse.json({
         ok: false,

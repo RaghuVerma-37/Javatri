@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db'
 import { reservationEmail, sendEmail } from '@/lib/email'
 import { formatInLondon } from '@/lib/hours'
 import { fieldErrors, reservationSchema } from '@/lib/validation'
-import { requireBranch } from '@/server/branch'
+import { getSelectedBranchSlug, requireBranch } from '@/server/branch'
 import { isDatabaseConfigured } from '@/server/static-data'
 import { isValidReservationTime } from '@/server/ordering'
 import { generateReference } from '@/server/orders'
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const branch = await requireBranch()
+    const branch = await requireBranch(await getSelectedBranchSlug())
 
     if (!branch.acceptsReservations) {
       return NextResponse.json(
