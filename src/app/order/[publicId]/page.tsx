@@ -8,6 +8,7 @@ import { Badge, ButtonLink } from '@/components/ui'
 import { prisma } from '@/lib/db'
 import { formatInLondon } from '@/lib/hours'
 import { formatPence } from '@/lib/money'
+import { outletAddress } from '@/lib/outlet'
 
 export const metadata: Metadata = {
   title: 'Your order',
@@ -46,7 +47,21 @@ export default async function OrderStatusPage({ params }: Params) {
 
   const order = await prisma.order.findUnique({
     where: { publicId },
-    include: { items: true, branch: { select: { phone: true, timezone: true } } },
+    include: {
+      items: true,
+      branch: {
+        select: {
+          phone: true,
+          timezone: true,
+          slug: true,
+          name: true,
+          addressLine1: true,
+          addressLine2: true,
+          city: true,
+          postcode: true,
+        },
+      },
+    },
   })
 
   if (!order) notFound()
@@ -176,7 +191,12 @@ export default async function OrderStatusPage({ params }: Params) {
       ) : order.type === 'PICKUP' ? (
         <p className="mt-4 flex gap-2.5 text-sm text-muted">
           <Clock aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
-          Collect from The Bell and Bottle, Bath Road, Littlewick Green SL6 3RX
+          {/* The kitchen the order was placed with. Without a street, the trading name leads so
+              "Collect from" never points at a whole village. */}
+          Collect from{' '}
+          {order.branch.addressLine1
+            ? outletAddress(order.branch)
+            : [order.branch.name, outletAddress(order.branch)].filter(Boolean).join(', ')}
         </p>
       ) : null}
 

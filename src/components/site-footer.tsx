@@ -4,10 +4,22 @@ import { MapPin, Phone } from 'lucide-react'
 import { FacebookIcon, InstagramIcon, TripAdvisorIcon } from '@/components/social-icons'
 import { OpenStatus } from '@/components/open-status'
 import { summariseWeek } from '@/lib/hours'
-import { SITE } from '@/lib/site'
+import { outletAddressLines, outletWords } from '@/lib/outlet'
+import { SITE, formatPhone, telHref } from '@/lib/site'
 import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 
 const YEAR = new Date().getFullYear()
+
+/*
+  Littlewick Green's details, for the one case where there is no branch to read: the database is
+  unreachable. With a branch, every line below is that outlet's own.
+*/
+const FALLBACK = {
+  blurb: 'Indian kitchen and banqueting hall at The Bell and Bottle, on the Bath Road in Littlewick Green.',
+  address: ['The Bell and Bottle, Bath Road', 'Littlewick Green, Maidenhead', 'SL6 3RX'],
+  tel: 'tel:+441628825753',
+  phone: '01628 825753',
+}
 
 export async function SiteFooter() {
   // The footer renders on every page, including the "not set up yet" one, so it must survive an
@@ -33,8 +45,7 @@ export async function SiteFooter() {
         <div className="lg:col-span-1">
           <p className="font-display text-2xl text-cream">{SITE.name}</p>
           <p className="mt-3 text-sm leading-relaxed text-lime">
-            Indian kitchen and banqueting hall at The Bell and Bottle, on the Bath Road in
-            Littlewick Green.
+            {branch ? outletWords(branch).footerBlurb : FALLBACK.blurb}
           </p>
           {branch ? (
             <div className="mt-4">
@@ -94,17 +105,17 @@ export async function SiteFooter() {
             <p className="flex gap-2.5">
               <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-pistachio" />
               <span>
-                The Bell and Bottle, Bath Road
-                <br />
-                Littlewick Green, Maidenhead
-                <br />
-                SL6 3RX
+                {(branch ? outletAddressLines(branch) : FALLBACK.address).map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
               </span>
             </p>
             <p className="flex gap-2.5">
               <Phone aria-hidden className="mt-0.5 size-4 shrink-0 text-pistachio" />
-              <a href="tel:+441628825753" className="transition-colors hover:text-pear">
-                01628 825753
+              <a href={telHref(branch?.phone) || FALLBACK.tel} className="transition-colors hover:text-pear">
+                {formatPhone(branch?.phone) || FALLBACK.phone}
               </a>
             </p>
           </address>

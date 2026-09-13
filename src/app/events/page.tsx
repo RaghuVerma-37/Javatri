@@ -10,6 +10,7 @@ import { MehndiBand } from '@/components/ornament/mehndi'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
+import { outletAddress } from '@/lib/outlet'
 import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getBranchSafe, getSelectedBranchSlug } from '@/server/branch'
 
@@ -213,7 +214,7 @@ export default async function EventsPage() {
                 {formatPhone(branch.phone)}
               </a>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                {branch.addressLine1}, {branch.addressLine2}, {branch.city} {branch.postcode}
+                {outletAddress(branch)}
               </p>
             </div>
           </aside>

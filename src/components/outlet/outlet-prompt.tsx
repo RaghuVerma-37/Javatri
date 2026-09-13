@@ -4,16 +4,11 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { Bike, MapPin, ShoppingBag, X } from 'lucide-react'
 import { TempleBorder } from '@/components/ornament/temple-border'
+import { AddressText } from '@/components/outlet/address-text'
 import { Doorway } from '@/components/outlet/doorway'
 import { useOutlet } from '@/components/outlet/outlet-context'
 import { devanagari } from '@/lib/fonts'
-import {
-  outletAddress,
-  outletImage,
-  outletLocality,
-  outletRegion,
-  outletServices,
-} from '@/lib/outlet'
+import { outletAddress, outletImage, outletLocality, outletServices } from '@/lib/outlet'
 import { cn } from '@/lib/cn'
 
 /**
@@ -97,7 +92,7 @@ export function OutletPrompt() {
       and it gives the dialog somewhere to scroll if a short window makes it taller than the
       viewport.
     */
-    <div className="fixed inset-0 z-[90] flex items-center justify-center overflow-y-auto p-4 sm:p-6">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center overflow-y-auto p-3 sm:p-6">
       {/* Dimmed, not opaque: the site stays visible behind, which is the whole point. */}
       <div
         className="prompt-veil absolute inset-0 bg-ink/40 backdrop-blur-[3px]"
@@ -117,7 +112,7 @@ export function OutletPrompt() {
           ref={closeRef}
           type="button"
           onClick={() => settle(outlet.outlets[0]?.slug ?? '')}
-          className="absolute right-3.5 top-3.5 z-10 inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-bg hover:text-ink"
+          className="absolute right-2.5 top-2.5 z-10 inline-flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-bg hover:text-ink sm:right-3.5 sm:top-3.5 sm:size-9"
         >
           <X aria-hidden className="size-4" />
           <span className="sr-only">Close and use {outletLocality(outlet.outlets[0]!)}</span>
@@ -144,34 +139,25 @@ export function OutletPrompt() {
           </p>
         </div>
 
-        <ul className="grid gap-3 p-5 sm:grid-cols-2 sm:gap-4 sm:p-8">
+        <ul className="grid gap-3 px-3 pb-3 pt-5 sm:grid-cols-2 sm:gap-4 sm:p-8">
           {outlet.outlets.map((item, index) => {
             const services = outletServices(item)
-            const region = outletRegion(item.slug)
+            const locality = outletLocality(item)
             return (
             <li key={item.slug} className="h-full">
               <button
                 type="button"
                 onClick={() => settle(item.slug)}
                 /*
-                  A row on a phone, a doorway card from sm up. Stacked full-height cards ran the
-                  dialog off the bottom of a 844px screen and put the heading out of reach; a
-                  thumbnail and two lines fits twice over.
+                  On a phone, one full-width card: a small arch and the name across the top, then
+                  the address and what the kitchen offers across the whole width. The row this
+                  replaces gave a third of the card to a photograph and squeezed everything else
+                  into the rest. The whole card is the button, so the "Choose" line is left to the
+                  larger layout, where there is room for it. From sm up, a doorway card.
                 */
-                className="group flex h-full w-full items-stretch gap-0 overflow-hidden rounded-2xl border border-line bg-bg text-left transition-colors hover:border-olive/45 sm:flex-col sm:items-center sm:text-center"
+                className="group flex h-full w-full flex-col rounded-2xl border border-line bg-bg p-4 text-left transition-colors hover:border-olive/45 active:border-olive active:bg-lime/40 sm:items-center sm:p-5 sm:pt-6 sm:text-center"
               >
-                <span className="relative block w-28 shrink-0 self-stretch overflow-hidden sm:hidden">
-                  <Image
-                    src={outletImage(item.slug)}
-                    alt=""
-                    aria-hidden
-                    fill
-                    sizes="7rem"
-                    className="object-cover"
-                  />
-                </span>
-
-                <span className="hidden w-full px-8 pt-6 sm:block">
+                <span className="hidden w-full px-3 sm:block">
                   <Doorway
                     id={`prompt-door-${item.slug}`}
                     src={outletImage(item.slug)}
@@ -181,38 +167,45 @@ export function OutletPrompt() {
                   />
                 </span>
 
-                <span className="flex min-w-0 flex-1 flex-col p-3.5 sm:items-center sm:p-5 sm:pt-4">
-                  <span className="block font-display text-lg leading-tight text-ink sm:text-xl">
-                    {outletLocality(item)}
+                <span className="flex items-center gap-3 sm:mt-4">
+                  <span className="relative block h-14 w-11 shrink-0 overflow-hidden rounded-t-full rounded-b-md bg-forest sm:hidden">
+                    <Image
+                      src={outletImage(item.slug)}
+                      alt=""
+                      aria-hidden
+                      fill
+                      sizes="2.75rem"
+                      className="object-cover"
+                    />
                   </span>
-                  {region ? <span className="mt-0.5 block text-xs text-muted">{region}</span> : null}
+                  <span className="font-display text-xl leading-tight text-ink">{locality}</span>
+                </span>
 
-                  {/* The address, under the option. An outlet whose street is not published shows
-                      the trading name alone rather than an empty line. */}
-                  <span className="mt-1.5 flex flex-1 gap-1.5 text-xs leading-relaxed text-muted sm:mt-2 sm:justify-center sm:gap-2">
-                    <MapPin aria-hidden className="mt-0.5 size-3.5 shrink-0 text-olive" />
-                    <span>{outletAddress(item) || item.name}</span>
-                  </span>
+                {/* The address, built only from the parts that exist — so an outlet without a
+                    street reads "Farnham Common, Buckinghamshire" and never shows an empty line. */}
+                <span className="mt-3 flex flex-1 gap-2 text-sm leading-relaxed text-muted sm:mt-2 sm:justify-center sm:text-xs">
+                  <MapPin aria-hidden className="mt-[0.2rem] size-3.5 shrink-0 text-olive" />
+                  <AddressText text={outletAddress(item) || item.name} />
+                </span>
 
-                  {/* Whether this one delivers, on the choice itself. Finding that out after
-                      picking a kitchen is the dead end this rebuild exists to remove. */}
-                  <span
-                    className={cn(
-                      'mt-2.5 inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-[0.6875rem] font-medium sm:self-center',
-                      services.delivers ? 'bg-brand-wash text-brand-text' : 'bg-surface-2 text-muted',
-                    )}
-                  >
-                    {services.delivers ? (
-                      <Bike aria-hidden className="size-3" />
-                    ) : (
-                      <ShoppingBag aria-hidden className="size-3" />
-                    )}
-                    {services.label}
-                  </span>
+                {/* Whether this one delivers, on the choice itself. Finding that out after
+                    picking a kitchen is the dead end this rebuild exists to remove. */}
+                <span
+                  className={cn(
+                    'mt-3 inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-xs font-medium sm:self-center sm:text-[0.6875rem]',
+                    services.delivers ? 'bg-brand-wash text-brand-text' : 'bg-surface-2 text-muted',
+                  )}
+                >
+                  {services.delivers ? (
+                    <Bike aria-hidden className="size-3.5 sm:size-3" />
+                  ) : (
+                    <ShoppingBag aria-hidden className="size-3.5 sm:size-3" />
+                  )}
+                  {services.label}
+                </span>
 
-                  <span className="mt-3 inline-flex items-center text-sm font-medium text-brand-text underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-text sm:mt-4">
-                    Choose {outletLocality(item)}
-                  </span>
+                <span className="mt-4 hidden text-sm font-medium text-brand-text underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-text sm:inline-flex">
+                  Choose {locality}
                 </span>
               </button>
             </li>

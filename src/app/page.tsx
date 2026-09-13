@@ -11,6 +11,7 @@ import { SectionDivider } from '@/components/ornament/section-divider'
 import { JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { formatPenceCompact } from '@/lib/money'
 import { summariseWeek } from '@/lib/hours'
+import { outletAddressLines, outletMapsUrl, outletWords } from '@/lib/outlet'
 import { SITE, absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getBranchSafe, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 import { getPublishedMenus } from '@/server/menu'
@@ -39,6 +40,8 @@ export default async function HomePage() {
   if (!branch) return <NotConfigured />
   const menus = await getPublishedMenus(branch.id)
   const state = getServiceState(branch)
+  // The chosen outlet's own directions: Farnham Common must never be told it is on the Bath Road.
+  const words = outletWords(branch)
 
   // The earliest time the kitchen could actually hand food over, derived from the opening hours
   // and its lead time — not a marketing claim.
@@ -254,19 +257,19 @@ export default async function HomePage() {
             <SectionHeading
               eyebrow="Find us"
               id="find-heading"
-              title="On the Bath Road, five minutes from the M4"
-              lead="The Bell and Bottle sits on the A4 between Maidenhead and Knowl Hill, with parking outside."
+              title={words.findUsTitle}
+              lead={words.findUsLead ?? undefined}
             />
 
             <address className="mt-7 space-y-4 text-[0.9375rem] not-italic">
               <p className="flex gap-3">
                 <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
                 <span>
-                  {branch.addressLine1}
-                  <br />
-                  {branch.addressLine2}, {branch.city}
-                  <br />
-                  {branch.postcode}
+                  {outletAddressLines(branch).map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
                 </span>
               </p>
               <p className="flex gap-3">
@@ -278,9 +281,7 @@ export default async function HomePage() {
             </address>
 
             <ButtonLink
-              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-                `${branch.addressLine1}, ${branch.postcode}`,
-              )}`}
+              href={outletMapsUrl(branch)}
               variant="secondary"
               size="sm"
               className="mt-6"

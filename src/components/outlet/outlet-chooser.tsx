@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import { Bike, MapPin, ShoppingBag } from 'lucide-react'
 import { Jali } from '@/components/home/jali'
 import { TempleBorder } from '@/components/ornament/temple-border'
+import { AddressText } from '@/components/outlet/address-text'
 import { Doorway } from '@/components/outlet/doorway'
 import type { Outlet } from '@/components/outlet/outlet-context'
 import { cn } from '@/lib/cn'
@@ -15,7 +16,6 @@ import {
   outletAddress,
   outletImage,
   outletLocality,
-  outletRegion,
   outletServices,
 } from '@/lib/outlet'
 
@@ -95,7 +95,6 @@ export function OutletChooser({
           {outlets.map((outlet, index) => {
             const services = outletServices(outlet)
             const locality = outletLocality(outlet)
-            const region = outletRegion(outlet.slug)
             return (
               <li key={outlet.slug} className="h-full">
                 <button
@@ -118,11 +117,12 @@ export function OutletChooser({
                   <span className="mt-7 block font-display text-[1.875rem] leading-tight text-ink sm:text-[2.125rem]">
                     {locality}
                   </span>
-                  {region ? <span className="mt-1 block text-sm text-muted">{region}</span> : null}
-
-                  <span className="mt-4 flex max-w-xs flex-1 justify-center gap-2 text-[0.9375rem] leading-relaxed text-muted">
+                  {/* No separate county line: the address carries the county where it is needed,
+                      and "Farnham Common / Buckinghamshire / Farnham Common, Buckinghamshire"
+                      said the same place three times. */}
+                  <span className="mt-3 flex max-w-xs flex-1 justify-center gap-2 text-[0.9375rem] leading-relaxed text-muted">
                     <MapPin aria-hidden className="mt-1 size-4 shrink-0 text-olive" />
-                    <span>{outletAddress(outlet) || outlet.name}</span>
+                    <AddressText text={outletAddress(outlet) || outlet.name} />
                   </span>
 
                   <span

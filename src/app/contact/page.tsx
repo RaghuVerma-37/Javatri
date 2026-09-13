@@ -6,6 +6,14 @@ import { OpenStatus } from '@/components/open-status'
 import { ButtonLink, SectionHeading } from '@/components/ui'
 import { breadcrumbSchema, JsonLd, restaurantSchema } from '@/lib/jsonld'
 import { summariseWeek } from '@/lib/hours'
+import {
+  outletAddress,
+  outletAddressLines,
+  outletLocality,
+  outletMapsUrl,
+  outletShortAddress,
+  outletWords,
+} from '@/lib/outlet'
 import { absoluteUrl, formatPhone, telHref } from '@/lib/site'
 import { getBranchSafe, getOtherBranches, getSelectedBranchSlug, getServiceState } from '@/server/branch'
 
@@ -27,10 +35,10 @@ export default async function ContactPage() {
   // The second branch is listed honestly rather than advertised. The old site offered Farnham
   // Common in the banqueting dropdown with no address, no phone and no hours anywhere.
   const otherBranches = await getOtherBranches(branch.slug)
+  const anyNotYetOpen = otherBranches.some((other) => !other.isActive)
 
-  const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    `${branch.addressLine1}, ${branch.postcode}`,
-  )}`
+  const words = outletWords(branch)
+  const directions = outletMapsUrl(branch)
 
   return (
     <>
@@ -45,10 +53,9 @@ export default async function ContactPage() {
       <div className="container-page py-10 sm:py-16">
         <header className="max-w-2xl">
           <h1 className="text-4xl sm:text-5xl">Find us</h1>
-          <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">
-            On the A4 between Maidenhead and Knowl Hill, about five minutes from junction 8/9 of the
-            M4, with parking outside.
-          </p>
+          {words.contactLead ? (
+            <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">{words.contactLead}</p>
+          ) : null}
           <div className="mt-5">
             <OpenStatus branch={branch} state={state} />
           </div>
@@ -64,13 +71,11 @@ export default async function ContactPage() {
               <p className="flex gap-3">
                 <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-accent" />
                 <span>
-                  {branch.addressLine1}
-                  <br />
-                  {branch.addressLine2}
-                  <br />
-                  {branch.city}
-                  <br />
-                  {branch.postcode}
+                  {outletAddressLines(branch).map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
                 </span>
               </p>
               <p className="flex gap-3">
@@ -112,9 +117,7 @@ export default async function ContactPage() {
               >
                 <MapPin aria-hidden className="mx-auto size-6 text-accent" />
                 <p className="mt-3 font-display text-lg">Open in Maps</p>
-                <p className="mt-1 text-sm text-muted">
-                  {branch.city}, {branch.postcode}
-                </p>
+                <p className="mt-1 text-sm text-muted">{outletShortAddress(branch)}</p>
               </a>
             </div>
           </section>
@@ -144,23 +147,38 @@ export default async function ContactPage() {
             <SectionHeading
               eyebrow="Also"
               id="other-heading"
-              title="Our other site"
-              lead="Not yet bookable online. Ring the Littlewick Green number and we will help."
+              title={otherBranches.length === 1 ? 'Our other site' : 'Our other sites'}
+              lead={
+                anyNotYetOpen
+                  ? 'A site that is not open yet cannot be booked online. Ring us and we will help.'
+                  : undefined
+              }
             />
             <ul className="mt-6 grid gap-4 sm:grid-cols-2">
               {otherBranches.map((other) => (
                 <li key={other.id} className="rounded-2xl border border-line bg-surface p-5">
                   <h3 className="font-display text-xl">{other.name}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {other.addressLine1
-                      ? `${other.addressLine1}, ${other.postcode ?? ''}`
-                      : 'Details coming soon.'}
+                    {outletAddress(other) || 'Details coming soon.'}
                   </p>
+                  {/* An open site is one choice away: switching makes every page, this one
+                      included, that kitchen's. One not open yet is reached by phone. */}
                   <p className="mt-3 text-sm">
-                    <Link href="/contact" className="text-brand-text underline underline-offset-2">
-                      Call {formatPhone(branch.phone)}
-                    </Link>{' '}
-                    <span className="text-muted">for anything at this site.</span>
+                    {other.isActive ? (
+                      <Link
+                        href={`/outlets?next=${encodeURIComponent('/contact')}`}
+                        className="text-brand-text underline underline-offset-2"
+                      >
+                        Switch to {outletLocality(other)}
+                      </Link>
+                    ) : (
+                      <>
+                        <a href={telHref(branch.phone)} className="text-brand-text underline underline-offset-2">
+                          Call {formatPhone(branch.phone)}
+                        </a>{' '}
+                        <span className="text-muted">for anything at this site.</span>
+                      </>
+                    )}
                   </p>
                 </li>
               ))}

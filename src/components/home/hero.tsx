@@ -7,12 +7,9 @@ import { buttonClass } from '@/components/ui'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
 import { devanagari } from '@/lib/fonts'
+import { outletTitle, outletWords } from '@/lib/outlet'
 import type { BranchWithHours, ServiceState } from '@/server/branch'
 
-const HEADLINE = [
-  ['Indian', 'cooking,'],
-  ['on', 'the', 'Bath', 'Road'],
-]
 
 export type TonightPanel = {
   /** "19:20", or null when there is nothing bookable in the next few days. */
@@ -43,6 +40,9 @@ export function Hero({
   state: ServiceState
   tonight: TonightPanel
 }) {
+  // The second line is the chosen outlet's own place: "on the Bath Road" is Littlewick Green's.
+  const words = outletWords(branch)
+  const headline = [['Indian', 'cooking,'], words.heroPlace]
   let wordIndex = 0
 
   return (
@@ -56,18 +56,18 @@ export function Hero({
             {/* Derived, not written down. With a second outlet selected this used to keep
                 announcing Littlewick Green underneath Farnham Common's opening hours. */}
             <p className="text-sm font-medium text-accent">
-              {[branch.name, branch.addressLine2 ?? branch.city].filter(Boolean).join(', ')}
+              {outletTitle(branch)}
             </p>
             <OpenStatus branch={branch} state={state} />
           </div>
 
           <h1 className="mt-6 max-w-3xl text-[clamp(2.5rem,7.5vw,4.75rem)] leading-[1.02] tracking-[-0.025em] text-ink">
-            {HEADLINE.map((line, lineIndex) => (
+            {headline.map((line, lineIndex) => (
               <span key={lineIndex} className="reveal-line">
-                {line.map((word) => {
+                {line.map((word, index) => {
                   const delay = 220 + wordIndex++ * 70
                   return (
-                    <span key={word}>
+                    <span key={index}>
                       <span
                         className="reveal-word"
                         style={{ ['--delay' as string]: `${delay}ms` }}
@@ -94,8 +94,7 @@ export function Hero({
             className="fade-up mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
             style={{ ['--delay' as string]: '760ms' }}
           >
-            Chaat, charcoal and slow-cooked curries in a Berkshire village pub. Collect it, have it
-            delivered, book a table — or fill the banqueting hall with a hundred and fifty guests.
+            {words.heroLead}
           </p>
 
           <div
