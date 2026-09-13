@@ -149,14 +149,28 @@ export function OutletPrompt() {
                 type="button"
                 onClick={() => settle(item.slug)}
                 /*
-                  On a phone, one full-width card: a small arch and the name across the top, then
-                  the address and what the kitchen offers across the whole width. The row this
-                  replaces gave a third of the card to a photograph and squeezed everything else
-                  into the rest. The whole card is the button, so the "Choose" line is left to the
-                  larger layout, where there is room for it. From sm up, a doorway card.
+                  On a phone, a rounded card with the restaurant's photograph behind it: the name, a
+                  hairline, then the address and what the kitchen offers across the whole width,
+                  in cream over a forest scrim. The photograph sits behind the text rather than
+                  beside it, so it no longer costs the address its width. The whole card is the
+                  button, so the "Choose" line is left to the larger layout. From sm up, a light
+                  doorway card with no background photograph.
                 */
-                className="group flex h-full w-full flex-col rounded-2xl border border-line bg-bg p-4 text-left transition-colors hover:border-olive/45 active:border-olive active:bg-lime/40 sm:items-center sm:p-5 sm:pt-6 sm:text-center"
+                className="group relative isolate flex h-full w-full flex-col overflow-hidden rounded-2xl border border-forest bg-forest p-4 text-left transition-colors hover:border-olive/45 active:border-pear sm:items-center sm:border-line sm:bg-bg sm:p-5 sm:pt-6 sm:text-center"
               >
+                {/* Phones only. The scrim never drops below 80% forest, which keeps cream text at
+                    5:1 or better over the brightest part of either photograph. */}
+                <span aria-hidden className="absolute inset-0 -z-10 sm:hidden">
+                  <Image
+                    src={outletImage(item.slug)}
+                    alt=""
+                    fill
+                    sizes="(min-width: 640px) 1px, 92vw"
+                    className="object-cover"
+                  />
+                  <span className="absolute inset-0 bg-gradient-to-r from-forest/90 to-forest/80" />
+                </span>
+
                 <span className="hidden w-full px-3 sm:block">
                   <Doorway
                     id={`prompt-door-${item.slug}`}
@@ -167,24 +181,18 @@ export function OutletPrompt() {
                   />
                 </span>
 
-                <span className="flex items-center gap-3 sm:mt-4">
-                  <span className="relative block h-14 w-11 shrink-0 overflow-hidden rounded-t-full rounded-b-md bg-forest sm:hidden">
-                    <Image
-                      src={outletImage(item.slug)}
-                      alt=""
-                      aria-hidden
-                      fill
-                      sizes="2.75rem"
-                      className="object-cover"
-                    />
-                  </span>
-                  <span className="font-display text-xl leading-tight text-ink">{locality}</span>
+                <span className="block font-display text-xl leading-tight text-cream sm:mt-4 sm:text-ink">
+                  {locality}
                 </span>
+
+                {/* On a phone, a hairline under the name separates the choice from its details.
+                    The doorway card from sm up has the arch doing that job, so it has no rule. */}
+                <span aria-hidden className="mt-3 block h-px w-full bg-cream/30 sm:hidden" />
 
                 {/* The address, built only from the parts that exist — so an outlet without a
                     street reads "Farnham Common, Buckinghamshire" and never shows an empty line. */}
-                <span className="mt-3 flex flex-1 gap-2 text-sm leading-relaxed text-muted sm:mt-2 sm:justify-center sm:text-xs">
-                  <MapPin aria-hidden className="mt-[0.2rem] size-3.5 shrink-0 text-olive" />
+                <span className="mt-3 flex flex-1 gap-2 text-sm leading-relaxed text-cream sm:mt-2 sm:justify-center sm:text-xs sm:text-muted">
+                  <MapPin aria-hidden className="mt-[0.2rem] size-3.5 shrink-0 text-pear sm:text-olive" />
                   <AddressText text={outletAddress(item) || item.name} />
                 </span>
 
