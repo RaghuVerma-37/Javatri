@@ -107,6 +107,10 @@
   --color-flame: #eb9a2a;
   --color-flame-core: #fde7a6;
 
+  /* The mace drawing: the lace a little brighter than the wordmark's red, on a nutmeg-brown seed. */
+  --color-mace: #9e1f1a;
+  --color-nutmeg: #4a2c18;
+
   /*
     Newsreader for display, Karla for everything else.
 
@@ -707,5 +711,57 @@
   @keyframes toran-sway {
     30% { transform: rotate(8deg); }
     65% { transform: rotate(-5deg); }
+  }
+
+  /*
+    The mace opening, the one orchestrated moment on the homepage: the mat, the seed, the lace
+    gathering at its foot, the strands climbing, and only then the lattice behind the arch — the
+    name first, then the pattern it gives the site.
+  */
+  .mace-mat {
+    animation: prompt-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+
+  .mace-seed {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mace-seed 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+
+  @keyframes mace-seed {
+    from { opacity: 0; transform: scale(0.85); }
+  }
+
+  .mace-base {
+    animation: veil-in 0.4s ease-out 0.55s both;
+  }
+
+  .mace [data-strand] {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+    animation: mace-draw var(--dur, 900ms) cubic-bezier(0.45, 0.05, 0.3, 1) var(--d, 0ms) forwards;
+  }
+
+  @keyframes mace-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .jali-arrive {
+    animation: veil-in 1.4s ease-out 1.9s both;
+  }
+
+  /* Reduced motion shortens durations but not delays; here nothing should wait to appear at all. */
+  @media (prefers-reduced-motion: reduce) {
+    .mace [data-strand] {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+
+    .mace-mat,
+    .mace-seed,
+    .mace-base,
+    .jali-arrive {
+      animation: none;
+    }
   }
 }

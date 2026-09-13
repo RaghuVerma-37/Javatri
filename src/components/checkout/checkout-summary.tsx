@@ -58,7 +58,7 @@ export function CheckoutSummary({ slots }: { slots: Record<string, SlotOption[]>
               {line.name}
               {line.selectedVariants.length > 0 || line.selectedModifiers.length > 0 ? (
                 <span className="block text-xs text-muted">
-                  {[...line.selectedVariants, ...line.selectedModifiers].map((o) => o.name).join(' · ')}
+                  {[...line.selectedVariants, ...line.selectedModifiers].map((o) => o.name).join(', ')}
                 </span>
               ) : null}
             </span>

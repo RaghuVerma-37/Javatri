@@ -113,7 +113,7 @@ export default async function ContactPage() {
                 <MapPin aria-hidden className="mx-auto size-6 text-accent" />
                 <p className="mt-3 font-display text-lg">Open in Maps</p>
                 <p className="mt-1 text-sm text-muted">
-                  {branch.postcode} · {branch.city}
+                  {branch.city}, {branch.postcode}
                 </p>
               </a>
             </div>

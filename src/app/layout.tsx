@@ -6,6 +6,7 @@ import { OutletPrompt } from '@/components/outlet/outlet-prompt'
 import { getActiveBranches, getSelectedBranchSlug } from '@/server/branch'
 import { OUTLET_COOKIE } from '@/lib/outlet'
 import { cookies } from 'next/headers'
+import { PhoneActionBar } from '@/components/phone-action-bar'
 import { RevealOnScroll } from '@/components/reveal-on-scroll'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteChrome } from '@/components/site-chrome'
@@ -111,6 +112,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <SiteChrome>
               <SiteFooter />
               <OutletPrompt />
+              <PhoneActionBar />
             </SiteChrome>
           </CartProvider>
         </OutletProvider>

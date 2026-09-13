@@ -58,7 +58,7 @@ export function outletLocality(branch: {
   return branch.addressLine2 ?? branch.city ?? branch.name
 }
 
-/** "The Bell and Bottle, Bath Road · Littlewick Green, Maidenhead · SL6 3RX" */
+/** "The Bell and Bottle, Bath Road, Littlewick Green, Maidenhead, SL6 3RX" */
 export function outletAddress(branch: {
   addressLine1?: string | null
   addressLine2?: string | null
@@ -71,7 +71,7 @@ export function outletAddress(branch: {
     branch.postcode,
   ]
     .filter(Boolean)
-    .join(' · ')
+    .join(', ')
 }
 
 /**

@@ -39,7 +39,7 @@ export default async function BookPage() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
           <div className="min-w-0 max-w-2xl">
             <header>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text">
+              <p className="text-sm font-medium text-brand-text">
                 Littlewick Green
               </p>
               <h1 className="mt-2 text-4xl sm:text-5xl">Book a table</h1>

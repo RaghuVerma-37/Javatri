@@ -103,7 +103,7 @@ export function SlotPicker({
         <div className="mt-4 space-y-5">
           {days.map((day) => (
             <div key={day.key}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+              <h3 className="text-sm font-medium text-muted">
                 {day.label}
               </h3>
               <ul className="mt-2 flex flex-wrap gap-1.5">

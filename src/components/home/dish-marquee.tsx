@@ -39,7 +39,7 @@ export function DishMarquee({
           band, because the two are separate elements rounded to different device pixels. */}
       <Wave className="-mb-px" />
       <div className="bg-pistachio py-2 sm:py-3">
-        <div aria-hidden className="text-ink/20">
+        <div aria-hidden className="text-ink/35">
           <TempleBorder id="temple-band" />
         </div>
       <div
@@ -52,7 +52,7 @@ export function DishMarquee({
           <MarqueeRow dishes={dishes} hidden />
         </div>
       </div>
-        <div aria-hidden className="text-ink/20">
+        <div aria-hidden className="text-ink/35">
           <TempleBorder id="temple-band-b" flip />
         </div>
       </div>

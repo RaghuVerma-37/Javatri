@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef, type ComponentPropsWithoutRef, type ReactNode } from 'react'
-import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/cn'
 
 /**
@@ -89,15 +88,11 @@ export function TiltCard({
       ) : null}
 
       <div className="flex flex-1 flex-col p-6 sm:p-7">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text">{eyebrow}</p>
+      <p className="text-sm font-medium text-brand-text">{eyebrow}</p>
       <h3 className="mt-3 text-2xl">{title}</h3>
       <div className="mt-2.5 flex-1 text-[0.9375rem] leading-relaxed text-muted">{children}</div>
-      <p className="mt-5 inline-flex items-center gap-2 font-medium text-brand-text">
+      <p className="mt-5 self-start font-medium text-brand-text underline decoration-line-strong underline-offset-4 transition-colors group-hover:decoration-brand-text">
         {cta}
-        <ArrowRight
-          aria-hidden
-          className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-        />
       </p>
       </div>
     </Link>

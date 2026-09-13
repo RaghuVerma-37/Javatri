@@ -82,8 +82,8 @@ export default async function EventsPage() {
           className="absolute inset-0 bg-gradient-to-r from-forest/95 via-forest/85 to-forest/55"
         />
         <div className="container-page relative py-28 sm:py-36">
-          <p className="fade-up text-xs font-semibold uppercase tracking-[0.2em] text-pear">
-            Banqueting · up to {SITE.banqueting.maxGuests} guests
+          <p className="fade-up text-sm font-medium text-pear">
+            Banqueting for up to {SITE.banqueting.maxGuests} guests
           </p>
           <h1 className="reveal-line mt-5 max-w-3xl text-[clamp(2.5rem,7vw,4.5rem)] leading-[1.02] tracking-[-0.025em] text-cream">
             <span className="reveal-word" style={{ ['--delay' as string]: '150ms' }}>

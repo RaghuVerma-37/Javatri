@@ -51,7 +51,7 @@ function CartContents({ onNavigate }: { onNavigate?: () => void }) {
                   <p className="mt-0.5 text-xs text-muted">
                     {[...priced.selectedVariants, ...priced.selectedModifiers]
                       .map((option) => option.name)
-                      .join(' · ')}
+                      .join(', ')}
                   </p>
                 ) : null}
 

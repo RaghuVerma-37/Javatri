@@ -48,7 +48,7 @@ export function OrderTypeSelector({
       value: 'DELIVERY',
       label: 'Delivery',
       detail: acceptsDelivery
-        ? `${formatPence(minOrderInPence)} minimum · ${formatPence(deliveryFeeInPence)} · about ${deliveryLeadMinutes} minutes`
+        ? `${formatPence(minOrderInPence)} minimum, ${formatPence(deliveryFeeInPence)} delivery, about ${deliveryLeadMinutes} minutes`
         : 'Not available today',
       icon: Bike,
       disabled: !acceptsDelivery,

@@ -26,7 +26,7 @@ export async function SiteFooter() {
     <footer className="bg-forest text-cream">
       {/* The border runs along the top edge of the footer the way it runs along the hem of a
           sari — the one place on the page where the site closes, so the one place it is edged. */}
-      <div aria-hidden className="text-cream/25">
+      <div aria-hidden className="text-cream/40">
         <TempleBorder id="temple-footer" flip />
       </div>
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:py-16">

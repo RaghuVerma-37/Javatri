@@ -1,11 +1,12 @@
-import { ArrowRight } from 'lucide-react'
 import { OpenStatus } from '@/components/open-status'
 import Image from 'next/image'
 import { Jali } from '@/components/home/jali'
 import { Diya } from '@/components/ornament/diya'
+import { Mace } from '@/components/ornament/mace'
 import { buttonClass } from '@/components/ui'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
+import { devanagari } from '@/lib/fonts'
 import type { BranchWithHours, ServiceState } from '@/server/branch'
 
 const HEADLINE = [
@@ -54,8 +55,8 @@ export function Hero({
           >
             {/* Derived, not written down. With a second outlet selected this used to keep
                 announcing Littlewick Green underneath Farnham Common's opening hours. */}
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-              {[branch.name, branch.addressLine2 ?? branch.city].filter(Boolean).join(' · ')}
+            <p className="text-sm font-medium text-accent">
+              {[branch.name, branch.addressLine2 ?? branch.city].filter(Boolean).join(', ')}
             </p>
             <OpenStatus branch={branch} state={state} />
           </div>
@@ -101,12 +102,8 @@ export function Hero({
             className="fade-up mt-9 flex flex-wrap items-center gap-x-7 gap-y-4"
             style={{ ['--delay' as string]: '900ms' }}
           >
-            <Link href="/order" className={cn(buttonClass({ size: 'lg' }), 'group')}>
+            <Link href="/order" className={buttonClass({ size: 'lg' })}>
               Order online
-              <ArrowRight
-                aria-hidden
-                className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-              />
             </Link>
             <Link
               href="/menu"
@@ -144,13 +141,16 @@ export function Hero({
  * jali behind it comes from — so the cultural note survives the thali being cut, without the page
  * needing six pictures to make it.
  *
- * Two pieces of motion, and only two. The image wipes up from its own base once on load, as if
- * the arch is being filled; then it holds a very slow drift so the block is never quite static.
- * Both stop dead under prefers-reduced-motion.
+ * The image wipes up from its own base once on load, as if the arch is being filled, then holds a
+ * very slow drift. Under it the mace draws itself — the restaurant's name, which is a lattice — and
+ * only once it has, the jali fades in behind the arch. Everything stops under reduced motion.
  */
 function HeroImage() {
   return (
-    <div className="relative">
+    <div>
+      {/* The arch and its lattice share a box of their own, so the lattice is sized to the arch
+          and never runs on behind the caption underneath. */}
+      <div className="relative">
       {/*
         The lattice sits behind the arch as a panel of its own, inset from the top and running off
         the right edge — a screen the arch is set against. Clipped to an arch itself, so the two
@@ -158,7 +158,7 @@ function HeroImage() {
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-6 left-[18%] right-[-12%] hidden overflow-hidden rounded-t-[10rem] rounded-b-[2rem] text-olive/55 sm:block"
+        className="jali-arrive pointer-events-none absolute inset-y-6 left-[18%] right-[-12%] hidden overflow-hidden rounded-t-[10rem] rounded-b-[2rem] text-olive/55 sm:block"
       >
         <Jali id="jali-hero" opacity={0.75} className="jali-drift size-full" />
       </div>
@@ -177,7 +177,28 @@ function HeroImage() {
           className="ken-burns object-cover"
         />
       </div>
+      </div>
 
+      {/* The name, drawn and explained. Set on a cream mat that overlaps the foot of the arch, so
+          it reads as a seal on the photograph rather than a caption floating under it. */}
+      {/* Only the mat overlaps the arch. The caption starts below the overlap, so neither the
+          Devanagari nor the sentence ever sits on the photograph. */}
+      <figure className="relative mx-auto -mt-12 flex w-fit items-start gap-4 sm:mx-0 sm:-ml-6">
+        <span className="mace-mat grid size-28 shrink-0 place-items-center rounded-full bg-bg shadow-[0_18px_40px_-24px_rgba(28,36,20,0.6)] ring-1 ring-olive/25">
+          <Mace className="h-20 w-auto" />
+        </span>
+        <figcaption
+          className="fade-up pt-15 text-sm leading-snug text-muted"
+          style={{ ['--delay' as string]: '1900ms' }}
+        >
+          <span lang="hi" className={cn(devanagari.className, 'block text-xl leading-none text-mace')}>
+            जावित्री
+          </span>
+          <span className="mt-1.5 block max-w-[13rem]">
+            Javatri is mace, the red lace that wraps a nutmeg.
+          </span>
+        </figcaption>
+      </figure>
     </div>
   )
 }
@@ -258,7 +279,7 @@ function TimeRow({
     /* The note sits under the figure rather than beside it, so the two times line up on the
        right edge instead of being pushed around by how long their notes are. */
     <div className="flex items-baseline justify-between gap-3 border-b border-olive/20 py-2.5 last:border-0 sm:block sm:border-0 sm:py-0">
-      <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{label}</dt>
+      <dt className="text-sm text-muted">{label}</dt>
       <dd className="sm:mt-1">
         {time ? (
           <>

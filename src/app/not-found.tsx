@@ -10,7 +10,7 @@ export const metadata = { title: 'Page not found' }
 export default function NotFound() {
   return (
     <div className="container-page flex min-h-[60svh] max-w-xl flex-col justify-center py-20">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text">404</p>
+      <p className="text-sm font-medium text-brand-text">404</p>
       <h1 className="mt-3 text-4xl">We could not find that page</h1>
       <p className="mt-4 leading-relaxed text-muted">
         It may have moved when we rebuilt the site. Everything the old site had is still here,

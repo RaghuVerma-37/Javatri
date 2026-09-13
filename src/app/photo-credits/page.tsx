@@ -40,7 +40,7 @@ export default async function PhotoCreditsPage() {
   return (
     <div className="container-page py-10 sm:py-14">
       <header className="max-w-3xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-text">
+        <p className="text-sm font-medium text-brand-text">
           Credits
         </p>
         <h1 className="mt-2 text-4xl sm:text-5xl">Photo credits</h1>
